@@ -1,0 +1,126 @@
+* {
+  margin: 0;
+  padding: 0;
+}
+
+.navbar {
+  display: grid;
+  grid-template-columns: 1fr 3fr 1fr;
+  padding-left: 50px;
+  padding-right: 50px;
+  background: var(--navbar-background-color);
+  color: var(--text-color);
+}
+
+.navbar-logo {
+  display: flex;
+  justify-content: left;
+  align-items: center;
+  font-size: 1.5rem;
+  font-weight: bold;
+  /* background: linear-gradient(135deg, #02640c, #02942e, #05c71f, #7fe48c); */
+  /* -webkit-background-clip: text; */
+  /* -webkit-text-fill-color: transparent; */
+  text-align: center;
+  font-family: Papyrus, fantasy;
+  /* font-family: Harrington; */
+  /* font-family: Papyrus; */
+
+  /* Hover effect */
+  &:hover {
+    transform: scale(1.1);
+  }
+}
+
+.navbar-links-one {
+  list-style: none;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.navbar-links-two {
+  list-style: none;
+  display: flex;
+  justify-content: right;
+  align-items: center;
+  cursor: pointer;
+}
+
+li {
+  width: 150px;
+  height: 60px;
+  line-height: 60px;
+  text-align: center;
+}
+
+.navbar-links-one>li {
+  width: 150px;
+}
+
+.navbar-links-two>li {
+  width: 60px;
+}
+
+.navbar a {
+  text-decoration: none;
+  color: var(--text-color);
+  cursor: pointer;
+
+  &:hover {
+    color: rgb(214, 150, 103);
+  }
+
+}
+
+
+.mobile-menu-icon {
+  display: none;
+  font-size: 20px;
+  background-color: var(--navbar-background-color);
+  color: var(--text-color);
+  cursor: pointer;
+  border: none;
+}
+
+.navbar-links-mobile {
+  list-style: none;
+  display: flex;
+  flex-direction: column;
+  position: absolute;
+  top: 38px;
+  right: 0;
+  background-color: var(--navbar-background-color);
+}
+
+@media (max-width: 768px) {
+  .navbar {
+    display: grid;
+    grid-template-columns: auto auto auto;
+    padding-left: 5px;
+    padding-right: 5px;
+  }
+
+  .navbar-logo {
+    font-size: 1rem;
+    font-weight: bold;
+  }
+
+  .navbar-links-one {
+    display: none;
+  }
+
+  .navbar-links-two>li {
+    width: auto;
+    font-size: small;
+    font-family: 'Courier New', Courier, monospace;
+  }
+
+  .navbar-links-two>.login {
+    display: none;
+  }
+
+  .mobile-menu-icon {
+    display: inline;
+  }
+}

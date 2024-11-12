@@ -1,0 +1,104 @@
+#root {
+  margin: 0;
+  padding: 0;
+  --text-hover-color: rgb(214, 150, 103);
+}
+
+body.light {
+  --background-color: #f4f3f3;
+  --text-color: #333;
+  --navbar-background-color: rgb(248, 250, 248);
+  --card-bgcolor: var(--background-color);
+}
+
+body.dark {
+  --background-color: #333;
+  --text-color: #cbc5c5;
+  --navbar-background-color: #1E1E1E;
+  --card-bgcolor: rgb(43, 43, 43);
+}
+
+body {
+  background-color: var(--background-color);
+  color: var(--text-color);
+  margin: 0;
+  font-family: Arial, sans-serif;
+}
+
+.container {
+  margin: auto;
+  width: 90%;
+  padding-top: 20px;
+}
+
+/* body{
+  background-color: rgb(63, 60, 60); 
+  background-color:#2A2A2A;
+} */
+h1 {
+  color: var(--text-color);
+  margin-bottom: 10px;
+  /* background: rgb(1,50,32);
+  background: linear-gradient(159deg, rgba(1,50,32,1) 0%, rgba(57,255,20,1) 100%); */
+}
+
+.form {
+  /* background: var(--text-color); */
+  max-width: 350px;
+  width: 100%;
+  padding: 25px 30px;
+  border-radius: 5px;
+  box-shadow: 0 10px 10px rgba(0, 0, 0, 0.15);
+  margin: auto;
+  margin-top: 5%;
+  text-align: center;
+}
+
+input[type=text],
+input[type=password],
+input[type=email],
+input[type=phone] {
+  width: 90%;
+  padding: 15px;
+  margin: 5px 0 22px 0;
+  display: inline-block;
+  border: none;
+  background: #bab8b8;
+}
+
+input[type=text]:focus,
+input[type=password]:focus,
+input[type=email]:focus,
+input[type=phone]:focus {
+  background-color: #ddd;
+  outline: none;
+}
+
+#link {
+  color: green;
+  cursor: pointer;
+  text-decoration: underline;
+}
+
+input[type=button] {
+  /* background-color: #034003; */
+  background: linear-gradient(159deg, rgba(1, 50, 32, 1) 0%, rgb(27, 144, 7) 100%);
+  color: white;
+  padding: 14px 20px;
+  /* margin: 8px 0; */
+  border: none;
+  cursor: pointer;
+  width: 100%;
+  opacity: 0.9;
+}
+
+input[type=button]:hover {
+  opacity: 1;
+}
+
+#forgotPass {
+  color: red;
+  text-align: right;
+  padding-bottom: 10px;
+  cursor: pointer;
+}

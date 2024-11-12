@@ -1,0 +1,54 @@
+.questioncard-grid{
+    display: flex;
+    flex-direction: column;
+    gap: 1rem;
+    /* padding: 1rem; */
+
+}
+.menu-card{
+    background-color: var(--card-bgcolor);
+    color: var(--text-color);
+    border-radius: 8px;
+    box-shadow: 0 4px 8px rgba(0,0,0,0.2);
+    padding: 1rem;
+    cursor: pointer;
+    /* &:hover {
+        transform: scale(1.1);
+      } */
+}
+.card-buttons{
+    display: grid;
+    column-gap: 1rem;
+    grid-template-columns: 1fr 1fr;
+    padding-top: 1rem;
+    height: 2rem;
+}
+.take-exam-btn, .read-ques-btn{   
+    color: white;
+    opacity: 0.9;;
+    cursor: pointer;
+    border: none;
+    border-radius: 5px;
+    &:hover{
+        opacity: 1;
+    }
+}
+.take-exam-btn{background-color: rgb(173, 5, 5);}
+.read-ques-btn{background-color: rgb(1, 123, 1);}
+/* Mobile */
+@media(max-width: 768px){
+    .questioncard-grid{
+        display: grid;
+        grid-template-columns: 1fr;
+        gap: 1rem;
+    }
+}
+/* Web */
+@media(min-width: 769px){
+    .questioncard-grid{
+        display: grid;
+        grid-template-columns: repeat(3,1fr);
+        gap: 1.5rem;
+    }
+
+}
