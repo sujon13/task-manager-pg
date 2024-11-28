@@ -10,7 +10,7 @@ export var questionBankData = [
         "examDate" : "12-07-2024",
         "examType" : "MCQ",
         "examDuration": "2hr",
-        "Questions":[
+        "questions":[
             {
                 "id" : 1,
                 "sub" : "Bangladesh",
@@ -70,7 +70,7 @@ export var questionBankData = [
         "examDate" : "12-07-2024",
         "examType" : "MCQ",
         "examDuration": "1hr",
-        "Questions":[
+        "questions":[
             {
                 "id" : 1,
                 "sub" : "Bangladesh",
@@ -130,7 +130,7 @@ export var questionBankData = [
         "examDate" : "12-07-2024",
         "examType" : "MCQ",
         "examDuration": "2hr",
-        "Questions":[
+        "questions":[
             {
                 "id" : 1,
                 "sub" : "Bangladesh",
@@ -190,7 +190,7 @@ export var questionBankData = [
         "examDate" : "12-07-2024",
         "examType" : "MCQ",
         "examDuration": "1hr",
-        "Questions":[
+        "questions":[
             {
                 "id" : 1,
                 "sub" : "Bangladesh",
@@ -250,7 +250,7 @@ export var questionBankData = [
         "examDate" : "12-07-2024",
         "examType" : "MCQ",
         "examDuration": "2hr",
-        "Questions":[
+        "questions":[
             {
                 "id" : 1,
                 "sub" : "Bangladesh",
