@@ -1,5 +1,5 @@
 import googleIcon from '../assets/google128.png';
-import { checkUsernameAvailability, signupSubmit } from '../services/api'
+import { checkUserNameAvailability, signupSubmit } from '../services/api'
 import { useEffect, useState } from 'react';
 import { Link } from 'react-router-dom';
 
@@ -41,18 +41,16 @@ export const Signup = () => {
         setError(validationError);
 
         if (validationError == '') {
-            const v = await checkUsernameAvailability(value);
+            const v = await checkUserNameAvailability(value);
             v == false ? setUsername(value) : setError('Username has been taken!');
         }
     };
     
-
-    //email is valid 
     const isValidEmail = (email) => {
         const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
         return emailRegex.test(email);
     }
-    //handle Mail
+    
     const handleMail = (e) => {
         const value = e.target.value;
         setMail(value);
@@ -61,14 +59,14 @@ export const Signup = () => {
         if (isValidEmail(value) == false) setMailError('Invalid Mail.')
 
     }
-    //Password Validation
+    
     const validatePassword = (password) => {
         const passwordRegex = /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[@$!%*?&])[A-Za-z\d@$!%*?&]{6,64}$/;
         if (!passwordRegex.test(password))
             return 'Password must be 6-64 characters long, contain at least one uppercase letter, one lowercase letter, one digit, and one special character.';
 
     }
-    //handlePassword
+    
     const handlePassword = (e) => {
         const value = e.target.value;
         setPassword(value);
@@ -87,17 +85,23 @@ export const Signup = () => {
     const handleSubmit = async (e) => {
         e.preventDefault();
 
-        const formData = {
+        const signupRequest = {
             "userName": userName,
             "email": mail,
             "rawPassword": password,
             "reTypeRawPassword": cPassword
         }
+
         try {
-            const response = await signupSubmit(formData);
+            const response = await signupSubmit(signupRequest);
+            console.log('response: ', response);
             setResponseMessage("Signup successful!"); // Success message
             setErrorMessage(""); // Clear any error
         } catch (error) {
+            console.error('error status: ', error.response?.status);
+            if (error.response?.data) {
+                console.error('error data: ', error.response?.data);
+            }
             setResponseMessage("");
             setErrorMessage(error.response?.data?.message || "An error occurred");
         }
@@ -145,7 +149,9 @@ export const Signup = () => {
                     required
                 />
                 {cPassError && <p style={{ color: 'red' }}>{cPassError}</p>}
-                <button type='submit'>Sign Up</button>
+                <button type='submit'>
+                    Sign Up
+                </button>
                 {responseMessage && <p style={{ color: "green" }}>{responseMessage}</p>}
       {errorMessage && <p style={{ color: "red" }}>{errorMessage}</p>}
                 {/* <input type="button" id="signup" value="Sign Up"  /> */}
