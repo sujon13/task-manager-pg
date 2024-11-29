@@ -16,3 +16,9 @@ export const checkUsernameAvailability = async (value) => {
     // console.log(response.data);
     return response.data;
   };
+
+export const signupSubmit = async(formData) =>{
+    const response = await api.post(`/signup`,formData);
+    console.log(response.data);
+    return response.data;
+}
