@@ -9,8 +9,22 @@ import { LiveExam } from './components/LiveExam';
 import { EnglishTutor } from './components/EnglishTutor';
 import { NavBar } from './components/NavBar';
 import { QuestionCard } from './components/QuestionBank/QuestionCard';
+import { useEffect } from 'react';
+
 
 export const App = () => {
+  // const getPostsData = async () => {
+  //   const res = await getPosts();
+  //   console.log(res);
+  // }
+
+  // useEffect(
+  //   () => {
+  //     getPostsData();
+  //   }
+  //   , [])
+
+  // console.log(getPosts());
   return (
     <Router>
       <NavBar />
