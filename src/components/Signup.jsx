@@ -45,16 +45,7 @@ export const Signup = () => {
             v == false ? setUsername(value) : setError('Username has been taken!');
         }
     };
-
-    //Password Validation
-    const validatePassword = (value) => {
-        //len min 6, at least 1upercase, 1 lower case, 1digit
-        if (value.length < 6)
-            return 'Pass length must be at least 6';
-
-        return '';
-
-    }
+    
 
     //email is valid 
     const isValidEmail = (email) => {
@@ -70,6 +61,13 @@ export const Signup = () => {
         if (isValidEmail(value) == false) setMailError('Invalid Mail.')
 
     }
+    //Password Validation
+    const validatePassword = (password) => {
+        const passwordRegex = /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[@$!%*?&])[A-Za-z\d@$!%*?&]{6,64}$/;
+        if (!passwordRegex.test(password))
+            return 'Password must be 6-64 characters long, contain at least one uppercase letter, one lowercase letter, one digit, and one special character.';
+
+    }
     //handlePassword
     const handlePassword = (e) => {
         const value = e.target.value;
@@ -83,7 +81,7 @@ export const Signup = () => {
     const handleCPassword = (e) => {
         const value = e.target.value;
         setCPassword(value);
-        if (password !== cPassword) setCPassError('Passwords don not match.');
+        if (password !== value) setCPassError('Passwords don not match.');
     }
 
     const handleSubmit = async (e) => {
@@ -142,7 +140,8 @@ export const Signup = () => {
                 <input
                     type="password"
                     placeholder="Confirm Password*"
-                    onChange={handleCPassword}
+                    onBlur={handleCPassword}
+                    onFocus={()=>setCPassError('')}
                     required
                 />
                 {cPassError && <p style={{ color: 'red' }}>{cPassError}</p>}

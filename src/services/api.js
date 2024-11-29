@@ -13,12 +13,12 @@ export const getPosts = () =>{
 export const checkUsernameAvailability = async (value) => {
     const response = await api.get(`/signup/checkUserName?userName=${value}`);
     console.log(response);
-    // console.log(response.data);
+    console.log(response.data);
     return response.data;
   };
 
 export const signupSubmit = async(formData) =>{
     const response = await api.post(`/signup`,formData);
-    console.log(response.data);
+    console.log("response: ", response);
     return response.data;
 }

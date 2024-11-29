@@ -6,7 +6,8 @@ export const QuestionBank = () => {
     console.log(questionBankData[0].questions);
     return (
         <section id='questionBank' className='questionBank container'>
-            <div>Question Bank </div>
+            <div style={{textAlign:"center",fontWeight:"bold",fontSize:25}}>Question Bank </div>
+            <Link to={'/questionbank/createquestion'} ><button id='btnAddQuestion'>+ Add new Question Set</button></Link>
             <div className='questioncard-grid'>
                 {questionBankData.map((data, index) => (
                     <div className='menu-card' key={index}>

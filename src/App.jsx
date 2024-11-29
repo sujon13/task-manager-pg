@@ -1,6 +1,5 @@
 import { useState } from 'react'
-import './App.css'
-import { Signup } from './components/signup'
+import './App.css';
 import { Login } from './components/Login'
 import { BrowserRouter as Router, Routes, Route, Link } from 'react-router-dom';
 import { Home } from './components/Home';
@@ -10,6 +9,8 @@ import { EnglishTutor } from './components/EnglishTutor';
 import { NavBar } from './components/NavBar';
 import { QuestionCard } from './components/QuestionBank/QuestionCard';
 import { useEffect } from 'react';
+import {CreateExamQuestions} from './components/QuestionBank/CreateExamQuestions';
+import { Signup } from './components/Signup';
 
 
 export const App = () => {
@@ -32,10 +33,10 @@ export const App = () => {
         <Route path='/' element={<Home />} />
         <Route path='/questionbank' element={<QuestionBank/>} />
         <Route path='/questionbank/:questionId' element={<QuestionCard />} />
+        <Route path='/questionbank/createquestion' element ={<CreateExamQuestions/>} />
         <Route path='/liveexam' element={<LiveExam />} />
         <Route path='/englishtutor' element={<EnglishTutor />} />
         <Route path='/signup' element={<Signup />} />
-        <Route path='/login' element={<Login />} />
       </Routes>
     </Router>
   )
