@@ -1,0 +1,12 @@
+.error-style {
+    color: red;
+    font-size: 14px;
+    margin: 0;
+    margin-top: -6px !important;
+}
+
+.success-style {
+    color: green;
+    font-size: 14px;
+    margin: 0;
+}
