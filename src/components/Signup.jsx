@@ -1,10 +1,13 @@
 import googleIcon from '../assets/google128.png';
-import { get, post } from '../services/api'
+import { get, post } from '../services/api';
 import { useState } from 'react';
-import { Link } from 'react-router-dom';
+import { Link, useNavigate } from 'react-router-dom';
 import './css/Signup.css';
+import './css/Social.css';
 
 export const Signup = () => {
+    const navigate = useNavigate();
+
     const [userName, setUserName] = useState('');
     //const [name, setName] = useState('');
     const [mail, setMail] = useState('');
@@ -110,6 +113,10 @@ export const Signup = () => {
         return userNameError !== '' || mailError !== '' || passError !== '' || cPassError !== '';
     }
 
+    const goToLogin = () => {
+        navigate('/login');
+    }
+
     const handleSubmit = async (e) => {
         e.preventDefault();
         setErrorMessage('');
@@ -126,6 +133,7 @@ export const Signup = () => {
         const { status, data } = await post('/signup', signupRequest);
         if (status >= 200 && status < 300) {
             setResponseMessage("Signup successful!"); // Success message
+            goToLogin();
         } else {
             if (data === null || data === undefined) {
                 setErrorMessage("An error occurred");
@@ -140,6 +148,21 @@ export const Signup = () => {
                 setCPassError(data.signupRequest);
         }  
 
+    }
+
+    const handleGoogleSignin = async () => {
+        console.log("Google Signin Started");
+        
+        const { status, data, headers } = await get('/oauth2/google/authenticate', undefined, true);
+        if (status >= 200 && status < 300) {
+            console.log("Will redirect to google auth page");
+            window.location.href = data;
+        } else if (status === 302 && headers.location) {
+            // Redirect the browser to the location provided by the backend
+            window.location.href = headers.location;
+        } else {
+            console.log("Google Signin Failed");
+        }
     }
 
     return (
@@ -190,6 +213,19 @@ export const Signup = () => {
                 {errorMessage && <p className="error-style" style={{ marginTop: '0px' }}>{errorMessage}</p>}
                 {/* <input type="button" id="signup" value="Sign Up"  /> */}
             </form>
-            <div style={{ paddingTop: "25px" }}>Already have an account? <Link to="/login" style={{ color: "green" }}>Log In</Link></div>
+            <div style={{ paddingTop: "15px" }}>Already have an account? <Link to="/login" style={{ color: "green" }}>Log In</Link></div>
+            <div className="social-login">
+                <div className="divider">
+                    <span>OR</span>
+                </div>
+                <button type="button" className="google-login-btn" onClick={handleGoogleSignin}>
+                    <img 
+                        src={googleIcon} 
+                        alt="Google Icon" 
+                        className="google-icon"
+                    />
+                    Continue with Google
+                </button>
+            </div>
         </div>)
 }

@@ -49,39 +49,53 @@ const handleError = error => {
     }
 }
 
-export const get = async (path, paramMap) => {
+export const get = async (path, paramMap, withCredentials = true) => {
     try {
         const url = getUrl(path, paramMap);
         console.info('get URL: ', url);
 
-        const response = await api.get(url);
+        const response = await api.get(url, { withCredentials: withCredentials });
         console.log('Status: ', response.status);
 
         if (response.data !== null && response.data !== undefined) {
             console.info('response data: ', response.data);
-            return { status: response.status, data: response.data };
+            return { 
+                status: response.status, 
+                data: response.data, 
+                headers: response.headers
+            };
         } else {
             console.warn('No data in response');
-            return { status: response.status };
+            return { 
+                status: response.status, 
+                headers: response.headers
+            };
         }
     } catch (error) {
         return handleError(error);
     }
 }
 
-export const post = async (path, body) => {
+export const post = async (path, body, withCredentials = true) => {
     try {
         const url = getUrl(path);
         console.info('post URL: ', url);
-        const response = await api.post(url, body);
+        const response = await api.post(url, body, { withCredentials: withCredentials });
         console.log('Status: ', response.status);
 
         if (response.data !== null && response.data !== undefined) {
             console.info('response data: ', response.data);
-            return { status: response.status, data: response.data };
+            return { 
+                status: response.status, 
+                data: response.data, 
+                headers: response.headers
+            };
         } else {
             console.warn('No data in response');
-            return { status: response.status };
+            return { 
+                status: response.status, 
+                headers: response.headers
+            };
         }
     } catch (error) {
         return handleError(error);
