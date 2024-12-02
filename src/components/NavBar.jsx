@@ -3,9 +3,10 @@ import { Link } from "react-router-dom";
 import './css/NavBar.css';
 import useTheme from "../hooks/useTheme";
 
-export const NavBar = () => {
+export const NavBar = ({ isLoggedIn, logout }) => {
     const [theme, toggleTheme] = useTheme();
     const [isMobile, setIsMobile] = useState(false);
+
     return (
         <div className={`navbar ${theme}`}>
             <div className="navbar-logo"> <Link to="/">
@@ -23,8 +24,10 @@ export const NavBar = () => {
                 <li onClick={toggleTheme} className="theme-toggle">
                     {theme === 'light' ?  '🌜': '🌞'}
                 </li>
-                <li className="login"><Link to="/login">LogIn</Link></li>
-                <li><Link to="/signup">SignUp</Link></li>
+                {/* <li className="login"><Link to="/login">LogIn</Link></li>
+                <li><Link to="/signup">SignUp</Link></li> */}
+                {isLoggedIn && <li onClick={logout}> Logout </li>}
+                {!isLoggedIn && <li><Link to="/login">Login</Link> or <Link to="/signup">SignUp</Link></li>}
             </ul>
             <button className="mobile-menu-icon" onClick={() => setIsMobile(!isMobile)}>
             ☰

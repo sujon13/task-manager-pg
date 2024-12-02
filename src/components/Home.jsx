@@ -1,11 +1,12 @@
 import React, { useEffect, useState } from "react";
 import { get } from '../services/api';
 
-export const Home = () => {
+export const Home = ({ login }) => {
     const fetchUserInfo = async () => {
         const { status, data } = await get("/users/me");
         if (status === 200 && data) {
-            console.log("User Info: ", data);
+            localStorage.setItem("userInfo", JSON.stringify(data));
+            login();
         }
     }
 

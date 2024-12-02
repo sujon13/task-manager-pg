@@ -48,7 +48,7 @@
 }
 
 li {
-  width: 150px;
+  width: 120px;
   height: 60px;
   line-height: 60px;
   text-align: center;
@@ -58,9 +58,9 @@ li {
   width: 150px;
 }
 
-.navbar-links-two>li {
-  width: 60px;
-}
+/* .navbar-links-two>li {
+  width: 90px;
+} */
 
 .navbar a {
   text-decoration: none;

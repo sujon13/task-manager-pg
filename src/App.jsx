@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 //import './App.css';
 import 'bootstrap/dist/css/bootstrap.min.css';
 import './App.css';
@@ -13,25 +13,37 @@ import { QuestionCard } from './components/QuestionBank/QuestionCard';
 import {CreateExamQuestions} from './components/QuestionBank/CreateExamQuestions';
 import { Signup } from './components/Signup';
 import { CreateUserName } from './components/CreateUserName';
+import { post } from './services/api';
+
 
 export const App = () => {
-  // const getPostsData = async () => {
-  //   const res = await getPosts();
-  //   console.log(res);
-  // }
+  const [isLoggedIn, setIsLoggedIn] = useState(false);
 
-  // useEffect(
-  //   () => {
-  //     getPostsData();
-  //   }
-  //   , [])
+  useEffect(() => {
+    const userInfo = JSON.parse(localStorage.getItem("userInfo"));
+    console.log("User Info: ", userInfo);
+    if (userInfo) {
+        setIsLoggedIn(true);
+    }
+  }, []);
 
-  // console.log(getPosts());
+  const handleLogin = () => {
+    setIsLoggedIn(true);
+  }
+
+  const handleLogout = async () => {
+    const { status } = await post("/logout");
+    if (status === 200) {
+      setIsLoggedIn(false);
+      localStorage.removeItem("userInfo");
+    }
+  }
+
   return (
     <Router>
-      <NavBar />
+      <NavBar isLoggedIn={isLoggedIn} logout={handleLogout} />
       <Routes>
-        <Route path='/' element={<Home />} />
+        <Route path='/' element={<Home login={handleLogin}/>} />
         <Route path='/questionbank' element={<QuestionBank/>} />
         <Route path='/questionbank/:questionId' element={<QuestionCard />} />
         <Route path='/questionbank/createquestion' element ={<CreateExamQuestions/>} />
