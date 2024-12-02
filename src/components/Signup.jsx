@@ -153,12 +153,13 @@ export const Signup = () => {
     const handleGoogleSignin = async () => {
         console.log("Google Signin Started");
         
-        const { status, data, headers } = await get('/oauth2/google/authenticate', undefined, true);
+        const { status, data, headers } = await get('/oauth2/google/authenticate');
         if (status >= 200 && status < 300) {
             console.log("Will redirect to google auth page");
             window.location.href = data;
         } else if (status === 302 && headers.location) {
             // Redirect the browser to the location provided by the backend
+            console.log("Will redirect to: ", headers.location);
             window.location.href = headers.location;
         } else {
             console.log("Google Signin Failed");
@@ -213,7 +214,7 @@ export const Signup = () => {
                 {errorMessage && <p className="error-style" style={{ marginTop: '0px' }}>{errorMessage}</p>}
                 {/* <input type="button" id="signup" value="Sign Up"  /> */}
             </form>
-            <div style={{ paddingTop: "15px" }}>Already have an account? <Link to="/login" style={{ color: "green" }}>Log In</Link></div>
+            <div style={{ paddingTop: "10px" }}>Already have an account? <Link to="/login" style={{ color: "green" }}>Log In</Link></div>
             <div className="social-login">
                 <div className="divider">
                     <span>OR</span>
