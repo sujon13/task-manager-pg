@@ -43,7 +43,7 @@ export const App = () => {
     <Router>
       <NavBar isLoggedIn={isLoggedIn} logout={handleLogout} />
       <Routes>
-        <Route path='/' element={<Home login={handleLogin}/>} />
+        <Route path='/' element={<Home isLoggedIn={isLoggedIn} login={handleLogin}/>} />
         <Route path='/questionbank' element={<QuestionBank/>} />
         <Route path='/questionbank/:questionId' element={<QuestionCard />} />
         <Route path='/questionbank/createquestion' element ={<CreateExamQuestions/>} />

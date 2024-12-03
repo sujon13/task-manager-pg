@@ -18,6 +18,11 @@ export const Login = () => {
     }
 
     const handleSubmit = async () => {
+        if (!userName || !password) {
+            setError('Please enter a username and password');
+            return;
+        }
+
         const authRequest = {
             userName,
             password
@@ -61,7 +66,7 @@ export const Login = () => {
                     {error && <p className="error-style">{error}</p>}
                 </Form.Group>
                 <Button 
-                    variant="outline-primary" 
+                    variant="success" 
                     type="button" 
                     onClick={handleSubmit}
                     className="w-100 mt-3"
