@@ -5,6 +5,7 @@ import './css/Signup.css';
 import './css/Social.css';
 import SocialLogin from './SocialLogin';
 import LoginLink from './LoginLink';
+import { getUrl } from '../services/util';
 
 export const Signup = () => {
     const navigate = useNavigate();
@@ -114,8 +115,9 @@ export const Signup = () => {
         return userNameError !== '' || mailError !== '' || passError !== '' || cPassError !== '';
     }
 
-    const goToLogin = () => {
-        navigate('/login');
+    const goToOtpVerification = (paramMap) => {
+        const url = getUrl('/verify-otp', paramMap);
+        navigate(url);
     }
 
     const handleSubmit = async (e) => {
@@ -134,7 +136,7 @@ export const Signup = () => {
         const { status, data } = await post('/signup', signupRequest);
         if (status >= 200 && status < 300) {
             setResponseMessage("Signup successful!"); // Success message
-            goToLogin();
+            goToOtpVerification(data);
         } else {
             if (data === null || data === undefined) {
                 setErrorMessage("An error occurred");

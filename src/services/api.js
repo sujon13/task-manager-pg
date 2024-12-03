@@ -1,16 +1,9 @@
 import axios from 'axios';
+import { getUrl } from './util';
 
 const api = axios.create({
     baseURL: "http://localhost:8080/api/v1",
 });
-
-const getUrl = (path, paramMap) => {
-    let url = path;
-    if (paramMap) {
-        url += '?' + Object.entries(paramMap).map(([key, value]) => `${key}=${value}`).join('&');
-    }
-    return url;
-}
 
 const handleError = error => {
     if (error.response) {
@@ -80,6 +73,7 @@ export const post = async (path, body, withCredentials = true) => {
     try {
         const url = getUrl(path);
         console.info('post URL: ', url);
+        console.info('post body: ', body);
         const response = await api.post(url, body, { withCredentials: withCredentials });
         console.log('Status: ', response.status);
 

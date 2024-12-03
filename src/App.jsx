@@ -15,7 +15,7 @@ import { Signup } from './components/Signup';
 import { CreateUserName } from './components/CreateUserName';
 import { get, post } from './services/api';
 import PublicRoute from './components/PublicRoute';
-
+import OtpVerification from './components/Otp';
 
 export const App = () => {
   const [isLoggedIn, setIsLoggedIn] = useState(false);
@@ -68,6 +68,14 @@ export const App = () => {
             element={
                 <PublicRoute isLoggedIn={isLoggedIn}>
                     <Signup />
+                </PublicRoute>
+            }
+        />
+        <Route
+            path="/verify-otp"
+            element={
+                <PublicRoute isLoggedIn={isLoggedIn}>
+                    <OtpVerification />
                 </PublicRoute>
             }
         />
