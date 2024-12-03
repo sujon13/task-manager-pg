@@ -2,6 +2,7 @@ import { useState } from "react";
 import { Link } from "react-router-dom";
 import './css/NavBar.css';
 import useTheme from "../hooks/useTheme";
+import PropTypes from 'prop-types';
 
 export const NavBar = ({ isLoggedIn, logout }) => {
     const [theme, toggleTheme] = useTheme();
@@ -35,3 +36,8 @@ export const NavBar = ({ isLoggedIn, logout }) => {
         </div>
     )
 }
+
+NavBar.propTypes = {
+    isLoggedIn: PropTypes.bool.isRequired,
+    logout: PropTypes.func.isRequired,
+};

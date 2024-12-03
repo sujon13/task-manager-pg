@@ -1,3 +1,4 @@
+import PropTypes from 'prop-types';
 import { post } from '../services/api';
 import { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
@@ -6,7 +7,7 @@ import Button from 'react-bootstrap/Button';
 import './css/Signup.css';
 import './css/Social.css';
 
-export const Login = () => {
+export const Login = ({ login }) => {
     const navigate = useNavigate();
 
     const [userName, setUserName] = useState('');
@@ -31,6 +32,7 @@ export const Login = () => {
         const { status, data } = await post('/authenticate', authRequest);
         if (status === 200) {
             console.log(`User ${userName} logged in successfully`);
+            login();
             goToHome();
         } else if (status === 400) {
             setError(data);
@@ -76,4 +78,9 @@ export const Login = () => {
             </Form>
         </div>
     )
+    
 }
+
+Login.propTypes = {
+    login: PropTypes.func.isRequired,
+};

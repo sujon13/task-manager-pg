@@ -9,6 +9,7 @@ import './css/Social.css';
 export const CreateUserName = () => {
     const location = useLocation();
     const navigate = useNavigate();
+    
     const [userName, setUserName] = useState('');
 
     const [userNameError, setUserNameError] = useState('');

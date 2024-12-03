@@ -1,18 +1,6 @@
-import { useEffect } from "react";
-import { get } from '../services/api';
+import PropTypes from 'prop-types';
 
-export const Home = ({ isLoggedIn, login }) => {
-    const fetchUserInfo = async () => {
-        const { status, data } = await get("/users/me");
-        if (status === 200 && data) {
-            localStorage.setItem("userInfo", JSON.stringify(data));
-            login();
-        }
-    }
-
-    useEffect(() => {
-        fetchUserInfo();
-    }, []); // Empty dependency array ensures this runs only once when the component mounts
+export const Home = ({ isLoggedIn }) => {
 
     return (
         <div className='container'>
@@ -26,3 +14,7 @@ export const Home = ({ isLoggedIn, login }) => {
         </div>
     )
 }
+
+Home.propTypes = {
+    isLoggedIn: PropTypes.bool.isRequired,
+};
