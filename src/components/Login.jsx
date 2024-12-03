@@ -6,6 +6,8 @@ import Form from 'react-bootstrap/Form';
 import Button from 'react-bootstrap/Button';
 import './css/Signup.css';
 import './css/Social.css';
+import SocialLogin from './SocialLogin';
+import SignupLink from './SignupLink';
 
 export const Login = ({ login }) => {
     const navigate = useNavigate();
@@ -75,6 +77,8 @@ export const Login = ({ login }) => {
                 >
                     Login
                 </Button>
+                <SignupLink />
+                <SocialLogin />
             </Form>
         </div>
     )

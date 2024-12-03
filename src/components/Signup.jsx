@@ -1,9 +1,10 @@
-import googleIcon from '../assets/google128.png';
 import { get, post } from '../services/api';
 import { useState } from 'react';
-import { Link, useNavigate } from 'react-router-dom';
+import { useNavigate } from 'react-router-dom';
 import './css/Signup.css';
 import './css/Social.css';
+import SocialLogin from './SocialLogin';
+import LoginLink from './LoginLink';
 
 export const Signup = () => {
     const navigate = useNavigate();
@@ -150,22 +151,6 @@ export const Signup = () => {
 
     }
 
-    const handleGoogleSignin = async () => {
-        console.log("Google Signin Started");
-        
-        const { status, data, headers } = await get('/oauth2/google/authenticate');
-        if (status >= 200 && status < 300) {
-            console.log("Will redirect to google auth page");
-            window.location.href = data;
-        } else if (status === 302 && headers.location) {
-            // Redirect the browser to the location provided by the backend
-            console.log("Will redirect to: ", headers.location);
-            window.location.href = headers.location;
-        } else {
-            console.log("Google Signin Failed");
-        }
-    }
-
     return (
         <div className="form">
             <h1>Sign Up</h1>
@@ -214,19 +199,7 @@ export const Signup = () => {
                 {errorMessage && <p className="error-style" style={{ marginTop: '0px' }}>{errorMessage}</p>}
                 {/* <input type="button" id="signup" value="Sign Up"  /> */}
             </form>
-            <div style={{ paddingTop: "10px" }}>Already have an account? <Link to="/login" style={{ color: "green" }}>Log In</Link></div>
-            <div className="social-login">
-                <div className="divider">
-                    <span>OR</span>
-                </div>
-                <button type="button" className="google-login-btn" onClick={handleGoogleSignin}>
-                    <img 
-                        src={googleIcon} 
-                        alt="Google Icon" 
-                        className="google-icon"
-                    />
-                    Continue with Google
-                </button>
-            </div>
+            <LoginLink />
+            <SocialLogin />
         </div>)
 }
