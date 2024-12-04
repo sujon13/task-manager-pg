@@ -1,5 +1,5 @@
 import PropTypes from 'prop-types';
-import { post } from '../services/api';
+import { post, auth } from '../services/api';
 import { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import Form from 'react-bootstrap/Form';
@@ -31,7 +31,7 @@ export const Login = ({ login }) => {
             password
         };
 
-        const { status, data } = await post('/authenticate', authRequest);
+        const { status, data } = await post(auth, '/authenticate', authRequest);
         if (status === 200) {
             console.log(`User ${userName} logged in successfully`);
             login();

@@ -1,4 +1,4 @@
-import { post } from '../services/api';
+import { post, auth } from '../services/api';
 import { useState } from 'react';
 import { useLocation, useNavigate } from 'react-router-dom';
 import Form from 'react-bootstrap/Form';
@@ -45,7 +45,7 @@ export const CreateUserName = () => {
             state
         };
 
-        const { status, data } = await post('/oauth2/register', userNameRequest);
+        const { status, data } = await post(auth, '/oauth2/register', userNameRequest);
         if (status === 200) {
             console.log(`User Name ${userName} registered successfully`);
             goToHome();

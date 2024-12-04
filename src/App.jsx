@@ -13,7 +13,7 @@ import { QuestionCard } from './components/QuestionBank/QuestionCard';
 import {CreateExamQuestions} from './components/QuestionBank/CreateExamQuestions';
 import { Signup } from './components/Signup';
 import { CreateUserName } from './components/CreateUserName';
-import { get, post } from './services/api';
+import { get, post, auth } from './services/api';
 import PublicRoute from './components/PublicRoute';
 import OtpVerification from './components/Otp';
 
@@ -27,7 +27,7 @@ export const App = () => {
 
   const fetchUserInfo = async () => {
     //setIsLoading(true);
-    const { status, data } = await get("/users/me");
+    const { status, data } = await get(auth, "/users/me");
     if (status === 200 && data) {
         localStorage.setItem("userInfo", JSON.stringify(data));
         setIsLoggedIn(true);
@@ -47,7 +47,7 @@ export const App = () => {
   }
 
   const handleLogout = async () => {
-    const { status } = await post("/logout");
+    const { status } = await post(auth, "/logout");
     if (status === 200) {
       logout();
     }

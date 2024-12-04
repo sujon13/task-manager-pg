@@ -1,4 +1,4 @@
-import { get, post } from '../services/api';
+import { get, post, auth } from '../services/api';
 import { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import './css/Signup.css';
@@ -54,7 +54,7 @@ export const Signup = () => {
 
         if (validationError === '') {
             const paramMap = { userName: userName };
-            const { status, data } = await get('/signup/checkUserName', paramMap);
+            const { status, data } = await get(auth, '/signup/checkUserName', paramMap);
             if (status === 200 && data) {
                 setUserNameError('UserName has been taken!');
             }
@@ -133,7 +133,7 @@ export const Signup = () => {
             "reTypeRawPassword": cPassword
         }
 
-        const { status, data } = await post('/signup', signupRequest);
+        const { status, data } = await post(auth, '/signup', signupRequest);
         if (status >= 200 && status < 300) {
             setResponseMessage("Signup successful!"); // Success message
             goToOtpVerification(data);

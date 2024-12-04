@@ -1,8 +1,12 @@
 import axios from 'axios';
 import { getUrl } from './util';
 
-const api = axios.create({
+export const auth = axios.create({
     baseURL: "http://localhost:8080/api/v1",
+});
+
+export const qa = axios.create({
+    baseURL: "http://localhost:8085/api/v1",
 });
 
 const handleError = error => {
@@ -42,12 +46,12 @@ const handleError = error => {
     }
 }
 
-export const get = async (path, paramMap, withCredentials = true) => {
+export const get = async (service, path, paramMap, withCredentials = true) => {
     try {
         const url = getUrl(path, paramMap);
         console.info('get URL: ', url);
 
-        const response = await api.get(url, { withCredentials: withCredentials });
+        const response = await service.get(url, { withCredentials: withCredentials });
         console.log('Status: ', response.status);
 
         if (response.data !== null && response.data !== undefined) {
@@ -69,12 +73,12 @@ export const get = async (path, paramMap, withCredentials = true) => {
     }
 }
 
-export const post = async (path, body, withCredentials = true) => {
+export const post = async (service, path, body, withCredentials = true) => {
     try {
         const url = getUrl(path);
         console.info('post URL: ', url);
         console.info('post body: ', body);
-        const response = await api.post(url, body, { withCredentials: withCredentials });
+        const response = await service.post(url, body, { withCredentials: withCredentials });
         console.log('Status: ', response.status);
 
         if (response.data !== null && response.data !== undefined) {
@@ -95,11 +99,3 @@ export const post = async (path, body, withCredentials = true) => {
         return handleError(error);
     }
 }
-
-export const getPosts = () => {
-    return post('/posts');
-}
-
-export const checkUserNameAvailability = async (value) => {
-    return get('/signup/checkUserName', { userName: value });
-};

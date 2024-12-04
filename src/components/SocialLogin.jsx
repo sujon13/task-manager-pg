@@ -1,5 +1,5 @@
 import googleIcon from '../assets/google128.png';
-import { get } from '../services/api';
+import { get, auth } from '../services/api';
 import './css/Signup.css';
 import './css/Social.css';
 
@@ -7,7 +7,7 @@ const SocialLogin = () => {
     const handleGoogleSignin = async () => {
         console.log("Google Signin Started");
         
-        const { status, data, headers } = await get('/oauth2/google/authenticate');
+        const { status, data, headers } = await get(auth, '/oauth2/google/authenticate');
         if (status >= 200 && status < 300) {
             console.log("Will redirect to google auth page");
             window.location.href = data;

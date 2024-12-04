@@ -1,6 +1,20 @@
 import PropTypes from 'prop-types';
+import { get, qa } from '../services/api';
 
 export const Home = ({ isLoggedIn }) => {
+    const test = async () => {
+        try {
+            const response = await get(qa, '/posts', { withCredentials: true });
+            console.log('status: ' + response.status);
+            console.log('posts: ' + response.data);
+        } catch (error) {
+            console.error('Error fetching posts:', error);
+        }
+    }
+
+    if (isLoggedIn) {
+        test();
+    }
 
     return (
         <div className='container'>

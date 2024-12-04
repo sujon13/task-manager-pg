@@ -1,4 +1,4 @@
-import { post } from '../services/api';
+import { post, auth } from '../services/api';
 import { useState, useEffect } from 'react';
 import { useNavigate, useLocation } from 'react-router-dom';
 import Form from 'react-bootstrap/Form';
@@ -28,7 +28,7 @@ const OtpVerification = () => {
             userId,
             email
         }
-        const { status, data } = await post('/signup/send-otp', otpRequest);
+        const { status, data } = await post(auth, '/signup/send-otp', otpRequest);
         if (status === 200) {
             console.log(`OTP sent to ${email}`);
             setOtpId(data.id);
@@ -75,7 +75,7 @@ const OtpVerification = () => {
             otp
         };
 
-        const { status, data } = await post('/signup/verify-otp', otpRequest);
+        const { status, data } = await post(auth, '/signup/verify-otp', otpRequest);
         if (status === 200) {
             console.log(`OTP verified for user ${userName}`);
             goToLogin();
