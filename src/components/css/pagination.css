@@ -1,0 +1,15 @@
+.custom-pagination .page-item .page-link {
+
+    font-size: 0.8rem; /* Adjust font size */
+    padding: 0.25rem 0.5rem; /* Adjust padding */
+    margin: 0 0.1rem; /* Adjust spacing */
+    border-radius: 0.2rem; /* Adjust border radius */
+}
+
+.custom-pagination li {
+    width: 60px;
+    height: 30px;
+    line-height: 30px;
+    text-align: center;
+}
+  
