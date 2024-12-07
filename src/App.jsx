@@ -23,8 +23,14 @@ export const App = () => {
   //const [isLoading, setIsLoading] = useState(false);
 
   useEffect(() => {
+    // const userInfo = localStorage.getItem("userInfo");  
+    // if (userInfo) {
+    //   setIsLoggedIn(true);
+    // } else {
+    //   fetchUserInfo();
+    // }
     fetchUserInfo();
-  },[]);
+  }, []);
 
   const fetchUserInfo = async () => {
     //setIsLoading(true);

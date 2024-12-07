@@ -1,9 +1,10 @@
 import { useState } from 'react';
-import { Table, Pagination } from 'react-bootstrap';
+import { Table, Pagination, Button } from 'react-bootstrap';
+import { FaEdit, FaTrash } from 'react-icons/fa';
 import PropTypes from 'prop-types';
 import '../../components/css/pagination.css';
 
-const PaginatedTable = ({ data, columns, pageChange }) => {
+const PaginatedTable = ({ data, columns, pageChange, handleEdit, handleDelete }) => {
   const [ currentPage ] = useState(data.number);
   const totalPages = data.totalPages;
   const itemsPerPage = data.size;
@@ -29,6 +30,30 @@ const PaginatedTable = ({ data, columns, pageChange }) => {
     );
   }
 
+  const anyActionColumn = columns.some(column => column.dataField === 'action');
+
+  const actionCol = (entry) => {
+    return (
+      <td>
+        <Button 
+          variant="warning" 
+          size="sm" 
+          className="me-2" 
+          onClick={() => handleEdit(entry.id)}
+        >
+          <FaEdit />
+        </Button>
+        <Button 
+          variant="danger" 
+          size="sm" 
+          onClick={() => handleDelete(entry.id)}
+        >
+          <FaTrash />
+        </Button>
+      </td>
+    );
+  }
+
   return (
     <>
       <Table striped bordered hover style={{ textAlign: 'center' }}>
@@ -38,6 +63,7 @@ const PaginatedTable = ({ data, columns, pageChange }) => {
             { columns.map((column, index) => (
               <th key={index}>{column.text}</th>
             ))}
+            { anyActionColumn && <th> Action </th> }
           </tr>
         </thead>
         <tbody>
@@ -48,6 +74,7 @@ const PaginatedTable = ({ data, columns, pageChange }) => {
               { columns.map((column, index) => (
                 <td key={index}>{item[column.dataField]}</td>
               ))}
+              { anyActionColumn && actionCol(item) }
             </tr>
           ))}
         </tbody>
@@ -75,6 +102,8 @@ PaginatedTable.propTypes = {
   data: PropTypes.object.isRequired,
   columns: PropTypes.array.isRequired,
   pageChange: PropTypes.func.isRequired,
+  handleEdit: PropTypes.func,
+  handleDelete: PropTypes.func,
 };
 
 export default PaginatedTable;

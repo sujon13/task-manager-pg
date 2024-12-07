@@ -13,7 +13,7 @@ export const Home = ({ isLoggedIn }) => {
     }
 
     if (isLoggedIn) {
-        test();
+        //test();
     }
 
     return (

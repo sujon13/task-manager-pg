@@ -99,3 +99,30 @@ export const post = async (service, path, body, withCredentials = true) => {
         return handleError(error);
     }
 }
+
+export const deleteEntry = async (service, path, id, withCredentials = true) => {
+    try {
+        const url = `${path}/${id}`;
+        console.info('delete URL: ', url);
+
+        const response = await service.delete(url, { withCredentials: withCredentials });
+        console.log('Status: ', response.status);
+
+        if (response.data !== null && response.data !== undefined) {
+            console.info('response data: ', response.data);
+            return { 
+                status: response.status, 
+                data: response.data, 
+                headers: response.headers
+            };
+        } else {
+            console.warn('No data in response');
+            return { 
+                status: response.status, 
+                headers: response.headers
+            };
+        }
+    } catch (error) {
+        return handleError(error);
+    }
+}
