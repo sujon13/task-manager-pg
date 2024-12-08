@@ -4,7 +4,7 @@ import { FaEdit, FaTrash } from 'react-icons/fa';
 import PropTypes from 'prop-types';
 import '../../components/css/pagination.css';
 
-const PaginatedTable = ({ data, columns, pageChange, handleEdit, handleDelete }) => {
+const PaginatedTable = ({ data, columns, anyActionColumn, pageChange, handleEdit, handleDelete }) => {
   const [ currentPage ] = useState(data.number);
   const totalPages = data.totalPages;
   const itemsPerPage = data.size;
@@ -29,8 +29,6 @@ const PaginatedTable = ({ data, columns, pageChange, handleEdit, handleDelete })
       </Pagination.Item>,
     );
   }
-
-  const anyActionColumn = columns.some(column => column.dataField === 'action');
 
   const actionCol = (entry) => {
     return (
@@ -101,6 +99,7 @@ const PaginatedTable = ({ data, columns, pageChange, handleEdit, handleDelete })
 PaginatedTable.propTypes = {
   data: PropTypes.object.isRequired,
   columns: PropTypes.array.isRequired,
+  anyActionColumn: PropTypes.bool,
   pageChange: PropTypes.func.isRequired,
   handleEdit: PropTypes.func,
   handleDelete: PropTypes.func,

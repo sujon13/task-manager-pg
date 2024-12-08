@@ -100,6 +100,33 @@ export const post = async (service, path, body, withCredentials = true) => {
     }
 }
 
+export const put = async (service, path, body, withCredentials = true) => {
+    try {
+        const url = `${path}/${body.id}`;
+        console.info('put URL: ', url);
+        console.info('put body: ', body);
+        const response = await service.put(url, body, { withCredentials: withCredentials });
+        console.log('Status: ', response.status);
+
+        if (response.data !== null && response.data !== undefined) {
+            console.info('response data: ', response.data);
+            return { 
+                status: response.status, 
+                data: response.data, 
+                headers: response.headers
+            };
+        } else {
+            console.warn('No data in response');
+            return { 
+                status: response.status, 
+                headers: response.headers
+            };
+        }
+    } catch (error) {
+        return handleError(error);
+    }
+}
+
 export const deleteEntry = async (service, path, id, withCredentials = true) => {
     try {
         const url = `${path}/${id}`;

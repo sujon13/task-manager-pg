@@ -1,8 +1,8 @@
 import { useState, useEffect } from 'react';
-import { Button, Form, InputGroup } from 'react-bootstrap';
+import { Button, Form, InputGroup, Row, Col } from 'react-bootstrap';
 import { FaPlus } from 'react-icons/fa';
 import PaginatedTable from '../util/PaginatedTable';
-import { get, post, deleteEntry, qa } from '../../services/api';
+import { get, post, put, deleteEntry, qa } from '../../services/api';
 import PostModal from './PostModal';
 import DeleteConfirmation from '../util/DeleteConfirmation';
 import Spinner from 'react-bootstrap/Spinner';
@@ -17,6 +17,9 @@ const PostList = () => {
     const [ showDeleteConfirmation, setShowDeleteConfirmation ] = useState(false);
     const [ isCreating, setIsCreating ] = useState(true);
     const [ id, setId ] = useState(null);
+    const [ engName, setEngName ] = useState('');
+    const [ bngName, setBngName ] = useState('');
+    const [ grade, setGrade ] = useState('');
 
   // Mock data
     const content = [
@@ -25,11 +28,16 @@ const PostList = () => {
         { id: 3, engName: 'Michael Lee', bngName: 'মাইকেল লি', grade: 9 },
     ];
 
-    const fetchPosts = async (page, size) => {
-        setIsLoading(true);
+    const fetchPosts = async (page, size, showLoading = true) => {
+        if (showLoading) {
+            setIsLoading(true);
+        }
         const params = {
             page,
             size,
+            engName,
+            bngName,
+            grade,
         }
         const { status, data } = await get(qa, '/posts', params);
         if (status === 200) {
@@ -37,7 +45,9 @@ const PostList = () => {
             setCurrentPage(data.number);
             setSize(data.size);
         }
-        setIsLoading(false);
+        if (showLoading) {
+            setIsLoading(false);
+        }
     }
 
     useEffect(() => {
@@ -50,7 +60,6 @@ const PostList = () => {
         { text: 'English Name', dataField: 'engName' },
         { text: 'Bangla Name', dataField: 'bngName' },
         { text: 'Grade', dataField: 'grade' },
-        { text: 'Action', dataField: 'action' },
     ];
 
     const sampleData = {
@@ -61,13 +70,21 @@ const PostList = () => {
         totalPages: Math.ceil(content.length / size),
     };
 
+    const newSampleData = {
+        content: content,
+        page: {
+            number: currentPage,
+            size: size,
+            totalElements: content.length,
+            totalPages: Math.ceil(content.length / size),
+        }
+    };
+
   
   // Handlers
     const handlePageChange = page => setCurrentPage(page);
 
     const findPostById = (id) => {
-        const post = data.content.find(p => p.id === id);
-        console.log('post', post);
         return data.content.find(p => p.id === id);
     }
 
@@ -84,17 +101,17 @@ const PostList = () => {
     };
 
     const handleOk = () => {
+        fetchPosts(currentPage, size, false);
         setTimeout(() => {
             setIsLoading(false);
-            reloadPage();
-        }, 1000);
+        }, 500);
     }
 
     const handleError = (error) => {
         setTimeout(() => {
             setIsLoading(false);
             console.error(error);
-        }, 1000);
+        }, 500);
     }
 
     const deletePost = async (id) => {
@@ -111,10 +128,6 @@ const PostList = () => {
         setShowDeleteConfirmation(false);
         deletePost(id);
     }
-    
-    const reloadPage = () => {
-        window.location.reload();
-    };
       
     const handleAddNew = () => {
         setId(null);
@@ -129,14 +142,21 @@ const PostList = () => {
 
     const handleSave = async (newPost) => {
         setIsLoading(true);
-        const { status, data } = await post(qa, '/posts', newPost);
-        if (status === 201) {
+        const { status, data } = await (isCreating ? post : put)(qa, '/posts', newPost);
+        if (status >= 200 && status < 300) {
             handleClose();
             handleOk();
-            //reloadPage();
         } else {
             handleError(data);
         }
+    }
+
+    const handleSearch = () => {
+        setIsLoading(true);
+        fetchPosts(0, size, false);
+        setTimeout(() => {
+            setIsLoading(false);
+        }, 500);
     }
 
     return (
@@ -154,8 +174,51 @@ const PostList = () => {
                 onCancel={() => setShowDeleteConfirmation(false)}
                 message="Are you sure you want to delete this item?"
             />
-             
-            <div className="d-flex justify-content-between align-items-center mb-3">
+
+            <div>
+                <Row>
+                    <Col md={4}>
+                        <Form.Control
+                            type="text"
+                            maxLength={ 256 }
+                            placeholder="English Title" 
+                            onChange={ (e) => setEngName(e.target.value) }
+                        />  
+                    </Col>
+                    <Col md={4}>
+                        <Form.Control
+                            type="text"
+                            maxLength={ 128 }
+                            placeholder="Bangla Title"
+                            onChange={ (e) => setBngName(e.target.value) }
+                        />  
+                    </Col>
+                    <Col md={3}>
+                        <Form.Control
+                            type="number"
+                            placeholder="Grade"
+                            onChange={ (e) => setGrade(e.target.value) }
+                        />  
+                    </Col>
+                    <Col md={1} >
+                        <Button 
+                            variant="primary" 
+                            className="search-button"
+                            onClick={ handleSearch }
+                        >
+                            Search
+                        </Button>    
+                    </Col>
+                </Row>
+                <Row>
+                    <Col md={12} className="d-flex justify-content-end mb-3">
+                        <Button variant="success" onClick={handleAddNew}>
+                            <FaPlus className="me-1" /> Add New Entry
+                        </Button>
+                    </Col>
+                </Row>
+            </div>
+            {/* <div className="d-flex justify-content-between align-items-center mb-3">
                 <InputGroup style={{ maxWidth: '300px' }}>
                     <Form.Control placeholder="Search..." />
                     <Button variant="primary">Filter</Button>
@@ -163,7 +226,7 @@ const PostList = () => {
                 <Button variant="success" onClick={handleAddNew}>
                     <FaPlus className="me-1" /> Add New Entry
                 </Button>
-            </div>
+            </div> */}
             {isLoading 
                 ? <div className="d-flex justify-content-center mt-5">
                     <Spinner animation="border" variant="primary" />
@@ -171,6 +234,7 @@ const PostList = () => {
                 : <PaginatedTable 
                     data={data} 
                     columns={columns} 
+                    anyActionColumn={true}
                     pageChange={handlePageChange} 
                     handleEdit={handleEdit} 
                     handleDelete={handleDelete} 
