@@ -3,11 +3,11 @@ import { Button, Form, Row, Col } from 'react-bootstrap';
 import { FaPlus } from 'react-icons/fa';
 import PaginatedTable from '../util/PaginatedTable';
 import { get, post, put, deleteEntry, qa } from '../../services/api';
-import PostModal from './PostModal';
+import ExamTakerModal from './ExamTakerModal';
 import DeleteConfirmation from '../util/DeleteConfirmation';
 import Spinner from 'react-bootstrap/Spinner';
 
-const PostList = () => {
+const ExamTakerList = () => {
     // State
     const [ data, setData ] = useState({});
     const [ currentPage, setCurrentPage ] = useState(0);
@@ -19,16 +19,8 @@ const PostList = () => {
     const [ id, setId ] = useState(null);
     const [ engName, setEngName ] = useState('');
     const [ bngName, setBngName ] = useState('');
-    const [ grade, setGrade ] = useState('');
 
-  // Mock data
-    const content = [
-        { id: 1, engName: 'John Doe', bngName: 'জন ডো', grade: 9 },
-        { id: 2, engName: 'Jane Smith', bngName: 'জেন স্মিথ', grade: 10 },
-        { id: 3, engName: 'Michael Lee', bngName: 'মাইকেল লি', grade: 9 },
-    ];
-
-    const fetchPosts = async (page, size, showLoading = true) => {
+    const fetchExamTakers = async (page, size, showLoading = true) => {
         if (showLoading) {
             setIsLoading(true);
         }
@@ -36,10 +28,9 @@ const PostList = () => {
             page,
             size,
             engName,
-            bngName,
-            grade,
+            bngName
         }
-        const { status, data } = await get(qa, '/posts', params);
+        const { status, data } = await get(qa, '/exam-takers', params);
         if (status === 200) {
             setData(data);
             setCurrentPage(data.number);
@@ -51,7 +42,7 @@ const PostList = () => {
     }
 
     useEffect(() => {
-        fetchPosts(currentPage, size);
+        fetchExamTakers(currentPage, size);
     }, [currentPage, size]);
 
 
@@ -59,37 +50,18 @@ const PostList = () => {
         // { text: '#', dataField: 'id' },
         { text: 'English Name', dataField: 'engName' },
         { text: 'Bangla Name', dataField: 'bngName' },
-        { text: 'Grade', dataField: 'grade' },
+        //{ text: 'Description', dataField: 'description' },
     ];
 
-    const sampleData = {
-        content: content,
-        number: currentPage,
-        size: size,
-        totalElements: content.length,
-        totalPages: Math.ceil(content.length / size),
-    };
-
-    const newSampleData = {
-        content: content,
-        page: {
-            number: currentPage,
-            size: size,
-            totalElements: content.length,
-            totalPages: Math.ceil(content.length / size),
-        }
-    };
-
-  
-  // Handlers
+    // Handlers
     const handlePageChange = page => setCurrentPage(page);
 
-    const findPostById = (id) => {
+    const findExamTakerById = (id) => {
         return data.content.find(p => p.id === id);
     }
 
     const handleEdit = (id) => {
-        console.log('clicked post id', id);
+        console.log('clicked exam taker id', id);
         setId(id);
         setIsCreating(false);
         setShowModal(true);
@@ -101,7 +73,7 @@ const PostList = () => {
     };
 
     const handleOk = () => {
-        fetchPosts(currentPage, size, false);
+        fetchExamTakers(currentPage, size, false);
         setTimeout(() => {
             setIsLoading(false);
         }, 500);
@@ -114,9 +86,9 @@ const PostList = () => {
         }, 500);
     }
 
-    const deletePost = async (id) => {
+    const deleteExamTaker = async (id) => {
         setIsLoading(true);
-        const { status, data } = await deleteEntry(qa, '/posts', id);
+        const { status, data } = await deleteEntry(qa, '/exam-takers', id);
         if (status === 204) {
             handleOk();
         } else {
@@ -126,7 +98,7 @@ const PostList = () => {
 
     const handleDeleteConfirmation = () => {
         setShowDeleteConfirmation(false);
-        deletePost(id);
+        deleteExamTaker(id);
     }
       
     const handleAddNew = () => {
@@ -140,9 +112,9 @@ const PostList = () => {
         setShowModal(false);
     }
 
-    const handleSave = async (newPost) => {
+    const handleSave = async (newExamTaker) => {
         setIsLoading(true);
-        const { status, data } = await (isCreating ? post : put)(qa, '/posts', newPost);
+        const { status, data } = await (isCreating ? post : put)(qa, '/exam-takers', newExamTaker);
         if (status >= 200 && status < 300) {
             handleClose();
             handleOk();
@@ -153,7 +125,7 @@ const PostList = () => {
 
     const handleSearch = () => {
         setIsLoading(true);
-        fetchPosts(0, size, false);
+        fetchExamTakers(0, size, false);
         setTimeout(() => {
             setIsLoading(false);
         }, 500);
@@ -161,10 +133,10 @@ const PostList = () => {
 
     return (
         <div className="container mt-4">
-            <PostModal 
+            <ExamTakerModal 
                 isCreating={isCreating}
                 show={ showModal } 
-                content={ isCreating ? null : findPostById(id) }
+                content={ isCreating ? null : findExamTakerById(id) }
                 handleClose={handleClose} 
                 handleCreate={handleSave} 
             />
@@ -181,7 +153,7 @@ const PostList = () => {
                         <Form.Control
                             type="text"
                             maxLength={ 256 }
-                            placeholder="English Title" 
+                            placeholder="English Name" 
                             onChange={ (e) => setEngName(e.target.value) }
                         />  
                     </Col>
@@ -189,15 +161,8 @@ const PostList = () => {
                         <Form.Control
                             type="text"
                             maxLength={ 128 }
-                            placeholder="Bangla Title"
+                            placeholder="Bangla Name"
                             onChange={ (e) => setBngName(e.target.value) }
-                        />  
-                    </Col>
-                    <Col md={3}>
-                        <Form.Control
-                            type="number"
-                            placeholder="Grade"
-                            onChange={ (e) => setGrade(e.target.value) }
                         />  
                     </Col>
                     <Col md={1} >
@@ -218,15 +183,6 @@ const PostList = () => {
                     </Col>
                 </Row>
             </div>
-            {/* <div className="d-flex justify-content-between align-items-center mb-3">
-                <InputGroup style={{ maxWidth: '300px' }}>
-                    <Form.Control placeholder="Search..." />
-                    <Button variant="primary">Filter</Button>
-                </InputGroup>
-                <Button variant="success" onClick={handleAddNew}>
-                    <FaPlus className="me-1" /> Add New Entry
-                </Button>
-            </div> */}
             {isLoading 
                 ? <div className="d-flex justify-content-center mt-5">
                     <Spinner animation="border" variant="primary" />
@@ -244,4 +200,4 @@ const PostList = () => {
     );
 };
 
-export default PostList;
+export default ExamTakerList;

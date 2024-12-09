@@ -17,6 +17,7 @@ import { get, post, auth } from './services/api';
 import PublicRoute from './components/PublicRoute';
 import OtpVerification from './components/Otp';
 import PostList from './components/post/PostList';
+import ExamTakerList from './components/examTaker/ExamTakerList';
 
 export const App = () => {
   const [isLoggedIn, setIsLoggedIn] = useState(false);
@@ -70,6 +71,7 @@ export const App = () => {
         <Route path='/questionbank/createquestion' element ={<CreateExamQuestions/>} />
         <Route path='/liveexam' element={<LiveExam />} />
         <Route path='/post' element={<PostList />} />
+        <Route path='/examtaker' element={<ExamTakerList />} />
         <Route path='/englishtutor' element={<EnglishTutor />} />
         <Route
             path="/signup"
