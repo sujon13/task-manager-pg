@@ -1,7 +1,7 @@
-import googleIcon from '../assets/google128.png';
-import { get, auth } from '../services/api';
-import './css/Signup.css';
-import './css/Social.css';
+import googleIcon from '../../assets/google128.png';
+import { get, auth } from '../../services/api';
+import '../css/Signup.css';
+import '../css/Social.css';
 
 const SocialLogin = () => {
     const handleGoogleSignin = async () => {

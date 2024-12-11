@@ -1,11 +1,11 @@
 import PropTypes from 'prop-types';
-import { post, auth } from '../services/api';
+import { post, auth } from '../../services/api';
 import { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import Form from 'react-bootstrap/Form';
 import Button from 'react-bootstrap/Button';
-import './css/Signup.css';
-import './css/Social.css';
+import '../css/Signup.css';
+import '../css/Social.css';
 import SocialLogin from './SocialLogin';
 import SignupLink from './SignupLink';
 

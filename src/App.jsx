@@ -2,7 +2,7 @@ import { useState, useEffect } from 'react';
 //import './App.css';
 import 'bootstrap/dist/css/bootstrap.min.css';
 import './App.css';
-import { Login } from './components/Login'
+import { Login } from './components/auth/Login'
 import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
 import { Home } from './components/Home';
 import { QuestionBank } from './components/QuestionBank/QuestionBank';
@@ -11,13 +11,14 @@ import { EnglishTutor } from './components/EnglishTutor';
 import { NavBar } from './components/NavBar';
 import { QuestionCard } from './components/QuestionBank/QuestionCard';
 import {CreateExamQuestions} from './components/QuestionBank/CreateExamQuestions';
-import { Signup } from './components/Signup';
-import { CreateUserName } from './components/CreateUserName';
+import { Signup } from './components/auth/Signup';
+import { CreateUserName } from './components/auth/CreateUserName';
 import { get, post, auth } from './services/api';
 import PublicRoute from './components/PublicRoute';
-import OtpVerification from './components/Otp';
+import OtpVerification from './components/auth/Otp';
 import PostList from './components/post/PostList';
 import ExamTakerList from './components/examTaker/ExamTakerList';
+import CreateExam from './components/exam/CreateExam';
 
 export const App = () => {
   const [isLoggedIn, setIsLoggedIn] = useState(false);
@@ -72,6 +73,7 @@ export const App = () => {
         <Route path='/liveexam' element={<LiveExam />} />
         <Route path='/post' element={<PostList />} />
         <Route path='/examtaker' element={<ExamTakerList />} />
+        <Route path='/exam/create' element={<CreateExam />} />
         <Route path='/englishtutor' element={<EnglishTutor />} />
         <Route
             path="/signup"

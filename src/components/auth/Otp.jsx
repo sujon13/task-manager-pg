@@ -1,9 +1,9 @@
-import { post, auth } from '../services/api';
+import { post, auth } from '../../services/api';
 import { useState, useEffect } from 'react';
 import { useNavigate, useLocation } from 'react-router-dom';
 import Form from 'react-bootstrap/Form';
 import Button from 'react-bootstrap/Button';
-import './css/Signup.css';
+import '../css/Signup.css';
 import Container from 'react-bootstrap/Container';
 import Row from 'react-bootstrap/Row';
 import Col from 'react-bootstrap/Col';

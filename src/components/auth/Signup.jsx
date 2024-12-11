@@ -1,11 +1,11 @@
-import { get, post, auth } from '../services/api';
+import { get, post, auth } from '../../services/api';
 import { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
-import './css/Signup.css';
-import './css/Social.css';
+import '../css/Signup.css';
+import '../css/Social.css';
 import SocialLogin from './SocialLogin';
 import LoginLink from './LoginLink';
-import { getUrl } from '../services/util';
+import { getUrl } from '../../services/util';
 
 export const Signup = () => {
     const navigate = useNavigate();
