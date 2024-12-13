@@ -1,11 +1,11 @@
 import { Modal, Button } from 'react-bootstrap';
 import PropTypes from 'prop-types';
 
-const EditConfirmation = ({ show, onConfirm, onCancel, message }) => {
+const Confirmation = ({ show, onConfirm, onCancel, message }) => {
     return (
         <Modal show={show} onHide={onCancel} centered>
             <Modal.Header closeButton>
-                <Modal.Title>Edit Confirmation</Modal.Title>
+                <Modal.Title>Confirmation</Modal.Title>
             </Modal.Header>
             <Modal.Body>
                 <p>{message || "Are you sure you want to proceed?"}</p>
@@ -14,7 +14,7 @@ const EditConfirmation = ({ show, onConfirm, onCancel, message }) => {
                 <Button variant="secondary" onClick={onCancel}>
                     Cancel
                 </Button>
-                <Button variant="warning" onClick={onConfirm}>
+                <Button variant="primary" onClick={onConfirm}>
                     Confirm
                 </Button>
             </Modal.Footer>
@@ -22,11 +22,11 @@ const EditConfirmation = ({ show, onConfirm, onCancel, message }) => {
     );
 };
 
-EditConfirmation.propTypes = {
+Confirmation.propTypes = {
     show: PropTypes.bool.isRequired,
     onConfirm: PropTypes.func.isRequired,
     onCancel: PropTypes.func.isRequired,
     message: PropTypes.string,
 };
 
-export default EditConfirmation;
+export default Confirmation;

@@ -51,6 +51,10 @@ h1 {
   text-align: center;
 }
 
+.form-label {
+  margin-bottom: 0 !important;
+}
+
 input[type=text],
 input[type=password],
 input[type=email],

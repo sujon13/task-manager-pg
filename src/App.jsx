@@ -18,7 +18,7 @@ import PublicRoute from './components/PublicRoute';
 import OtpVerification from './components/auth/Otp';
 import PostList from './components/post/PostList';
 import ExamTakerList from './components/examTaker/ExamTakerList';
-import CreateExam from './components/exam/CreateExam';
+import RealExam from './components/exam/RealExam';
 
 export const App = () => {
   const [isLoggedIn, setIsLoggedIn] = useState(false);
@@ -73,7 +73,8 @@ export const App = () => {
         <Route path='/liveexam' element={<LiveExam />} />
         <Route path='/post' element={<PostList />} />
         <Route path='/examtaker' element={<ExamTakerList />} />
-        <Route path='/exam/create' element={<CreateExam />} />
+        <Route path='/exam' element={<RealExam />} />
+        <Route path='/exam/:examId' element={<RealExam />} />
         <Route path='/englishtutor' element={<EnglishTutor />} />
         <Route
             path="/signup"
