@@ -1,10 +1,11 @@
 import { useState, useEffect } from 'react';
-import { Button, Form, Row, Col } from 'react-bootstrap';
+import { Button, Form, Row, Col, Accordion } from 'react-bootstrap';
 import { get, post, put, qa } from '../../services/api';
 import Spinner from 'react-bootstrap/Spinner';
 import Select from 'react-select';
 import Confirmation from '../util/Confirmation';
 import ToastNotification from '../util/ToastNotification';
+import ExamQuestion from '../Question/ExamQuestion';
 import { useParams, useNavigate } from 'react-router-dom';
 
 const RealExam = () => {
@@ -25,6 +26,7 @@ const RealExam = () => {
     const [totalQuestion, setTotalQuestion] = useState('');
     const [totalMark, setTotalMark] = useState('');
     const [allocatedTimeInMin, setAllocatedTimeInMin] = useState('');
+    const [topics, setTopics] = useState([]);
 
     const [showConfirmation, setShowConfirmation] = useState(false);
     const [isLoading, setIsLoading] = useState(false);
@@ -44,6 +46,13 @@ const RealExam = () => {
         const { status, data } = await get(qa, '/exam-takers/dropdown');
         if (status === 200) {
             setExamTakerOptions(data.map(examTaker => ({ value: examTaker.id, label: examTaker.name })));
+        }
+    }
+
+    const loadTopics = async () => {
+        const { status, data } = await get(qa, `/topics`);
+        if (status === 200) {
+            setTopics(data);
         }
     }
 
@@ -68,7 +77,9 @@ const RealExam = () => {
         loadExamTakerOptions();
         if (examId) {
             loadExam();
+            loadTopics();
         }
+
     }, [examId]);
 
     const handleOk = (response, successCallback) => {
@@ -175,90 +186,105 @@ const RealExam = () => {
                 {isLoading && <div className="d-flex justify-content-center mt-100">
                     <Spinner animation="border" variant="primary" />
                 </div>}
-                <Form hidden={ isLoading } onSubmit={ handleSaveExam }>
-                    <Row>
-                        <Col md={12}>
-                            <Form.Group className="" controlId="formBasicEmail">
-                                <Form.Label>Exam Name</Form.Label>
-                                <Form.Control 
-                                    type="text" 
-                                    maxLength={ 127 }
-                                    placeholder="Enter Exam Name" 
-                                    required
-                                    value={ name }
-                                    onChange={ (e) => setName(e.target.value) }
-                                />
-                            </Form.Group>
-                        </Col>
-                        <Col md={4}>
-                            <Form.Group className="mb-2" controlId="">
-                                <Form.Label>Exam Date</Form.Label>
-                                <Form.Control
-                                    type="date"
-                                    placeholder="Enter Exam Date"
-                                    value={ date }
-                                    onChange={ (e) => setDate(e.target.value) }
-                                /> 
-                            </Form.Group> 
-                        </Col>
-                        <Col md={4}>
-                            <Form.Group className="mb-2" controlId="">
-                                <Form.Label>Post</Form.Label>
-                                <Select
-                                    options={jobPostOptions}
-                                    onChange={ (option) => setJobPost(option.value) }
-                                    placeholder="Select Post"
-                                    value={ jobPostOptions.find(option => option.value === jobPost) }
-                                />
-                            </Form.Group>
-                        </Col>
-                        <Col md={4}>
-                            <Form.Group className="mb-2" controlId="">
-                                <Form.Label>Exam Taker</Form.Label>
-                                <Select
-                                    options={examTakerOptions}
-                                    onChange={ (option) => setExamTaker(option.value) }
-                                    placeholder="Select Exam Taker"
-                                    value={ examTakerOptions.find(option => option.value === examTaker) }
-                                />
-                            </Form.Group>
-                        </Col>
-                        <Col md={4}>
-                            <Form.Group className="" controlId="">
-                                <Form.Label>Total Question</Form.Label>
-                                <Form.Control
-                                    type="number"
-                                    placeholder="Enter Total Question" 
-                                    required
-                                    value={ totalQuestion }
-                                    onChange={ (e) => setTotalQuestion(e.target.value) }
-                                />  
-                            </Form.Group>
-                        </Col>
-                        <Col md={4}>
-                            <Form.Group className="" controlId="">
-                                <Form.Label>Total Mark</Form.Label>
-                                <Form.Control
-                                    type="number"
-                                    placeholder="Enter Total Mark" 
-                                    value={ totalMark }
-                                    onChange={ (e) => setTotalMark(e.target.value) }
-                                />  
-                            </Form.Group>
-                        </Col>
-                        <Col md={4} className="d-flex justify-content-start align-items-center">
-                            <Form.Group className="" controlId="">
-                                <Button 
-                                    type="submit"
-                                    variant="primary" 
-                                    //onClick={ handleCreateExam }
-                                >
-                                    { examId ? 'Update Exam' : 'Create Exam' }
-                                </Button>
-                            </Form.Group>
-                        </Col>
-                    </Row>
-                </Form>
+                <div className="exam-section">
+                    <div className="exam-section-header mb-3">
+                        <h3>Exam Details</h3>
+                    </div>
+                    <Form hidden={ isLoading } onSubmit={ handleSaveExam }>
+                        <Row>
+                            <Col md={12}>
+                                <Form.Group className="" controlId="formBasicEmail">
+                                    <Form.Label>Exam Name</Form.Label>
+                                    <Form.Control 
+                                        type="text" 
+                                        maxLength={ 127 }
+                                        placeholder="Enter Exam Name" 
+                                        required
+                                        value={ name }
+                                        onChange={ (e) => setName(e.target.value) }
+                                    />
+                                </Form.Group>
+                            </Col>
+                            <Col md={4}>
+                                <Form.Group className="mb-2" controlId="">
+                                    <Form.Label>Exam Date</Form.Label>
+                                    <Form.Control
+                                        type="date"
+                                        placeholder="Enter Exam Date"
+                                        value={ date }
+                                        onChange={ (e) => setDate(e.target.value) }
+                                    /> 
+                                </Form.Group> 
+                            </Col>
+                            <Col md={4}>
+                                <Form.Group className="mb-2" controlId="">
+                                    <Form.Label>Post</Form.Label>
+                                    <Select
+                                        options={jobPostOptions}
+                                        onChange={ (option) => setJobPost(option.value) }
+                                        placeholder="Select Post"
+                                        value={ jobPostOptions.find(option => option.value === jobPost) }
+                                    />
+                                </Form.Group>
+                            </Col>
+                            <Col md={4}>
+                                <Form.Group className="mb-2" controlId="">
+                                    <Form.Label>Exam Taker</Form.Label>
+                                    <Select
+                                        options={examTakerOptions}
+                                        onChange={ (option) => setExamTaker(option.value) }
+                                        placeholder="Select Exam Taker"
+                                        value={ examTakerOptions.find(option => option.value === examTaker) }
+                                    />
+                                </Form.Group>
+                            </Col>
+                            <Col md={4}>
+                                <Form.Group className="" controlId="">
+                                    <Form.Label>Total Question</Form.Label>
+                                    <Form.Control
+                                        type="number"
+                                        placeholder="Enter Total Question" 
+                                        required
+                                        value={ totalQuestion }
+                                        onChange={ (e) => setTotalQuestion(e.target.value) }
+                                    />  
+                                </Form.Group>
+                            </Col>
+                            <Col md={4}>
+                                <Form.Group className="" controlId="">
+                                    <Form.Label>Total Mark</Form.Label>
+                                    <Form.Control
+                                        type="number"
+                                        placeholder="Enter Total Mark" 
+                                        value={ totalMark }
+                                        onChange={ (e) => setTotalMark(e.target.value) }
+                                    />  
+                                </Form.Group>
+                            </Col>
+                            <Col md={4} className="d-flex justify-content-start align-items-center">
+                                <Form.Group className="" controlId="">
+                                    <Button 
+                                        type="submit"
+                                        variant="primary" 
+                                        //onClick={ handleCreateExam }
+                                    >
+                                        { examId ? 'Update Exam' : 'Create Exam' }
+                                    </Button>
+                                </Form.Group>
+                            </Col>
+                        </Row>
+                    </Form>
+                </div>
+                { examId && (
+                    <div className="question-section mt-5">
+                        <div className="question-section-header mb-3">
+                            <h3>Questions</h3>
+                        </div>
+                        <div className="question-section-body">
+                            <ExamQuestion examId={ +examId } topics={ topics } />
+                        </div>
+                    </div>
+                )}
             </div>
         </div>
     );
