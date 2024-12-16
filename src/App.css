@@ -108,3 +108,9 @@ input[type=button]:hover {
   padding-bottom: 10px;
   cursor: pointer;
 }
+
+.required-field::after {
+  content: '*';
+  color: red;
+  margin-left: 4px;
+}

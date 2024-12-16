@@ -21,9 +21,13 @@ const ExamQuestion = ( { examId, topics }) => {
                 <Accordion.Item 
                     eventKey={topic.id.toString()} 
                     key={topic.id}
-                    onClick={() => handleToggle(topic.id)}
                 >
-                    <Accordion.Header>{topic.engName}</Accordion.Header>
+                    <Accordion.Header 
+                        onClick={() => handleToggle(topic.id)}
+                        className={activeTopicIds.includes(topic.id) ? 'active' : ''}
+                    >
+                        {topic.engName}
+                    </Accordion.Header>
                     <Accordion.Body>
                         { activeTopicIds.includes(topic.id) && <Question examId={ examId } topic={ topic } /> }   
                     </Accordion.Body>
