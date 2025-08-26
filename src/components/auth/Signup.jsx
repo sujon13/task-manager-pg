@@ -3,7 +3,6 @@ import { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import '../css/Signup.css';
 import '../css/Social.css';
-import SocialLogin from './SocialLogin';
 import LoginLink from './LoginLink';
 import { getUrl } from '../../services/util';
 
@@ -11,12 +10,13 @@ export const Signup = () => {
     const navigate = useNavigate();
 
     const [userName, setUserName] = useState('');
-    //const [name, setName] = useState('');
+    const [name, setName] = useState('');
     const [mail, setMail] = useState('');
     const [password, setPassword] = useState('');
     const [cPassword, setCPassword] = useState('');
 
     const [userNameError, setUserNameError] = useState('');
+    const [nameError, setNameError] = useState('');
     const [passError, setPassError] = useState('');
     const [cPassError, setCPassError] = useState('');
     const [mailError, setMailError] = useState('');
@@ -60,6 +60,17 @@ export const Signup = () => {
             }
         }
     };
+
+    const handleName = (e) => {
+        const rawValue = e.target.value;
+        if (rawValue === null || rawValue === undefined || rawValue === '') {
+            setNameError('Name is required');
+            return;
+        }
+
+        const name = rawValue.trim();
+        setName(name);
+    }
     
     const isEmailValid = (email) => {
         const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
@@ -112,12 +123,17 @@ export const Signup = () => {
     }
 
     const anyError = () => {
-        return userNameError !== '' || mailError !== '' || passError !== '' || cPassError !== '';
+        return mailError !== '' || passError !== '' || cPassError !== '';
     }
 
     const goToOtpVerification = (paramMap) => {
         const url = getUrl('/verify-otp', paramMap);
         navigate(url);
+    }
+
+    const retrieveUserName = email => {
+        const atIndex = email.indexOf("@");
+        return email.substring(0, atIndex);
     }
 
     const handleSubmit = async (e) => {
@@ -127,7 +143,7 @@ export const Signup = () => {
         if (anyError()) return;
 
         const signupRequest = {
-            "userName": userName,
+            //"userName": retrieveUserName(mail),
             "email": mail,
             "rawPassword": password,
             "reTypeRawPassword": cPassword
@@ -159,16 +175,11 @@ export const Signup = () => {
             <form onSubmit={handleSubmit}>
                 <input
                     type="text"
-                    placeholder="username"
-                    onBlur={handleUserName}
-                    onFocus={() => setUserNameError('')}
-                    required
-                />
-                {userNameError && <p className="error-style">{userNameError}</p>}
-                <input
-                    type="text"
-                    placeholder="Your Name"
+                    placeholder="Your Name*"
                     id="name"
+                    onBlur={handleName}
+                    onFocus={() => { setNameError('') }}
+                    required
                 />
                 <input
                     type="email"
@@ -202,6 +213,5 @@ export const Signup = () => {
                 {/* <input type="button" id="signup" value="Sign Up"  /> */}
             </form>
             <LoginLink />
-            <SocialLogin />
         </div>)
 }

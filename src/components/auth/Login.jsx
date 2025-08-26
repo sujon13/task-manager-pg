@@ -78,7 +78,6 @@ export const Login = ({ login }) => {
                     Login
                 </Button>
                 <SignupLink />
-                <SocialLogin />
             </Form>
         </div>
     )
