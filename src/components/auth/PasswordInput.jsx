@@ -31,8 +31,8 @@ PasswordInput.propTypes = {
     placeholder: PropTypes.string.isRequired,
     value: PropTypes.string.isRequired,
     onChange: PropTypes.func.isRequired,
-    onBlur: PropTypes.func.isRequired,
-    onFocus: PropTypes.func.isRequired
+    onBlur: PropTypes.func,
+    onFocus: PropTypes.func.isRequired,
 };
 
 export default PasswordInput;

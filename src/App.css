@@ -118,3 +118,8 @@ input[type=button]:hover {
   color: red;
   margin-left: 4px;
 }
+
+.disabled-overlay {
+  pointer-events: none;
+  opacity: 0.5; /* optional dimming */
+}

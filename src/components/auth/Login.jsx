@@ -2,42 +2,53 @@ import PropTypes from 'prop-types';
 import { post, auth } from '../../services/api';
 import { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
-import Form from 'react-bootstrap/Form';
-import Button from 'react-bootstrap/Button';
 import '../css/Signup.css';
 import '../css/Social.css';
 import SignupLink from './SignupLink';
+import PasswordInput from './PasswordInput';
+import { Container, Form, Button, Card } from "react-bootstrap";
+import SuccessToast from './SuccessToast';
 
 export const Login = ({ login }) => {
     const navigate = useNavigate();
 
-    const [userName, setUserName] = useState('');
+    const [userNameOrEmail, setUserNameOrEmail] = useState('');
     const [password, setPassword] = useState('');
     const [error, setError] = useState('');
+    const [showToast, setShowToast] = useState(false);
+
+    const autohideTimeInMillis = 5000;
 
     const goToHome = () => {
         navigate('/');
     }
 
+    const showSuccessToast = (callback) => {
+        setShowToast(true);
+        setTimeout(() => {
+            callback();
+        }, autohideTimeInMillis);
+    }
+
     const handleSubmit = async () => {
-        if (!userName || !password) {
-            setError('Please enter username and password');
+        if (!setUserNameOrEmail || !password) {
+            setError('Please enter user name/email and password');
             return;
         }
 
         const authRequest = {
-            userName,
+            userNameOrEmail,
             password
         };
 
         const { status, data } = await post(auth, '/authenticate', authRequest);
         if (status === 200) {
-            console.log(`User ${userName} logged in successfully`);
-            login();
-            goToHome();
-        } else if (status === 400) {
-            setError(data);
-        } else if (status === 401) {
+            console.log(`User ${userNameOrEmail} logged in successfully`);
+            showSuccessToast(() => {
+                login();
+                goToHome();
+            })
+        } else if (status === 400 || status === 401) {
             setError(data);
         } else {
             setError('Something went wrong. Please try again later.');
@@ -45,42 +56,48 @@ export const Login = ({ login }) => {
     }
 
     return (
-        <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'center', height: '80vh' }}>
-            <Form>
-                <Form.Group>
+        <Container
+            fluid
+            className="d-flex justify-content-center align-items-center vh-80"
+        >
+            <Card style={{ width: "30rem" }} className={ "p-4 shadow-lg " + (showToast ? 'disabled-overlay' : '') }>
+                <Form>
                     <Form.Control 
                         type="text" 
-                        className="w-100 mb-3"
-                        placeholder="username" 
-                        value={userName}
-                        onChange={e => setUserName(e.target.value)} 
+                        className="mb-3"
+                        placeholder="Enter username or email" 
+                        value={userNameOrEmail}
+                        onChange={e => setUserNameOrEmail(e.target.value)} 
                         onFocus={() => setError('')}
                         required
                     />
-                    <Form.Control 
-                        type="password" 
-                        className="w-100"
-                        placeholder="password" 
+                    <PasswordInput
+                        placeholder="Enter password"
                         value={password}
-                        onChange={e => setPassword(e.target.value)} 
-                        onFocus={() => setError('')}
-                        required
+                        onChange={(e) => setPassword(e.target.value)}
+                        onFocus={() => { setError('') }}
                     />
-                    {error && <p className="error-style">{error}</p>}
-                </Form.Group>
-                <Button 
-                    variant="success" 
-                    type="button" 
-                    onClick={handleSubmit}
-                    className="w-100 mt-3"
-                >
-                    Login
-                </Button>
-                <SignupLink />
-            </Form>
-        </div>
+                    {error && <p className="error-style mt-3" style={{ marginTop: '0px' }}>{error}</p>}
+                    <Button 
+                        variant="success" 
+                        type="button" 
+                        onClick={handleSubmit}
+                        className="w-100 mt-3"
+                    >
+                        Login
+                    </Button>
+                    <SignupLink />
+                </Form>
+            </Card>
+            <SuccessToast
+                onClose={() => setShowToast(false)}
+                show={showToast}
+                autohideTimeInMillis={autohideTimeInMillis}       
+                toastBody={ 'Successfully Logged In'}
+            >
+            </SuccessToast>
+        </Container>
     )
-    
 }
 
 Login.propTypes = {

@@ -5,9 +5,9 @@ import Form from 'react-bootstrap/Form';
 import Button from 'react-bootstrap/Button';
 import '../css/Signup.css';
 import Container from 'react-bootstrap/Container';
-import { Toast, ToastContainer } from "react-bootstrap";
 import Row from 'react-bootstrap/Row';
 import Col from 'react-bootstrap/Col';
+import SuccessToast from './SuccessToast';
 
 const OtpVerification = () => {
     const navigate = useNavigate();
@@ -66,10 +66,10 @@ const OtpVerification = () => {
         navigate('/login');
     }
 
-    const showSuccessToast = () => {
+    const showSuccessToast = (callback) => {
         setShowToast(true);
         setTimeout(() => {
-            goToLogin();
+            callback();
         }, autohideTimeInMillis);
     }
 
@@ -88,7 +88,7 @@ const OtpVerification = () => {
         const { status, data } = await post(auth, '/signup/verify-otp', otpRequest);
         if (status === 200) {
             console.log(`OTP verified for user ${userName}`);
-            showSuccessToast();
+            showSuccessToast(() => goToLogin());
         } else if (status === 400) {
             setError(data);
         } else {
@@ -160,17 +160,13 @@ const OtpVerification = () => {
                     </Form>
                 </Col>
             </Row>
-            <ToastContainer position="middle-center" className="p-3">
-                <Toast
-                    bg="primary"
-                    onClose={() => setShowToast(false)}
-                    show={showToast}
-                    delay={autohideTimeInMillis}       
-                    autohide            // automatically hide after delay
-                >
-                <Toast.Body className="text-white">OTP Verification Successful!</Toast.Body>
-                </Toast>
-            </ToastContainer>
+            <SuccessToast
+                onClose={() => setShowToast(false)}
+                show={showToast}
+                autohideTimeInMillis={autohideTimeInMillis}       
+                toastBody={'OTP Verification Successful!'}
+            >
+            </SuccessToast>
         </Container>
     )
     

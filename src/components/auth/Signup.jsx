@@ -6,6 +6,7 @@ import '../css/Social.css';
 import LoginLink from './LoginLink';
 import { getUrl } from '../../services/util';
 import PasswordInput from './PasswordInput';
+import { Button } from 'react-bootstrap';
 
 export const Signup = () => {
     const navigate = useNavigate();
@@ -206,9 +207,14 @@ export const Signup = () => {
                 {cPassError && <p className="error-style">{cPassError}</p>}
                 {responseMessage && <p className="success-style">{responseMessage}</p>}
                 {errorMessage && <p className="error-style" style={{ marginTop: '0px' }}>{errorMessage}</p>}
-                <button type='submit' style={{ marginTop: '5px' }}>
+                <Button 
+                    variant='success' 
+                    type='submit' 
+                    className='w-100 mt-5'
+                >
                     Sign Up
-                </button>
+                </Button>
+
                 {/* <input type="button" id="signup" value="Sign Up"  /> */}
             </form>
             <LoginLink />
