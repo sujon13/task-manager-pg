@@ -55,6 +55,10 @@ h1 {
   margin-bottom: 0 !important;
 }
 
+.password-design {
+  margin: 5px 0 16px 0;
+}
+
 input[type=text],
 input[type=password],
 input[type=email],

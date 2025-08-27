@@ -5,6 +5,7 @@ import '../css/Signup.css';
 import '../css/Social.css';
 import LoginLink from './LoginLink';
 import { getUrl } from '../../services/util';
+import PasswordInput from './PasswordInput';
 
 export const Signup = () => {
     const navigate = useNavigate();
@@ -92,9 +93,9 @@ export const Signup = () => {
     }
     
     const validatePassword = (password) => {
-        const passwordRegex = /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[@$!%*?&])[A-Za-z\d@$!%*?&]{6,64}$/;
+        const passwordRegex = /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)[A-Za-z\d@$!%*?&]{6,64}$/;
         if (!passwordRegex.test(password))
-            return 'Password must be 6-64 characters long, contain at least one uppercase letter, one lowercase letter, one digit, and one special character.';
+            return 'Password must be 6-64 characters long, contain at least one uppercase letter, one lowercase letter, and one digit.';
 
         return '';
     }
@@ -131,11 +132,6 @@ export const Signup = () => {
         navigate(url);
     }
 
-    const retrieveUserName = email => {
-        const atIndex = email.indexOf("@");
-        return email.substring(0, atIndex);
-    }
-
     const handleSubmit = async (e) => {
         e.preventDefault();
         setErrorMessage('');
@@ -144,9 +140,10 @@ export const Signup = () => {
 
         const signupRequest = {
             //"userName": retrieveUserName(mail),
-            "email": mail,
-            "rawPassword": password,
-            "reTypeRawPassword": cPassword
+            name: name,
+            email: mail,
+            rawPassword: password,
+            reTypeRawPassword: cPassword
         }
 
         const { status, data } = await post(auth, '/signup', signupRequest);
@@ -159,12 +156,7 @@ export const Signup = () => {
                 return;
             }
 
-            if ('userName' in data)
-                setUserNameError(data.userName);
-            if ('email' in data)
-                setMailError(data.email);
-            if ('signupRequest' in data)
-                setCPassError(data.signupRequest);
+            setErrorMessage(data);
         }  
 
     }
@@ -189,27 +181,34 @@ export const Signup = () => {
                     required
                 />
                 {mailError && <p className="error-style">{mailError}</p>}
-                <input
+                {/* <input
                     type="password"
                     placeholder="password*"
                     onBlur={handlePassword}
                     onFocus={() => { setPassError('') }}
                     required
+                /> */}
+                <PasswordInput
+                    placeholder="password*"
+                    value={password}
+                    onChange={(e) => setPassword(e.target.value)}
+                    onBlur={handlePassword}
+                    onFocus={() => { setPassError('') }}
                 />
                 {passError && <p className="error-style">{passError}</p>}
-                <input
-                    type="password"
+                <PasswordInput
                     placeholder="Confirm Password*"
+                    value={cPassword}
+                    onChange={(e) => setCPassword(e.target.value)}
                     onBlur={handleCPassword}
-                    onFocus={()=>setCPassError('')}
-                    required
+                    onFocus={() => { setCPassError('') }}
                 />
                 {cPassError && <p className="error-style">{cPassError}</p>}
-                <button type='submit'>
-                    Sign Up
-                </button>
                 {responseMessage && <p className="success-style">{responseMessage}</p>}
                 {errorMessage && <p className="error-style" style={{ marginTop: '0px' }}>{errorMessage}</p>}
+                <button type='submit' style={{ marginTop: '5px' }}>
+                    Sign Up
+                </button>
                 {/* <input type="button" id="signup" value="Sign Up"  /> */}
             </form>
             <LoginLink />

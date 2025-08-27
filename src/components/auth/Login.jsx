@@ -6,7 +6,6 @@ import Form from 'react-bootstrap/Form';
 import Button from 'react-bootstrap/Button';
 import '../css/Signup.css';
 import '../css/Social.css';
-import SocialLogin from './SocialLogin';
 import SignupLink from './SignupLink';
 
 export const Login = ({ login }) => {
@@ -22,7 +21,7 @@ export const Login = ({ login }) => {
 
     const handleSubmit = async () => {
         if (!userName || !password) {
-            setError('Please enter a username and password');
+            setError('Please enter username and password');
             return;
         }
 

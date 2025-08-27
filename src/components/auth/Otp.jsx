@@ -5,6 +5,7 @@ import Form from 'react-bootstrap/Form';
 import Button from 'react-bootstrap/Button';
 import '../css/Signup.css';
 import Container from 'react-bootstrap/Container';
+import { Toast, ToastContainer } from "react-bootstrap";
 import Row from 'react-bootstrap/Row';
 import Col from 'react-bootstrap/Col';
 
@@ -17,11 +18,13 @@ const OtpVerification = () => {
     const [error, setError] = useState('');
     const [timer, setTimer] = useState(60); // Initial timer value in seconds
     const [resendDisabled, setResendDisabled] = useState(true);
+    const [showToast, setShowToast] = useState(false);
 
     const urlParams = new URLSearchParams(location.search);
     const userId = urlParams.get('userId');
     const userName = urlParams.get('userName');
     const email = urlParams.get('email');
+    const autohideTimeInMillis = 2000;
 
     const sendOtp = async () => {
         const otpRequest = {
@@ -63,6 +66,13 @@ const OtpVerification = () => {
         navigate('/login');
     }
 
+    const showSuccessToast = () => {
+        setShowToast(true);
+        setTimeout(() => {
+            goToLogin();
+        }, autohideTimeInMillis);
+    }
+
     const handleSubmit = async () => {
         if (!otp || otp.length !== 6) {
             setError('Please enter a valid OTP');
@@ -78,7 +88,7 @@ const OtpVerification = () => {
         const { status, data } = await post(auth, '/signup/verify-otp', otpRequest);
         if (status === 200) {
             console.log(`OTP verified for user ${userName}`);
-            goToLogin();
+            showSuccessToast();
         } else if (status === 400) {
             setError(data);
         } else {
@@ -150,6 +160,17 @@ const OtpVerification = () => {
                     </Form>
                 </Col>
             </Row>
+            <ToastContainer position="middle-center" className="p-3">
+                <Toast
+                    bg="primary"
+                    onClose={() => setShowToast(false)}
+                    show={showToast}
+                    delay={autohideTimeInMillis}       
+                    autohide            // automatically hide after delay
+                >
+                <Toast.Body className="text-white">OTP Verification Successful!</Toast.Body>
+                </Toast>
+            </ToastContainer>
         </Container>
     )
     
