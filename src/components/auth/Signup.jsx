@@ -6,7 +6,7 @@ import '../css/Social.css';
 import LoginLink from './LoginLink';
 import { getUrl } from '../../services/util';
 import PasswordInput from './PasswordInput';
-import { Button } from 'react-bootstrap';
+import { Button, Form } from 'react-bootstrap';
 
 export const Signup = () => {
     const navigate = useNavigate();
@@ -166,7 +166,7 @@ export const Signup = () => {
         <div className="form">
             <h1>Sign Up</h1>
             <form onSubmit={handleSubmit}>
-                <input
+                <Form.Control
                     type="text"
                     placeholder="Your Name*"
                     id="name"
@@ -174,7 +174,7 @@ export const Signup = () => {
                     onFocus={() => { setNameError('') }}
                     required
                 />
-                <input
+                <Form.Control
                     type="email"
                     placeholder="email*"
                     onBlur={handleMail}
