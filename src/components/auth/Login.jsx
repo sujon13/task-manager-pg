@@ -17,7 +17,10 @@ export const Login = ({ login }) => {
     const [error, setError] = useState('');
     const [showToast, setShowToast] = useState(false);
 
-    const autohideTimeInMillis = 5000;
+    const autohideTimeInMillis = 2000;
+    const adminWhatsapp = '01730016065';
+    const adminEmail = 'ae2.scada@pgcb.gov.bd';
+
 
     const goToHome = () => {
         navigate('/');
@@ -48,11 +51,22 @@ export const Login = ({ login }) => {
                 login();
                 goToHome();
             })
-        } else if (status === 400 || status === 401) {
+        } else if (status === 400) {
             setError(data);
+        } else if (status === 401) {
+            if (typeof data === 'string') {
+                console.error(data);
+                setError(data);
+            } else {
+                const { errorMessage } = data;
+                const error = `${errorMessage}. Please contact with admin by whats App (${adminWhatsapp}) or by email (${adminEmail})`;
+                setError(error);
+                console.error(error);
+            }
         } else {
             setError('Something went wrong. Please try again later.');
         }
+
     }
 
     return (
