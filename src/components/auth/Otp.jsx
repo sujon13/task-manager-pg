@@ -1,13 +1,10 @@
-import { post, auth } from '../../services/api';
 import { useState, useEffect } from 'react';
 import { useNavigate, useLocation } from 'react-router-dom';
-import Form from 'react-bootstrap/Form';
-import Button from 'react-bootstrap/Button';
+import { Form, Container, Row, Col, Button } from 'react-bootstrap';
+
 import '../css/Signup.css';
-import Container from 'react-bootstrap/Container';
-import Row from 'react-bootstrap/Row';
-import Col from 'react-bootstrap/Col';
 import SuccessToast from './SuccessToast';
+import { post, auth } from '../../services/api';
 
 const OtpVerification = () => {
     const navigate = useNavigate();

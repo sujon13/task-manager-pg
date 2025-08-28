@@ -1,12 +1,14 @@
-import { get, post, auth } from '../../services/api';
 import { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
+import { Button, Form } from 'react-bootstrap';
+
 import '../css/Signup.css';
 import '../css/Social.css';
+import { get, post, auth } from '../../services/api';
 import LoginLink from './LoginLink';
 import { getUrl } from '../../services/util';
 import PasswordInput from './PasswordInput';
-import { Button, Form } from 'react-bootstrap';
+
 
 export const Signup = () => {
     const navigate = useNavigate();

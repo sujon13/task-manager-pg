@@ -1,13 +1,15 @@
 import PropTypes from 'prop-types';
-import { post, auth } from '../../services/api';
 import { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
+import { Container, Form, Button, Card, Spinner } from "react-bootstrap";
+
 import '../css/Signup.css';
 import '../css/Social.css';
+import { post, auth } from '../../services/api';
 import SignupLink from './SignupLink';
 import PasswordInput from './PasswordInput';
-import { Container, Form, Button, Card } from "react-bootstrap";
 import SuccessToast from './SuccessToast';
+
 
 export const Login = ({ login }) => {
     const navigate = useNavigate();
@@ -16,8 +18,10 @@ export const Login = ({ login }) => {
     const [password, setPassword] = useState('');
     const [error, setError] = useState('');
     const [showToast, setShowToast] = useState(false);
+    const [loading, setLoading] = useState(false);
 
-    const autohideTimeInMillis = 2000;
+    const autohideTimeInMillis = 1000;
+    const waitTimeForApiInMillis = 500;
     const adminWhatsapp = '01730016065';
     const adminEmail = 'ae2.scada@pgcb.gov.bd';
 
@@ -44,7 +48,9 @@ export const Login = ({ login }) => {
             password
         };
 
+        setLoading(true);
         const { status, data } = await post(auth, '/authenticate', authRequest);
+        setTimeout(() => setLoading(false), waitTimeForApiInMillis);
         if (status === 200) {
             console.log(`User ${userNameOrEmail} logged in successfully`);
             showSuccessToast(() => {
@@ -66,7 +72,6 @@ export const Login = ({ login }) => {
         } else {
             setError('Something went wrong. Please try again later.');
         }
-
     }
 
     return (
@@ -75,7 +80,13 @@ export const Login = ({ login }) => {
             className="d-flex justify-content-center align-items-center vh-80"
         >
             <Card style={{ width: "30rem" }} className={ "p-4 shadow-lg " + (showToast ? 'disabled-overlay' : '') }>
-                <Form>
+                <div style={{ display: (loading ? 'flex' : 'none'), justifyContent: 'center', alignItems: 'center' }}>
+                    <Spinner 
+                        animation="border" 
+                        variant="primary" 
+                    />
+                </div>
+                <Form style={{ visibility: loading ? 'hidden' : 'visible' }}>
                     <Form.Control 
                         type="text" 
                         className="mb-3"

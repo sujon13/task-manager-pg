@@ -1,6 +1,7 @@
 import PropTypes from 'prop-types';
-import '../css/Signup.css';
 import { Toast, ToastContainer } from "react-bootstrap";
+
+import '../css/Signup.css';
 
 
 const SuccessToast = ({onClose, autohideTimeInMillis, show, toastBody}) => {
