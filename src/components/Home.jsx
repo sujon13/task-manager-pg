@@ -17,11 +17,11 @@ export const Home = ({ isLoggedIn }) => {
     }
 
     return (
-        <div className='container'>
+        <div className='d-flex justify-content-center align-items-center' style={{ marginTop: '20px' }}>
             {isLoggedIn ? (
-                <h2>Welcome to ExamStudy School......!!!</h2>
+                <h2>Welcome to Power Grid Task Tracker</h2>
             ) : (
-                <h2>Please login to continue</h2>
+                <h2>Please login to continue to Power Grid Task Tracker</h2>
             )}
             {/* <div><Link to="/signup">Sign Up</Link></div>
             <div><Link to="/login">Log In</Link></div> */}

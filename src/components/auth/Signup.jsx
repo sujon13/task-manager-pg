@@ -8,6 +8,7 @@ import { get, post, auth } from '../../services/api';
 import LoginLink from './LoginLink';
 import { getUrl } from '../../services/util';
 import PasswordInput from './PasswordInput';
+import Title from '../util/Title';
 
 
 export const Signup = () => {
@@ -166,7 +167,7 @@ export const Signup = () => {
 
     return (
         <div className="form">
-            <h1>Sign Up</h1>
+            <Title/>
             <form onSubmit={handleSubmit}>
                 <Form.Control
                     type="text"

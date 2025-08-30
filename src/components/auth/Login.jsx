@@ -9,6 +9,7 @@ import { post, auth } from '../../services/api';
 import SignupLink from './SignupLink';
 import PasswordInput from './PasswordInput';
 import SuccessToast from './SuccessToast';
+import Title from '../util/Title';
 
 
 export const Login = ({ login }) => {
@@ -28,6 +29,10 @@ export const Login = ({ login }) => {
 
     const goToHome = () => {
         navigate('/');
+    }
+
+    const goToIncident = () => {
+        navigate('/incident');
     }
 
     const showSuccessToast = (callback) => {
@@ -55,7 +60,7 @@ export const Login = ({ login }) => {
             console.log(`User ${userNameOrEmail} logged in successfully`);
             showSuccessToast(() => {
                 login();
-                goToHome();
+                goToIncident();
             })
         } else if (status === 400) {
             setError(data);
@@ -80,6 +85,7 @@ export const Login = ({ login }) => {
             className="d-flex justify-content-center align-items-center vh-80"
         >
             <Card style={{ width: "30rem" }} className={ "p-4 shadow-lg " + (showToast ? 'disabled-overlay' : '') }>
+                <Title/>
                 <div style={{ display: (loading ? 'flex' : 'none'), justifyContent: 'center', alignItems: 'center' }}>
                     <Spinner 
                         animation="border" 

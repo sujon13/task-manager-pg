@@ -10,7 +10,7 @@ export const NavBar = ({ isLoggedIn, logout }) => {
 
     return (
         <div className={`navbar ${theme}`}>
-            <div className="navbar-logo"> <Link to="/">
+            {/* <div className="navbar-logo"> <Link to="/">
                 Exam <span style={{ color: "rgb(214, 150, 103)" }}>Study</span>School
                 </Link>
             </div>
@@ -20,7 +20,7 @@ export const NavBar = ({ isLoggedIn, logout }) => {
                 </li>
                 <li><Link to="/englishtutor">English Tutor</Link>
                 </li>
-            </ul>
+            </ul>  */}
             <ul className= 'navbar-links-two'>
                 <li onClick={toggleTheme} className="theme-toggle">
                     {theme === 'light' ?  '🌜': '🌞'}
@@ -31,7 +31,7 @@ export const NavBar = ({ isLoggedIn, logout }) => {
                 {!isLoggedIn && <li><Link to="/login">Login</Link> or <Link to="/signup">SignUp</Link></li>}
             </ul>
             <button className="mobile-menu-icon" onClick={() => setIsMobile(!isMobile)}>
-            ☰
+                ☰
             </button>
         </div>
     )

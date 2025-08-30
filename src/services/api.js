@@ -5,6 +5,10 @@ export const auth = axios.create({
     baseURL: "http://localhost:8080/api/v1",
 });
 
+export const task = axios.create({
+    baseURL: "http://localhost:8085/api/v1",
+});
+
 export const qa = axios.create({
     baseURL: "http://localhost:8085/api/v1",
 });

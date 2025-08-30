@@ -4,8 +4,9 @@
 }
 
 .navbar {
-  display: grid;
-  grid-template-columns: 1fr 3fr 1fr;
+  display: flex;
+  justify-content: flex-end;
+  align-items: center;
   padding-left: 50px;
   padding-right: 50px;
   background: var(--navbar-background-color);
@@ -47,10 +48,14 @@
   cursor: pointer;
 }
 
+ul {
+  margin-bottom: 0px;
+}
+
 li {
   width: 120px;
-  height: 60px;
-  line-height: 60px;
+  height: 30px;
+  line-height: 30px;
   text-align: center;
 }
 
@@ -95,8 +100,9 @@ li {
 
 @media (max-width: 768px) {
   .navbar {
-    display: grid;
-    grid-template-columns: auto auto auto;
+    display: flex;
+    justify-content: flex-end;
+    align-items: center;
     padding-left: 5px;
     padding-right: 5px;
   }

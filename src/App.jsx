@@ -19,6 +19,7 @@ import OtpVerification from './components/auth/Otp';
 import PostList from './components/post/PostList';
 import ExamTakerList from './components/examTaker/ExamTakerList';
 import RealExam from './components/exam/RealExam';
+import IncidentList from './components/incidents/IncidentList';
 
 export const App = () => {
   const [isLoggedIn, setIsLoggedIn] = useState(false);
@@ -76,6 +77,7 @@ export const App = () => {
         <Route path='/exam' element={<RealExam />} />
         <Route path='/exam/:examId' element={<RealExam />} />
         <Route path='/englishtutor' element={<EnglishTutor />} />
+        <Route path='/incident' element={<IncidentList />} />
         <Route
             path="/signup"
             element={
