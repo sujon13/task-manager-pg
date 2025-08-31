@@ -3,7 +3,7 @@ import { Button, Form, Row, Col } from 'react-bootstrap';
 import { FaPlus } from 'react-icons/fa';
 import PaginatedTable from '../util/PaginatedTable';
 import { get, post, put, deleteEntry, task } from '../../services/api';
-//import IncidentModal from './IncidentModal';
+import IncidentModal from './IncidentModal';
 import DeleteConfirmation from '../util/DeleteConfirmation';
 import Spinner from 'react-bootstrap/Spinner';
 
@@ -16,6 +16,7 @@ const IncidentList = () => {
     const [ showModal, setShowModal ] = useState(false);
     const [ showDeleteConfirmation, setShowDeleteConfirmation ] = useState(false);
     const [ isCreating, setIsCreating ] = useState(true);
+
     const [ id, setId ] = useState(null);
     //const [ eventNo, setEventNo ] = useState('');
     //const [ station, setStation ] = useState('');
@@ -64,6 +65,7 @@ const IncidentList = () => {
         { text: 'Reported By', dataField: 'reportedBy', type: 'string' },
         { text: 'Assigned To', dataField: 'assignedTo', type: 'string' },
         { text: 'Incident', dataField: 'summary', type: 'string' },
+        { text: 'Priority', dataField: 'priority', type: 'string'},
         { text: 'Status', dataField: 'status', type: 'string' },
     ];
 
@@ -166,13 +168,13 @@ const IncidentList = () => {
 
     return (
         <div className="container mt-4">
-            {/* <IncidentModal 
+            <IncidentModal 
                 isCreating={isCreating}
                 show={ showModal } 
                 content={ isCreating ? null : findIncidentById(id) }
                 handleClose={handleClose} 
                 handleCreate={handleSave} 
-            /> */}
+            />
             <DeleteConfirmation
                 show={showDeleteConfirmation}
                 onConfirm={ handleDeleteConfirmation }

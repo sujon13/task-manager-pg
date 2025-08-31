@@ -1,36 +1,46 @@
 import { useState, useEffect } from 'react';
 import Button from 'react-bootstrap/Button';
-import Form from 'react-bootstrap/Form';
+import { Form, Row, Col } from 'react-bootstrap';
 import Modal from 'react-bootstrap/Modal';
 import PropTypes from 'prop-types'; 
+import DatePicker from "react-datepicker";
+import Select from 'react-select';
+import "react-datepicker/dist/react-datepicker.css";
+import { get, task, auth } from '../../services/api';
+import { JsDate, ApiDate } from '../../services/util';  
+import '../css/DatePicker.css';
+
 
 const IncidentModal = ({ isCreating, show, content, handleClose, handleCreate }) => {
     //const [showModal, setShowModal] = useState(show);
     const [ id, setId ] = useState('');
     const [ eventNo, setEventNo ] = useState('');
     const [ station, setStation ] = useState('');
-    const [ occurredAt, setOccurredAt ] = useState(null);
-    const [ reportedAt, setReportedAt ] = useState(null);
+    const [ occurredAt, setOccurredAt ] = useState(new Date());
+    const [ reportedAt, setReportedAt ] = useState(new Date());
     const [ reportedBy, setReportedBy ] = useState('');
     const [ assignedTo, setAssignedTo ] = useState('');
-    const [ resolvedAt, setResolvedAt ] = useState('');
-    const [ faultNature, setFaultNature ] = useState('');
+    const [ resolvedAt, setResolvedAt ] = useState(null);
+    const [ faultNature, setFaultNature ] = useState('SOFTWARE');
     const [ summary, setSummary ] = useState('');
     const [ description, setDescription ] = useState('');
     const [ remarksByReporter, setRemarksByReporter ] = useState('');
     const [ remarksByAssignee, setRemarksByAssignee ] = useState('');
-    const [ status, setStatus] = useState('');
-    const [ priority, setPriority ] = useState('');
+    const [ status, setStatus] = useState(null);
+    const [ priority, setPriority ] = useState('HIGH');
 
-    const [ stationError, setStationError ] = useState('');
+    const [ summaryError, setSummaryError ] = useState('');
+
+    const [ priorityOptions, setPriorityOptions ] = useState([]);
+    const [ userOptions, setUserOptions ] = useState([]);
 
 
     const setContent = () => {
         setId(content.id);
         setEventNo(content.eventNo);
         setStation(content.station);
-        setOccurredAt(content.occurredAt);
-        setReportedAt(content.reportedAt);
+        setOccurredAt(JsDate(content.occurredAt));
+        setReportedAt(JsDate(content.reportedAt));
         setReportedBy(content.reportedBy);
         setAssignedTo(content.assignedTo);
         setResolvedAt(content.resolvedAt);
@@ -47,33 +57,47 @@ const IncidentModal = ({ isCreating, show, content, handleClose, handleCreate })
         setId(null);
         setEventNo('');
         setStation('');
-        setOccurredAt(null);
-        setReportedAt(null);
+        setOccurredAt(new Date());
+        setReportedAt(new Date());
         setReportedBy('');
         setAssignedTo('');
         setResolvedAt(null);
-        setFaultNature('');
+        setFaultNature('SOFTWARE');
         setSummary('');
         setDescription('');
         setRemarksByReporter('');
         setRemarksByAssignee('');
-        setStatus('');
-        setPriority('');
+        setStatus(null);
+        setPriority('HIGH');
     }
-    
+
+    const loadPriorityOptions = async () => {
+        const { status, data } = await get(task, '/incidents/priority/dropdown');
+        if (status === 200) {
+            setPriorityOptions(data.map(priority => ({ value: priority.name, label: priority.name })));
+        }
+    }
+
+    const loadUserOptions = async () => {
+        const { status, data } = await get(auth, '/users/dropdown');
+        if (status === 200) {
+            setUserOptions(data.map(user => ({ value: user.username, label: user.name })));
+        }
+    }
+
     useEffect(() => {
+        loadPriorityOptions();
+        loadUserOptions();
         if (content) {
+            console.info('has content');
             setContent();
         } else {
+            console.log('no content');
             clearContent();
         }
     }, [show, content]);
 
     const validate = () => {
-        if (!station) {
-            setStationError('Station is required');
-            return false;
-        }
         return true;
     }
 
@@ -85,8 +109,8 @@ const IncidentModal = ({ isCreating, show, content, handleClose, handleCreate })
         const incident = {
             id: content?.id || null,
             station,
-            occurredAt,
-            reportedAt,
+            occurredAt: ApiDate(occurredAt),
+            reportedAt: ApiDate(reportedAt),
             reportedBy,
             assignedTo,
             resolvedAt,
@@ -98,8 +122,14 @@ const IncidentModal = ({ isCreating, show, content, handleClose, handleCreate })
             status,
             priority
         };
+        console.log('incident to save', incident);
 
         handleCreate(incident);
+    }
+
+    const handleDateChange = (date, setter) => {
+        console.log('date selected', date);
+        setter(date);
     }
 
     if (show === false) {
@@ -109,44 +139,80 @@ const IncidentModal = ({ isCreating, show, content, handleClose, handleCreate })
 
     return (
         <>
-            <Modal show={ show } onHide={ handleClose }>
-                <Modal.Header closeButton >
-                    <Modal.Title>{ isCreating ? 'New Post' : 'Edit Post' }</Modal.Title>
+            <Modal show={ show } onHide={ handleClose } size='lg'>
+                <Modal.Header closeButton>
+                    <Modal.Title>{ isCreating ? 'New Incident' : 'Edit Incident' }</Modal.Title>
                 </Modal.Header>
                 <Modal.Body>
                     <Form>
-                        <Form.Group className="mb-3">
-                            <Form.Control
-                                type="text"
-                                placeholder="English Title"
-                                value={ engName }
-                                required
-                                maxLength={ 256 }
-                                autoFocus
-                                onFocus={ () => setEngNameError('') }
-                                onChange={ (e) => setEngName(e.target.value) }
-                            />
-                            { engNameError && <p className="text-danger">{ engNameError }</p> }
-                        </Form.Group>
-                        <Form.Group className="mb-3">
-                            <Form.Control
-                                type="text"
-                                maxLength={ 128 }
-                                placeholder="Bangla Title" 
-                                value={ bngName }
-                                onChange={ (e) => setBngName(e.target.value) }
-                            />
-                        </Form.Group>
-                        <Form.Group className="mb-3">
-                            <Form.Control
-                                type="number"
-                                placeholder="Grade"
-                                value={ grade }
-                                min="1"
-                                max="20"    
-                                onChange={ (e) => setGrade(e.target.value) }
-                            />
-                        </Form.Group>
+                        <Row>
+                            <Col md={6} sm={12}>
+                                <Form.Group className="">
+                                    <Form.Label>Station</Form.Label>
+                                    <Form.Control
+                                        type="text"
+                                        placeholder="Station"
+                                        value={ station }
+                                        maxLength={ 64 }
+                                        onChange={ (e) => setStation(e.target.value) }
+                                    />
+                                </Form.Group>
+                            </Col>
+                            <Col md={6} sm={12}>
+                                <Form.Group className="">
+                                    <div>
+                                        <Form.Label>Occurred At</Form.Label>
+                                    </div>
+                                    <DatePicker
+                                        selected={occurredAt ? new Date(occurredAt) : new Date()}
+                                        onChange={(d) => handleDateChange(d, setOccurredAt)}
+                                        showTimeSelect
+                                        timeIntervals={1}
+                                        dateFormat="dd MMM, yyyy hh:mm a"
+                                    />
+                                </Form.Group>
+                            </Col>
+                            <Col md={12}>
+                                <Form.Group className="mb-3">
+                                    <Form.Label>Incident Summary</Form.Label>
+                                    <Form.Control
+                                        as="textarea"
+                                        rows={3}
+                                        cols={50}
+                                        placeholder="Write incident summary here..."
+                                        value={ summary }
+                                        required
+                                        maxLength={ 1024 }
+                                        autoFocus
+                                        onFocus={ () => setSummaryError('') }
+                                        onChange={ (e) => setSummary(e.target.value) }
+                                    />
+                                    { summaryError && <p className="text-danger">{ summaryError }</p> }
+                                </Form.Group>
+                            </Col>
+                            <Col md={6} sm={12}>
+                                <Form.Group className="">
+                                    <Form.Label>Priority</Form.Label>
+                                    <Select
+                                        options={ priorityOptions }
+                                        onChange={ (option) => setPriority(option.value) }
+                                        placeholder="Select Priority"
+                                        value={ priorityOptions.find(option => option.value === priority) }
+                                    />
+                                </Form.Group>
+                            </Col>
+                            <Col md={6} sm={12}>
+                                <Form.Group className="">
+                                    <Form.Label>Assigned To</Form.Label>
+                                    <Select
+                                        options={ userOptions }
+                                        onChange={ (option) => setAssignedTo(option.value) }
+                                        placeholder="Select Assignee"
+                                        value={ userOptions.find(option => option.value === assignedTo) }
+                                    />
+                                </Form.Group>
+                            </Col>
+                        </Row>
                     </Form>
                 </Modal.Body>
                 <Modal.Footer>
