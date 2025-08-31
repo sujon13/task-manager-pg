@@ -58,11 +58,13 @@ const IncidentList = () => {
 
     const columns = [
         // { text: '#', dataField: 'id' },
-        { text: 'Station', dataField: 'station' },
-        { text: 'Occurred At', dataField: 'occurredAt' },
-        { text: 'Reported By', dataField: 'reportedBy' },
-        { text: 'Assigned To', dataField: 'assignedTo' },
-        { text: 'Status', dataField: 'status' },
+        { text: 'Event No', dataField: 'eventNo', type: 'int' },
+        { text: 'Station', dataField: 'station', type: 'string' },
+        { text: 'Reported At', dataField: 'reportedAt', type: 'date' },
+        { text: 'Reported By', dataField: 'reportedBy', type: 'string' },
+        { text: 'Assigned To', dataField: 'assignedTo', type: 'string' },
+        { text: 'Incident', dataField: 'summary', type: 'string' },
+        { text: 'Status', dataField: 'status', type: 'string' },
     ];
 
     const sampleIncidents = {

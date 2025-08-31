@@ -3,6 +3,7 @@ import { Table, Pagination, Button } from 'react-bootstrap';
 import { FaEdit, FaTrash } from 'react-icons/fa';
 import PropTypes from 'prop-types';
 import '../../components/css/pagination.css';
+import { convertTo12HourDateTime } from '../../services/util';
 
 const PaginatedTable = ({ data, columns, anyActionColumn, pageChange, handleEdit, handleDelete }) => {
   const [ currentPage ] = useState(data.number);
@@ -42,6 +43,7 @@ const PaginatedTable = ({ data, columns, anyActionColumn, pageChange, handleEdit
           <FaEdit />
         </Button>
         <Button 
+          style = {{display: 'none'}}
           variant="danger" 
           size="sm" 
           onClick={() => handleDelete(entry.id)}
@@ -69,8 +71,8 @@ const PaginatedTable = ({ data, columns, anyActionColumn, pageChange, handleEdit
             <tr key={indexOfFirstItem + idx}>
               
               <td>{indexOfFirstItem + idx + 1}</td>
-              { columns.map((column, index) => (
-                <td key={index}>{item[column.dataField]}</td>
+              { columns.map((column, index) => ( 
+                <td key={index}>{column.type === 'date' ? convertTo12HourDateTime(item[column.dataField]) : item[column.dataField]}</td>
               ))}
               { anyActionColumn && actionCol(item) }
             </tr>
