@@ -1,11 +1,14 @@
 import { useState, useEffect } from 'react';
 import { Button, Form, Row, Col } from 'react-bootstrap';
 import { FaPlus } from 'react-icons/fa';
+import Select from 'react-select';
+import Spinner from 'react-bootstrap/Spinner';
+
 import PaginatedTable from '../util/PaginatedTable';
-import { get, post, put, deleteEntry, task } from '../../services/api';
+import { get, post, put, deleteEntry, task, auth } from '../../services/api';
 import IncidentModal from './IncidentModal';
 import DeleteConfirmation from '../util/DeleteConfirmation';
-import Spinner from 'react-bootstrap/Spinner';
+
 
 const IncidentList = () => {
     // State
@@ -24,7 +27,12 @@ const IncidentList = () => {
     const [ reportedBy, setReportedBy ] = useState('');
     const [ assignedTo, setAssignedTo ] = useState('');
     const [ status, setStatus ] = useState('');
-    const [ grade, setGrade ] = useState('');
+    const [ priority, setPriority ] = useState('');
+
+    const [ priorityOptions, setPriorityOptions ] = useState([]);
+    const [ statusOptions, setStatusOptions ] = useState([]);
+    const [ reporterOptions, setReporterOptions ] = useState([]);
+    const [ assigneeOptions, setAssigneeOptions ] = useState([]);
 
   // Mock data
     const content = [
@@ -52,8 +60,43 @@ const IncidentList = () => {
         }
     }
 
+    const loadPriorityOptions = async () => {
+        const { status, data } = await get(task, '/incidents/priority/dropdown');
+        if (status === 200) {
+            const emptyOption = { value: '', label: '--Select Priority--' };
+            const options = data.map(priority => ({ value: priority.id, label: priority.name }))
+            setPriorityOptions([emptyOption, ...options]);
+        }
+    }
+
+    const loadStatusOptions = async () => {
+        const { status, data } = await get(task, '/incidents/status/dropdown');
+        if (status === 200) {
+            const emptyOption = { value: '', label: '--Select Status--' };
+            const options = data.map(status => ({ value: status.id, label: status.name }));
+            setStatusOptions([emptyOption, ...options]);
+        }
+    }
+
+    const buildUserOptions = (data, label) => {
+        const emptyOption = { value: '', label: label };
+        const options = data.map(user => ({ value: user.username, label: user.name }));
+        return [emptyOption, ...options];
+    }
+
+    const loadUserOptions = async () => {
+        const { status, data } = await get(auth, '/users/dropdown?excludingSelf=false');
+        if (status === 200) {
+            setReporterOptions(buildUserOptions(data, '--Select Reporter--'));
+            setAssigneeOptions(buildUserOptions(data, '--Select Assignee--'));
+        }
+    }
+
     useEffect(() => {
         fetchIncidents(currentPage, size);
+        loadPriorityOptions();
+        loadStatusOptions();
+        loadUserOptions();
     }, [currentPage, size]);
 
 
@@ -185,27 +228,36 @@ const IncidentList = () => {
             <div>
                 <Row>
                     <Col md={4}>
-                        <Form.Control
-                            type="text"
-                            maxLength={ 256 }
-                            placeholder="Reported By" 
-                            onChange={ (e) => setReportedBy(e.target.value) }
-                        />  
+                        <Select
+                            options={ reporterOptions }
+                            onChange={ (option) => setReportedBy(option.value) }
+                            placeholder="Reported By"
+                            value={ reporterOptions.find(option => option.value === reportedBy) }
+                        />
                     </Col>
                     <Col md={4}>
-                        <Form.Control
-                            type="text"
-                            maxLength={ 128 }
+                        <Select
+                            options={ assigneeOptions }
+                            onChange={ (option) => setAssignedTo(option.value) }
                             placeholder="Assigned To"
-                            onChange={ (e) => setAssignedTo(e.target.value) }
-                        />  
+                            value={ assigneeOptions.find(option => option.value === assignedTo) }
+                        />
+                    </Col>
+                    <Col md={4}>
+                       <Select
+                            options={ priorityOptions }
+                            onChange={ (option) => setPriority(option.value) }
+                            placeholder="Select Priority"
+                            value={ priorityOptions.find(option => option.value === priority) }
+                        />
                     </Col>
                     <Col md={3}>
-                        <Form.Control
-                            type="number"
-                            placeholder="Status"
-                            onChange={ (e) => setStatus(e.target.value) }
-                        />  
+                        <Select
+                            options={ statusOptions }
+                            onChange={ (option) => setStatus(option.value) }
+                            placeholder="Select Status"
+                            value={ statusOptions.find(option => option.value === status) }
+                        /> 
                     </Col>
                     <Col md={1} >
                         <Button 
