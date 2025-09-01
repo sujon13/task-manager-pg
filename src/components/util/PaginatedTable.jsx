@@ -69,6 +69,21 @@ const PaginatedTable = ({ data, columns, anyActionColumn, pageChange, handleEdit
         return null;
     }
   }
+
+  const badgeForStatus = (status, statusStr) => {
+    switch (status) {
+      case "REPORTED":
+        return <Badge bg="secondary">{statusStr}</Badge>;
+      case "IN_PROGRESS":
+        return <Badge bg="primary">{statusStr}</Badge>;
+      case "IN_REVIEW":
+        return <Badge bg="warning" text="dark">{statusStr}</Badge>;
+      case "RESOLVED":
+        return <Badge bg="success">{statusStr}</Badge>;
+      default:
+        return null;
+    }
+  }
   
   const tableContent = (item, column) => {
     const data = item[column.dataField];
@@ -78,8 +93,10 @@ const PaginatedTable = ({ data, columns, anyActionColumn, pageChange, handleEdit
       case 'enum': 
         if (column.dataField === 'priority') {
           return badgeForPriority(capitalizeFirst(data));
+        } else if (column.dataField === 'status') {
+          return badgeForStatus(data, item[column.extraField]);
         } else {
-          return capitalizeFirst(data);
+          return data;
         }
       case 'user':
         return data?.name || data?.userName;

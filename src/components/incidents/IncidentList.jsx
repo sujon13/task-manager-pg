@@ -116,27 +116,8 @@ const IncidentList = () => {
         { text: 'Assigned To', dataField: 'assignedTo', type: 'user' },
         { text: 'Incident', dataField: 'summary', type: 'string' },
         { text: 'Priority', dataField: 'priority', type: 'enum' },
-        { text: 'Status', dataField: 'status', type: 'enum' },
+        { text: 'Status', dataField: 'status', type: 'enum', extraField: 'statusStr' },
     ];
-
-    const sampleIncidents = {
-        content: content,
-        number: currentPage,
-        size: size,
-        totalElements: content.length,
-        totalPages: Math.ceil(content.length / size),
-    };
-
-    const newSampleIncidents = {
-        content: content,
-        page: {
-            number: currentPage,
-            size: size,
-            totalElements: content.length,
-            totalPages: Math.ceil(content.length / size),
-        }
-    };
-
   
   // Handlers
     const handlePageChange = page => setCurrentPage(page);
