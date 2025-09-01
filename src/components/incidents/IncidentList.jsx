@@ -65,8 +65,8 @@ const IncidentList = () => {
         { text: 'Reported By', dataField: 'reportedBy', type: 'string' },
         { text: 'Assigned To', dataField: 'assignedTo', type: 'string' },
         { text: 'Incident', dataField: 'summary', type: 'string' },
-        { text: 'Priority', dataField: 'priority', type: 'string'},
-        { text: 'Status', dataField: 'status', type: 'string' },
+        { text: 'Priority', dataField: 'priority', type: 'enum' },
+        { text: 'Status', dataField: 'status', type: 'enum' },
     ];
 
     const sampleIncidents = {

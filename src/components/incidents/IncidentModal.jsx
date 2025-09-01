@@ -9,6 +9,7 @@ import "react-datepicker/dist/react-datepicker.css";
 import { get, task, auth } from '../../services/api';
 import { JsDate, ApiDate } from '../../services/util';  
 import '../css/DatePicker.css';
+import '../css/IncidentModal.css';
 
 
 const IncidentModal = ({ isCreating, show, content, handleClose, handleCreate }) => {
@@ -74,14 +75,16 @@ const IncidentModal = ({ isCreating, show, content, handleClose, handleCreate })
     const loadPriorityOptions = async () => {
         const { status, data } = await get(task, '/incidents/priority/dropdown');
         if (status === 200) {
-            setPriorityOptions(data.map(priority => ({ value: priority.name, label: priority.name })));
+            setPriorityOptions(data.map(priority => ({ value: priority.id, label: priority.name })));
         }
     }
 
     const loadUserOptions = async () => {
         const { status, data } = await get(auth, '/users/dropdown');
         if (status === 200) {
-            setUserOptions(data.map(user => ({ value: user.username, label: user.name })));
+            const emptyOption = { value: '', label: 'Choose an assignee' };
+            const options = data.map(user => ({ value: user.username, label: user.name }));
+            setUserOptions([emptyOption, ...options]);
         }
     }
 
@@ -98,6 +101,10 @@ const IncidentModal = ({ isCreating, show, content, handleClose, handleCreate })
     }, [show, content]);
 
     const validate = () => {
+        if (!summary || summary.trim() === '') {
+            setSummaryError('Incident summary is required');
+            return false;
+        }
         return true;
     }
 
@@ -146,32 +153,6 @@ const IncidentModal = ({ isCreating, show, content, handleClose, handleCreate })
                 <Modal.Body>
                     <Form>
                         <Row>
-                            <Col md={6} sm={12}>
-                                <Form.Group className="">
-                                    <Form.Label>Station</Form.Label>
-                                    <Form.Control
-                                        type="text"
-                                        placeholder="Station"
-                                        value={ station }
-                                        maxLength={ 64 }
-                                        onChange={ (e) => setStation(e.target.value) }
-                                    />
-                                </Form.Group>
-                            </Col>
-                            <Col md={6} sm={12}>
-                                <Form.Group className="">
-                                    <div>
-                                        <Form.Label>Occurred At</Form.Label>
-                                    </div>
-                                    <DatePicker
-                                        selected={occurredAt ? new Date(occurredAt) : new Date()}
-                                        onChange={(d) => handleDateChange(d, setOccurredAt)}
-                                        showTimeSelect
-                                        timeIntervals={1}
-                                        dateFormat="dd MMM, yyyy hh:mm a"
-                                    />
-                                </Form.Group>
-                            </Col>
                             <Col md={12}>
                                 <Form.Group className="mb-3">
                                     <Form.Label>Incident Summary</Form.Label>
@@ -179,7 +160,7 @@ const IncidentModal = ({ isCreating, show, content, handleClose, handleCreate })
                                         as="textarea"
                                         rows={3}
                                         cols={50}
-                                        placeholder="Write incident summary here..."
+                                        placeholder="*Write incident summary here..."
                                         value={ summary }
                                         required
                                         maxLength={ 1024 }
@@ -191,7 +172,7 @@ const IncidentModal = ({ isCreating, show, content, handleClose, handleCreate })
                                 </Form.Group>
                             </Col>
                             <Col md={6} sm={12}>
-                                <Form.Group className="">
+                                <Form.Group className="mb-3">
                                     <Form.Label>Priority</Form.Label>
                                     <Select
                                         options={ priorityOptions }
@@ -202,7 +183,7 @@ const IncidentModal = ({ isCreating, show, content, handleClose, handleCreate })
                                 </Form.Group>
                             </Col>
                             <Col md={6} sm={12}>
-                                <Form.Group className="">
+                                <Form.Group className="mb-3">
                                     <Form.Label>Assigned To</Form.Label>
                                     <Select
                                         options={ userOptions }
@@ -212,6 +193,34 @@ const IncidentModal = ({ isCreating, show, content, handleClose, handleCreate })
                                     />
                                 </Form.Group>
                             </Col>
+                            <Col md={6} sm={12}>
+                                <Form.Group className="">
+                                    <Form.Label>Station</Form.Label>
+                                    <Form.Control
+                                        className='modal-input'
+                                        type="text"
+                                        placeholder="Station"
+                                        value={ station }
+                                        maxLength={ 64 }
+                                        onChange={ (e) => setStation(e.target.value) }
+                                    />
+                                </Form.Group>
+                            </Col>
+                            {/* <Col md={6} sm={12}>
+                                <Form.Group className="">
+                                    <div>
+                                        <Form.Label>Occurred At</Form.Label>
+                                    </div>
+                                    <DatePicker
+                                        className='modal-input'
+                                        selected={occurredAt ? new Date(occurredAt) : new Date()}
+                                        onChange={(d) => handleDateChange(d, setOccurredAt)}
+                                        showTimeSelect
+                                        timeIntervals={1}
+                                        dateFormat="dd MMM, yyyy hh:mm a"
+                                    />
+                                </Form.Group>
+                            </Col> */}
                         </Row>
                     </Form>
                 </Modal.Body>
