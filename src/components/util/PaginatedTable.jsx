@@ -88,7 +88,7 @@ const PaginatedTable = ({ data, columns, anyActionColumn, pageChange, handleEdit
   const getMaxWidth = col => {
     switch(col.dataField) {
       case 'eventNo':
-        return '40px';
+        return '50px';
       case 'station':
         return '60px';
       case 'reportedAt':
@@ -100,7 +100,7 @@ const PaginatedTable = ({ data, columns, anyActionColumn, pageChange, handleEdit
       case 'summary':
         return '250px';
       case 'priority':
-        return '50px';
+        return '60px';
       case 'status':
         return '60px';
       default:
@@ -153,7 +153,7 @@ const PaginatedTable = ({ data, columns, anyActionColumn, pageChange, handleEdit
       <Table striped bordered hover style={{ textAlign: 'center' }}>
         <thead>
           <tr>
-            <th className='text-break' style={{ maxWidth: '40px'}}> Serial </th>
+            <th className='text-break' style={{ maxWidth: '50px'}}> Serial </th>
             { columns.map((column, index) => (
               <th key={index} className="text-break" style={{ maxWidth: getMaxWidth(column) }}>
                 {column.text}
@@ -166,7 +166,7 @@ const PaginatedTable = ({ data, columns, anyActionColumn, pageChange, handleEdit
           {currentItems.map((item, idx) => (
             <tr key={indexOfFirstItem + idx} style={{ height: '60px' }}>
               
-              <td style={{ maxWidth: '40px'}}>{indexOfFirstItem + idx + 1}</td>
+              <td style={{ maxWidth: '50px'}}>{indexOfFirstItem + idx + 1}</td>
               { columns.map((column, index) => ( 
                 <td key={index} className="text-truncate" style={{ maxWidth: getMaxWidth(column) }}>
                   <OverlayTrigger
