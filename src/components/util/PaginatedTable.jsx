@@ -1,5 +1,5 @@
 import { useState } from 'react';
-import { Table, Pagination, Button, Badge } from 'react-bootstrap';
+import { Table, Pagination, Button, Badge, OverlayTrigger, Tooltip } from 'react-bootstrap';
 import { FaEdit, FaTrash } from 'react-icons/fa';
 import PropTypes from 'prop-types';
 import '../../components/css/pagination.css';
@@ -33,7 +33,7 @@ const PaginatedTable = ({ data, columns, anyActionColumn, pageChange, handleEdit
 
   const actionCol = (entry) => {
     return (
-      <td>
+      <td style={{ maxWidth: '50px' }}>
         <Button 
         style={{ display: entry.reporter || entry.assignee ? '' : 'none' }}
           variant="warning" 
@@ -44,7 +44,7 @@ const PaginatedTable = ({ data, columns, anyActionColumn, pageChange, handleEdit
           <FaEdit />
         </Button>
         <Button 
-          style = {{display: ''}}
+          style = {{display: 'None'}}
           variant="danger" 
           size="sm" 
           onClick={() => handleDelete(entry.id)}
@@ -84,6 +84,29 @@ const PaginatedTable = ({ data, columns, anyActionColumn, pageChange, handleEdit
         return null;
     }
   }
+
+  const getMaxWidth = col => {
+    switch(col.dataField) {
+      case 'eventNo':
+        return '40px';
+      case 'station':
+        return '60px';
+      case 'reportedAt':
+        return '120px';
+      case 'reportedBy':
+        return '120px';
+      case 'assignedTo':
+        return '120px';
+      case 'summary':
+        return '250px';
+      case 'priority':
+        return '50px';
+      case 'status':
+        return '60px';
+      default:
+        return '';
+    }
+  }
   
   const tableContent = (item, column) => {
     const data = item[column.dataField];
@@ -105,25 +128,53 @@ const PaginatedTable = ({ data, columns, anyActionColumn, pageChange, handleEdit
     }
   }
 
+  const tooltipContent = (item, column) => {
+    const data = item[column.dataField];
+    switch (column.type) {
+      case 'date':
+        return convertTo12HourDateTime(data);
+      case 'enum': 
+        if (column.dataField === 'priority') {
+          return capitalizeFirst(data);
+        } else if (column.dataField === 'status') {
+          return item[column.extraField];
+        } else {
+          return data;
+        }
+      case 'user':
+        return data?.name || data?.userName;
+      default:
+        return data;
+    }
+  }
+
   return (
     <>
       <Table striped bordered hover style={{ textAlign: 'center' }}>
         <thead>
           <tr>
-            <th> Serial </th>
+            <th className='text-break' style={{ maxWidth: '40px'}}> Serial </th>
             { columns.map((column, index) => (
-              <th key={index}>{column.text}</th>
+              <th key={index} className="text-break" style={{ maxWidth: getMaxWidth(column) }}>
+                {column.text}
+              </th>
             ))}
-            { anyActionColumn && <th> Action </th> }
+            { anyActionColumn && <th className='text-break' style={{ maxWidth: '50px'}}> Action </th> }
           </tr>
         </thead>
         <tbody>
           {currentItems.map((item, idx) => (
-            <tr key={indexOfFirstItem + idx}>
+            <tr key={indexOfFirstItem + idx} style={{ height: '60px' }}>
               
-              <td>{indexOfFirstItem + idx + 1}</td>
+              <td style={{ maxWidth: '40px'}}>{indexOfFirstItem + idx + 1}</td>
               { columns.map((column, index) => ( 
-                <td key={index}>{ tableContent(item, column) }
+                <td key={index} className="text-truncate" style={{ maxWidth: getMaxWidth(column) }}>
+                  <OverlayTrigger
+                    placement="top"
+                    overlay={<Tooltip>{ tooltipContent(item, column) }</Tooltip>}
+                  >
+                    <span>{ tableContent(item, column) }</span>
+                  </OverlayTrigger>
                 </td>
               ))}
               { anyActionColumn && actionCol(item) }

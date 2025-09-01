@@ -109,7 +109,7 @@ const IncidentList = () => {
 
     const columns = [
         // { text: '#', dataField: 'id' },
-        { text: 'Event No', dataField: 'eventNo', type: 'int' },
+        { text: 'Event', dataField: 'eventNo', type: 'int' },
         { text: 'Station', dataField: 'station', type: 'string' },
         { text: 'Reported At', dataField: 'reportedAt', type: 'date' },
         { text: 'Reported By', dataField: 'reportedBy', type: 'user' },
