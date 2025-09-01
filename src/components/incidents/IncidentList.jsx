@@ -24,10 +24,10 @@ const IncidentList = () => {
     //const [ eventNo, setEventNo ] = useState('');
     //const [ station, setStation ] = useState('');
     //const [ occurredAt, setOccurredAt] = useState('');
-    const [ reportedBy, setReportedBy ] = useState('');
-    const [ assignedTo, setAssignedTo ] = useState('');
-    const [ status, setStatus ] = useState('');
-    const [ priority, setPriority ] = useState('');
+    const [ reportedBy, setReportedBy ] = useState(null);
+    const [ assignedTo, setAssignedTo ] = useState(null);
+    const [ status, setStatus ] = useState(null);
+    const [ priority, setPriority ] = useState(null);
 
     const [ priorityOptions, setPriorityOptions ] = useState([]);
     const [ statusOptions, setStatusOptions ] = useState([]);
@@ -45,12 +45,19 @@ const IncidentList = () => {
         if (showLoading) {
             setIsLoading(true);
         }
+
         const params = {
             page,
-            size
-        }
-        const { status, data } = await get(task, '/incidents', params);
-        if (status === 200) {
+            size,
+            reportedBy,
+            assignedTo,
+            status,
+            priority,
+        };
+
+        const response = await get(task, '/incidents', params);
+        if (response.status === 200) {
+            const { data } = response;
             setData(data);
             setCurrentPage(data.number);
             setSize(data.size);
@@ -105,8 +112,8 @@ const IncidentList = () => {
         { text: 'Event No', dataField: 'eventNo', type: 'int' },
         { text: 'Station', dataField: 'station', type: 'string' },
         { text: 'Reported At', dataField: 'reportedAt', type: 'date' },
-        { text: 'Reported By', dataField: 'reportedBy', type: 'string' },
-        { text: 'Assigned To', dataField: 'assignedTo', type: 'string' },
+        { text: 'Reported By', dataField: 'reportedBy', type: 'user' },
+        { text: 'Assigned To', dataField: 'assignedTo', type: 'user' },
         { text: 'Incident', dataField: 'summary', type: 'string' },
         { text: 'Priority', dataField: 'priority', type: 'enum' },
         { text: 'Status', dataField: 'status', type: 'enum' },

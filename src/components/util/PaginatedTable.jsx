@@ -81,6 +81,8 @@ const PaginatedTable = ({ data, columns, anyActionColumn, pageChange, handleEdit
         } else {
           return capitalizeFirst(data);
         }
+      case 'user':
+        return data?.name || data?.userName;
       default:
         return data;
     }

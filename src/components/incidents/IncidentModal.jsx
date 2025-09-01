@@ -42,8 +42,8 @@ const IncidentModal = ({ isCreating, show, content, handleClose, handleCreate })
         setStation(content.station);
         setOccurredAt(JsDate(content.occurredAt));
         setReportedAt(JsDate(content.reportedAt));
-        setReportedBy(content.reportedBy);
-        setAssignedTo(content.assignedTo);
+        setReportedBy(content.reportedBy?.userName);
+        setAssignedTo(content.assignedTo?.userName);
         setResolvedAt(content.resolvedAt);
         setFaultNature(content.faultNature);
         setSummary(content.summary);
