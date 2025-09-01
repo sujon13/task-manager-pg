@@ -170,7 +170,7 @@ const PaginatedTable = ({ data, columns, anyActionColumn, pageChange, handleEdit
               { columns.map((column, index) => ( 
                 <td key={index} className="text-truncate" style={{ maxWidth: getMaxWidth(column) }}>
                   <OverlayTrigger
-                    placement="top"
+                    placement="auto"
                     overlay={<Tooltip>{ tooltipContent(item, column) }</Tooltip>}
                   >
                     <span>{ tableContent(item, column) }</span>
