@@ -1,7 +1,10 @@
-import PropTypes from 'prop-types';
 import { get, qa } from '../services/api';
+import useUser from '../hooks/useUser';
 
-export const Home = ({ isLoggedIn }) => {
+export const Home = () => {
+    const { isLoggedIn } = useUser();
+
+    
     const test = async () => {
         try {
             const response = await get(qa, '/posts', { withCredentials: true });
@@ -28,7 +31,3 @@ export const Home = ({ isLoggedIn }) => {
         </div>
     )
 }
-
-Home.propTypes = {
-    isLoggedIn: PropTypes.bool.isRequired,
-};

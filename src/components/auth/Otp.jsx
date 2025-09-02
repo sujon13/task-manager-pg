@@ -1,14 +1,15 @@
 import { useState, useEffect } from 'react';
-import { useNavigate, useLocation } from 'react-router-dom';
+import { useLocation } from 'react-router-dom';
 import { Form, Container, Row, Col, Button } from 'react-bootstrap';
 
 import '../css/Signup.css';
 import SuccessToast from './SuccessToast';
 import { post, auth } from '../../services/api';
+import { useAppNavigate } from '../../hooks/useAppNavigate';
 
 const OtpVerification = () => {
-    const navigate = useNavigate();
     const location = useLocation();
+    const { goLogin } = useAppNavigate();
 
     const [otp, setOtp] = useState('');
     const [otpId, setOtpId] = useState('');
@@ -59,10 +60,6 @@ const OtpVerification = () => {
         setResendDisabled(true); // Disable the resend button
     };
 
-    const goToLogin = () => {
-        navigate('/login');
-    }
-
     const showSuccessToast = (callback) => {
         setShowToast(true);
         setTimeout(() => {
@@ -85,7 +82,7 @@ const OtpVerification = () => {
         const { status, data } = await post(auth, '/signup/verify-otp', otpRequest);
         if (status === 200) {
             console.log(`OTP verified for user ${userName}`);
-            showSuccessToast(() => goToLogin());
+            showSuccessToast(() => goLogin());
         } else if (status === 400) {
             setError(data);
         } else {

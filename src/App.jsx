@@ -1,109 +1,81 @@
-import { useState, useEffect } from 'react';
 //import './App.css';
 import 'bootstrap/dist/css/bootstrap.min.css';
 import './App.css';
 import { Login } from './components/auth/Login'
-import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
-import { Home } from './components/Home';
-import { QuestionBank } from './components/QuestionBank/QuestionBank';
-import { LiveExam } from './components/LiveExam';
-import { EnglishTutor } from './components/EnglishTutor';
-import { NavBar } from './components/NavBar';
-import { QuestionCard } from './components/QuestionBank/QuestionCard';
-import {CreateExamQuestions} from './components/QuestionBank/CreateExamQuestions';
+import { Routes, Route } from 'react-router-dom';
+// import { Home } from './components/Home';
+// import { QuestionBank } from './components/QuestionBank/QuestionBank';
+// import { LiveExam } from './components/LiveExam';
+// import { EnglishTutor } from './components/EnglishTutor';
+// import { QuestionCard } from './components/QuestionBank/QuestionCard';
+// import {CreateExamQuestions} from './components/QuestionBank/CreateExamQuestions';
+// import { CreateUserName } from './components/auth/CreateUserName';
 import { Signup } from './components/auth/Signup';
-import { CreateUserName } from './components/auth/CreateUserName';
-import { get, post, auth } from './services/api';
-import PublicRoute from './components/PublicRoute';
+import PublicRoute from './components/route/PublicRoute';
+import PrivateRoute from './components/route/PrivateRoute';
 import OtpVerification from './components/auth/Otp';
-import PostList from './components/post/PostList';
-import ExamTakerList from './components/examTaker/ExamTakerList';
-import RealExam from './components/exam/RealExam';
+// import PostList from './components/post/PostList';
+// import ExamTakerList from './components/examTaker/ExamTakerList';
+// import RealExam from './components/exam/RealExam';
 import IncidentList from './components/incidents/IncidentList';
+import { NavBar } from './components/NavBar';
+import { Home } from './components/Home';
+import { ROUTES } from './routes.js';
 
 export const App = () => {
-  const [isLoggedIn, setIsLoggedIn] = useState(false);
-  //const [isLoading, setIsLoading] = useState(false);
+    //const [isLoading, setIsLoading] = useState(false);
 
-  useEffect(() => {
-    // const userInfo = localStorage.getItem("userInfo");  
-    // if (userInfo) {
-    //   setIsLoggedIn(true);
-    // } else {
-    //   fetchUserInfo();
-    // }
-    fetchUserInfo();
-  }, []);
 
-  const fetchUserInfo = async () => {
-    //setIsLoading(true);
-    const { status, data } = await get(auth, "/users/me");
-    if (status === 200 && data) {
-        localStorage.setItem("userInfo", JSON.stringify(data));
-        setIsLoggedIn(true);
-    } else {
-        logout();
-    }
-    //setIsLoading(false);
-  }
+    return (
+        <>
+            <NavBar />
+            <Routes>
+                <Route path={ROUTES.HOME} element={<Home />} />
 
-  const handleLogin = () => {
-    setIsLoggedIn(true);
-  }
-
-  const logout = () => {
-    setIsLoggedIn(false);
-    localStorage.removeItem("userInfo");
-  }
-
-  const handleLogout = async () => {
-    const { status } = await post(auth, "/logout");
-    if (status === 200) {
-      logout();
-    }
-  }
-
-  return (
-    <Router>
-      <NavBar isLoggedIn={isLoggedIn} logout={handleLogout} />
-      <Routes>
-        <Route path='/' element={<Home isLoggedIn={isLoggedIn} />} />
-        <Route path='/questionbank' element={<QuestionBank/>} />
-        <Route path='/questionbank/:questionId' element={<QuestionCard />} />
-        <Route path='/questionbank/createquestion' element ={<CreateExamQuestions/>} />
-        <Route path='/liveexam' element={<LiveExam />} />
-        <Route path='/post' element={<PostList />} />
-        <Route path='/examtaker' element={<ExamTakerList />} />
-        <Route path='/exam' element={<RealExam />} />
-        <Route path='/exam/:examId' element={<RealExam />} />
-        <Route path='/englishtutor' element={<EnglishTutor />} />
-        <Route path='/incident' element={<IncidentList />} />
-        <Route
-            path="/signup"
-            element={
-                <PublicRoute isLoggedIn={isLoggedIn}>
-                    <Signup />
-                </PublicRoute>
-            }
-        />
-        <Route
-            path="/verify-otp"
-            element={
-                <PublicRoute isLoggedIn={isLoggedIn}>
-                    <OtpVerification />
-                </PublicRoute>
-            }
-        />
-        <Route
-            path="/login"
-            element={
-                <PublicRoute isLoggedIn={isLoggedIn}>
-                    <Login login={handleLogin}/>
-                </PublicRoute>
-            }
-        />
-        <Route path='/createusername' element={<CreateUserName />} />
-      </Routes>
-    </Router>
-  )
+                {/* <Route path='/questionbank' element={<QuestionBank/>} />
+                <Route path='/questionbank/:questionId' element={<QuestionCard />} />
+                <Route path='/questionbank/createquestion' element ={<CreateExamQuestions/>} />
+                <Route path='/liveexam' element={<LiveExam />} />
+                <Route path='/post' element={<PostList />} />
+                <Route path='/examtaker' element={<ExamTakerList />} />
+                <Route path='/exam' element={<RealExam />} />
+                <Route path='/exam/:examId' element={<RealExam />} />
+                <Route path='/englishtutor' element={<EnglishTutor />} /> 
+                <Route path='/createusername' element={<CreateUserName />} /> */}
+                
+                <Route 
+                    path={ROUTES.INCIDENTS}
+                    element={
+                        <PrivateRoute>
+                            <IncidentList />
+                        </PrivateRoute>
+                    } 
+                />
+                <Route
+                    path={ROUTES.SIGNUP}
+                    element={
+                        <PublicRoute>
+                            <Signup />
+                        </PublicRoute>
+                    }
+                />
+                <Route
+                    path={ROUTES.VERIFY_OTP}
+                    element={
+                        <PublicRoute>
+                            <OtpVerification />
+                        </PublicRoute>
+                    }
+                />
+                <Route
+                    path={ROUTES.LOGIN}
+                    element={
+                        <PublicRoute>
+                            <Login/>
+                        </PublicRoute>
+                    }
+                />
+            </Routes>
+        </>
+    )
 }

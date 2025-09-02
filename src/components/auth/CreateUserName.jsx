@@ -1,14 +1,15 @@
 import { post, auth } from '../../services/api';
 import { useState } from 'react';
-import { useLocation, useNavigate } from 'react-router-dom';
+import { useLocation } from 'react-router-dom';
 import Form from 'react-bootstrap/Form';
 import Button from 'react-bootstrap/Button';
 import '../css/Signup.css';
 import '../css/Social.css';
+import { useAppNavigate } from '../../hooks/useAppNavigate';
 
 export const CreateUserName = () => {
     const location = useLocation();
-    const navigate = useNavigate();
+    const { goHome } = useAppNavigate();
     
     const [userName, setUserName] = useState('');
 
@@ -33,10 +34,6 @@ export const CreateUserName = () => {
         return '';
     };
 
-    const goToHome = () => {
-        navigate('/');
-    }
-
     const registerUserName = async () => {
         const userNameRequest = {
             userId,
@@ -48,7 +45,7 @@ export const CreateUserName = () => {
         const { status, data } = await post(auth, '/oauth2/register', userNameRequest);
         if (status === 200) {
             console.log(`User Name ${userName} registered successfully`);
-            goToHome();
+            goHome();
         } else if (status === 409) {
             console.log("user name: ", userName);
             setUserNameError(data + ' Please try another user Name.');

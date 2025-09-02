@@ -1,5 +1,4 @@
 import { useState } from 'react';
-import { useNavigate } from 'react-router-dom';
 import { Button, Form } from 'react-bootstrap';
 
 import '../css/Signup.css';
@@ -9,10 +8,11 @@ import LoginLink from './LoginLink';
 import { getUrl } from '../../services/util';
 import PasswordInput from './PasswordInput';
 import Title from '../util/Title';
+import { useAppNavigate } from '../../hooks/useAppNavigate';
 
 
 export const Signup = () => {
-    const navigate = useNavigate();
+    const { goTo } = useAppNavigate();
 
     const [userName, setUserName] = useState('');
     const [name, setName] = useState('');
@@ -133,7 +133,7 @@ export const Signup = () => {
 
     const goToOtpVerification = (paramMap) => {
         const url = getUrl('/verify-otp', paramMap);
-        navigate(url);
+        goTo(url);
     }
 
     const handleSubmit = async (e) => {

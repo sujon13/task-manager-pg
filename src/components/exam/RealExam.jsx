@@ -1,18 +1,19 @@
 import { useState, useEffect } from 'react';
-import { Button, Form, Row, Col, Accordion } from 'react-bootstrap';
+import { Button, Form, Row, Col } from 'react-bootstrap';
 import { get, post, put, qa } from '../../services/api';
 import Spinner from 'react-bootstrap/Spinner';
 import Select from 'react-select';
 import Confirmation from '../util/Confirmation';
 import ToastNotification from '../util/ToastNotification';
 import ExamQuestion from '../Question/ExamQuestion';
-import { useParams, useNavigate } from 'react-router-dom';
+import { useParams } from 'react-router-dom';
+import { useAppNavigate } from '../../hooks/useAppNavigate';
 
 const RealExam = () => {
     // State
 
     const { examId } = useParams(); // Retrieve the examId from the URL
-    const navigate = useNavigate();
+    const { goTo } = useAppNavigate();
 
     const [id, setId] = useState(examId);
     const [name, setName] = useState('');
@@ -128,7 +129,7 @@ const RealExam = () => {
         setIsDisabled(false);
         
         if (!examId) {
-            navigate(`/exam/${id}`);
+            goTo(`/exam/${id}`);
         }
     }
 

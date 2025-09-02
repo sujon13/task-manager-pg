@@ -1,6 +1,4 @@
-import PropTypes from 'prop-types';
 import { useState } from 'react';
-import { useNavigate } from 'react-router-dom';
 import { Container, Form, Button, Card, Spinner } from "react-bootstrap";
 
 import '../css/Signup.css';
@@ -10,10 +8,12 @@ import SignupLink from './SignupLink';
 import PasswordInput from './PasswordInput';
 import SuccessToast from './SuccessToast';
 import Title from '../util/Title';
+import useUser from '../../hooks/useUser';
+import { useAppNavigate } from '../../hooks/useAppNavigate';
 
-
-export const Login = ({ login }) => {
-    const navigate = useNavigate();
+export const Login = () => {
+    const { goIncidents } = useAppNavigate();
+    const { login } = useUser();
 
     const [userNameOrEmail, setUserNameOrEmail] = useState('');
     const [password, setPassword] = useState('');
@@ -25,15 +25,6 @@ export const Login = ({ login }) => {
     const waitTimeForApiInMillis = 500;
     const adminWhatsapp = '01730016065';
     const adminEmail = 'ae2.scada@pgcb.gov.bd';
-
-
-    const goToHome = () => {
-        navigate('/');
-    }
-
-    const goToIncident = () => {
-        navigate('/incident');
-    }
 
     const showSuccessToast = (callback) => {
         setShowToast(true);
@@ -60,7 +51,7 @@ export const Login = ({ login }) => {
             console.log(`User ${userNameOrEmail} logged in successfully`);
             showSuccessToast(() => {
                 login();
-                goToIncident();
+                goIncidents();
             })
         } else if (status === 400) {
             setError(data);
@@ -130,7 +121,3 @@ export const Login = ({ login }) => {
         </Container>
     )
 }
-
-Login.propTypes = {
-    login: PropTypes.func.isRequired,
-};
