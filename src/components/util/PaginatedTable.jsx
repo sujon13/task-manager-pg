@@ -70,6 +70,20 @@ const PaginatedTable = ({ data, columns, anyActionColumn, pageChange, handleEdit
     }
   }
 
+  const buildBadgeForStatus = (statusStr) => {
+    return (
+      <>
+        {statusStr.split(" ").map((word, idx) => (
+          <div key={idx} className=""> 
+            <Badge bg="warning" text="dark">
+              {word}
+            </Badge>
+        </div>
+        ))}
+      </>
+    );
+  }
+
   const badgeForStatus = (status, statusStr) => {
     switch (status) {
       case "REPORTED":
@@ -77,7 +91,8 @@ const PaginatedTable = ({ data, columns, anyActionColumn, pageChange, handleEdit
       case "IN_PROGRESS":
         return <Badge bg="primary">{statusStr}</Badge>;
       case "IN_REVIEW":
-        return <Badge bg="warning" text="dark">{statusStr}</Badge>;
+        //return <Badge bg="warning" text="dark">{statusStr}</Badge>;
+        return buildBadgeForStatus(statusStr);
       case "RESOLVED":
         return <Badge bg="success">{statusStr}</Badge>;
       default:
@@ -102,7 +117,7 @@ const PaginatedTable = ({ data, columns, anyActionColumn, pageChange, handleEdit
       case 'priority':
         return '60px';
       case 'status':
-        return '60px';
+        return '90px';
       default:
         return '';
     }
