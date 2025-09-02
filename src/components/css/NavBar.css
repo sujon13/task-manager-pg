@@ -53,13 +53,13 @@ ul {
 }
 
 li {
-  width: 90px;
+  width: 120px;
   height: 30px;
   line-height: 30px;
   text-align: center;
 }
 
-.navbar-links-one>li {
+.navbar-links-one > li {
   width: 150px;
 }
 
@@ -96,6 +96,20 @@ li {
   top: 38px;
   right: 0;
   background-color: var(--navbar-background-color);
+}
+
+.profile-icon {
+  width: 1.5rem;
+  height: 1.5rem;
+  cursor: pointer;
+  color: #333;
+}
+
+@media (min-width: 768px) {
+  .profile-icon {
+    width: 1.8rem;
+    height: 1.8rem;
+  }
 }
 
 @media (max-width: 768px) {

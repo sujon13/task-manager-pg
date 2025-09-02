@@ -20,6 +20,7 @@ import OtpVerification from './components/auth/Otp';
 import IncidentList from './components/incidents/IncidentList';
 import { NavBar } from './components/NavBar';
 import { Home } from './components/Home';
+import NotFound from './components/NotFound';
 import Profile from './components/profile/Profile';
 import { ROUTES } from './routes.js';
 
@@ -84,6 +85,8 @@ export const App = () => {
                         </PublicRoute>
                     }
                 />
+                {/* Catch-all route for unmatched paths */}
+                <Route path={ROUTES.UNMATCHED} element={<NotFound />} />
             </Routes>
         </>
     )

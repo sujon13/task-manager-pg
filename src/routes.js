@@ -6,6 +6,7 @@ export const ROUTES = {
     VERIFY_OTP: "/verify-otp",
     INCIDENTS: "/incident",
     PROFILE: "/profile",
+    UNMATCHED: "*",
     // Add other routes as needed
     UNAUTHORIZED: "/unauthorized",
 };
