@@ -10,9 +10,12 @@ import { get, task, auth } from '../../services/api';
 import { JsDate, ApiDate } from '../../services/util';  
 import '../css/DatePicker.css';
 import '../css/IncidentModal.css';
+import useUser from "../../hooks/useUser";
 
 
 const IncidentModal = ({ isCreating, show, content, handleClose, handleCreate }) => {
+    const { user } = useUser();
+
     //const [showModal, setShowModal] = useState(show);
     const [ id, setId ] = useState('');
     const [ eventNo, setEventNo ] = useState('');
@@ -34,7 +37,13 @@ const IncidentModal = ({ isCreating, show, content, handleClose, handleCreate })
 
     const [ priorityOptions, setPriorityOptions ] = useState([]);
     const [ userOptions, setUserOptions ] = useState([]);
+    const [ statusOptions, setStatusOptions ] = useState([]);
 
+    const isOnlyAssignee = () => {
+        if (isCreating) return false;
+        const me = user?.userName;
+        return me === assignedTo && me !== reportedBy;
+    }
 
     const setContent = () => {
         setId(content.id);
@@ -88,9 +97,20 @@ const IncidentModal = ({ isCreating, show, content, handleClose, handleCreate })
         }
     }
 
+    const loadStatusOptions = async () => {
+        const { status, data } = await get(task, '/incidents/status/dropdown');
+        if (status === 200) {
+            const emptyOption = { value: '', label: 'Choose Status' };
+            const options = data.map(status => ({ value: status.id, label: status.name }));
+            setStatusOptions([emptyOption, ...options]);
+        }
+    }
+
     useEffect(() => {
         loadPriorityOptions();
         loadUserOptions();
+        loadStatusOptions();
+
         if (content) {
             console.info('has content');
             setContent();
@@ -126,7 +146,7 @@ const IncidentModal = ({ isCreating, show, content, handleClose, handleCreate })
             description,
             remarksByReporter,
             remarksByAssignee,
-            status,
+            status: isCreating ? null: status,
             priority
         };
         console.log('incident to save', incident);
@@ -167,6 +187,7 @@ const IncidentModal = ({ isCreating, show, content, handleClose, handleCreate })
                                         autoFocus
                                         onFocus={ () => setSummaryError('') }
                                         onChange={ (e) => setSummary(e.target.value) }
+                                        readOnly={ isOnlyAssignee() }
                                     />
                                     { summaryError && <p className="text-danger">{ summaryError }</p> }
                                 </Form.Group>
@@ -179,6 +200,7 @@ const IncidentModal = ({ isCreating, show, content, handleClose, handleCreate })
                                         onChange={ (option) => setPriority(option.value) }
                                         placeholder="Select Priority"
                                         value={ priorityOptions.find(option => option.value === priority) }
+                                        isDisabled={ isOnlyAssignee() } 
                                     />
                                 </Form.Group>
                             </Col>
@@ -190,6 +212,7 @@ const IncidentModal = ({ isCreating, show, content, handleClose, handleCreate })
                                         onChange={ (option) => setAssignedTo(option.value) }
                                         placeholder="Select Assignee"
                                         value={ userOptions.find(option => option.value === assignedTo) }
+                                        isDisabled={ isOnlyAssignee() } 
                                     />
                                 </Form.Group>
                             </Col>
@@ -203,9 +226,22 @@ const IncidentModal = ({ isCreating, show, content, handleClose, handleCreate })
                                         value={ station }
                                         maxLength={ 64 }
                                         onChange={ (e) => setStation(e.target.value) }
+                                        readOnly={ isOnlyAssignee() }
                                     />
                                 </Form.Group>
                             </Col>
+                            <Col md={6} sm={12} style={{ display: isCreating ? 'none' : 'block' }}>
+                                <Form.Group className="">
+                                    <Form.Label>Status</Form.Label>
+                                    <Select
+                                        options={ statusOptions }
+                                        onChange={ (option) => setStatus(option.value) }
+                                        placeholder="Select Status"
+                                        value={ statusOptions.find(option => option.value === status) }
+                                    />
+                                </Form.Group>
+                            </Col>
+                            
                             {/* <Col md={6} sm={12}>
                                 <Form.Group className="">
                                     <div>
