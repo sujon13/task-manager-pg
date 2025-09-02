@@ -10,6 +10,7 @@ import { useAppNavigate } from '../hooks/useAppNavigate';
 export const UserProvider = ({ children }) => {
     const { goLogin, goIncidents } = useAppNavigate();
     const [user, setUser] = useState(null); // { id, name, email, role }
+    const [loading, setLoading] = useState(true);
 
     const fetchUserInfo = async (callback) => {
         const { status, data } = await get(auth, "/users/me", { withCredentials: true });
@@ -25,6 +26,7 @@ export const UserProvider = ({ children }) => {
         } else {
             logout();
         }
+        setLoading(false);
     }
 
     // Restore by fetching from server on refresh
@@ -55,7 +57,7 @@ export const UserProvider = ({ children }) => {
     const isLoggedIn = !!user;
 
     return (
-        <UserContext.Provider value={{ user, isLoggedIn, login, logout }}>
+        <UserContext.Provider value={{ user, isLoggedIn, login, logout, loading }}>
             {children}
         </UserContext.Provider>
     );
