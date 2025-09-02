@@ -51,7 +51,6 @@ export const Login = () => {
             console.log(`User ${userNameOrEmail} logged in successfully`);
             showSuccessToast(() => {
                 login();
-                goIncidents();
             })
         } else if (status === 400) {
             setError(data);

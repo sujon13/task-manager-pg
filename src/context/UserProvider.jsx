@@ -34,8 +34,14 @@ export const UserProvider = ({ children }) => {
         fetchUserInfo();
     }, []);
 
-    const login = () => {
-        fetchUserInfo(() => goIncidents());
+    const login = (callback) => {
+        fetchUserInfo(() => {
+            if (typeof callback === 'function') {
+                callback();
+            } else {
+                goIncidents();
+            }
+        });
         //localStorage.setItem("user", JSON.stringify(userData));
     };
 

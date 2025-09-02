@@ -5,6 +5,7 @@ export const ROUTES = {
     SIGNUP: "/signup",
     VERIFY_OTP: "/verify-otp",
     INCIDENTS: "/incident",
+    PROFILE: "/profile",
     // Add other routes as needed
     UNAUTHORIZED: "/unauthorized",
 };

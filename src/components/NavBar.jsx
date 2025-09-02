@@ -2,11 +2,15 @@ import { useState } from "react";
 import { Link } from "react-router-dom";
 import './css/NavBar.css';
 import useTheme from "../hooks/useTheme";
+import { FaUserCircle } from "react-icons/fa";
 //import PropTypes from 'prop-types';
 import useUser from '../hooks/useUser';
+import { ROUTES } from '../routes';
+import { useAppNavigate } from '../hooks/useAppNavigate';
 
 export const NavBar = () => {
     const { isLoggedIn, logout } = useUser();
+    const { goProfile } = useAppNavigate();
     const [theme, toggleTheme] = useTheme();
     const [isMobile, setIsMobile] = useState(false);
 
@@ -27,10 +31,18 @@ export const NavBar = () => {
                 <li onClick={toggleTheme} className="theme-toggle">
                     {theme === 'light' ?  '🌜': '🌞'}
                 </li>
-                {/* <li className="login"><Link to="/login">LogIn</Link></li>
-                <li><Link to="/signup">SignUp</Link></li> */}
+                { isLoggedIn && 
+                    <li>
+                        <FaUserCircle
+                            size={30}
+                            style={{ cursor: "pointer" }}
+                            onClick={ () => goProfile() }
+                            title={"Profile"}
+                        />
+                    </li>
+                }
                 {isLoggedIn && <li onClick={logout}> Logout </li>}
-                {!isLoggedIn && <li><Link to="/login">Login</Link> or <Link to="/signup">SignUp</Link></li>}
+                {!isLoggedIn && <li><Link to={ROUTES.LOGIN}>Login</Link> or <Link to={ROUTES.SIGNUP}>SignUp</Link></li>}
             </ul>
             <button className="mobile-menu-icon" onClick={() => setIsMobile(!isMobile)}>
                 ☰

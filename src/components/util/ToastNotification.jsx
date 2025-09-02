@@ -4,13 +4,13 @@ import PropTypes from 'prop-types';
 
 function ToastNotification({ show, onClose, message, title, isSuccess = true }) {
   return (
-    <ToastContainer position="middle-center" className="p-3">
+    <ToastContainer position="top-center" className="p-3">
       <Toast 
         show={show} 
         onClose={onClose} 
-        delay={1000} 
+        delay={3000} 
         autohide 
-        style={{ backgroundColor: isSuccess ? 'green' : '' }}
+        style={{ backgroundColor: isSuccess ? 'green' : '', color: isSuccess ? 'white' : '' }}
       >
         <Toast.Header>
           <strong className="me-auto">{title}</strong>

@@ -11,6 +11,7 @@ export function useAppNavigate() {
         goLogin: () => navigate(ROUTES.LOGIN),
         goSignup: () => navigate(ROUTES.SIGNUP),
         goIncidents: () => navigate(ROUTES.INCIDENTS),
+        goProfile: () => navigate(ROUTES.PROFILE),
         goVerifyOtp: () => navigate(ROUTES.VERIFY_OTP),
         goTo: (path) => navigate(path),
         replaceWith: (path) => navigate(path, { replace: true }),
