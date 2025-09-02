@@ -18,17 +18,28 @@ export const NavBar = () => {
             variant={theme === "light" ? "light" : "dark"}
             className="shadow-sm"
             collapseOnSelect
+            style={{ paddingTop: "8px", paddingBottom: "8px", minHeight: "50px" }}
         >
-            <Container>
+            <Container style={{ paddingTop: '0px' }}>
                 {/* Mobile toggle button */}
-                <Navbar.Toggle aria-controls="basic-navbar-nav" />
+                <Navbar.Toggle
+                    aria-controls="basic-navbar-nav"
+                    style={{ padding: "2px 6px" }}
+                >
+                    <span
+                        className="navbar-toggler-icon"
+                        style={{ width: "18px", height: "18px" }}
+                    />
+                </Navbar.Toggle>
 
                 {/* Menu links */}
                 <Navbar.Collapse id="basic-navbar-nav">
                     <Nav className="ms-auto">
-                        <Nav.Link as={Link} to={ROUTES.INCIDENTS}>
-                            Incidents
-                        </Nav.Link>
+                        { isLoggedIn && (
+                            <Nav.Link as={Link} to={ROUTES.INCIDENTS}>
+                                Incidents
+                            </Nav.Link>
+                        )}
 
                         {/* Theme Toggle */}
                         <Nav.Link onClick={toggleTheme}>
