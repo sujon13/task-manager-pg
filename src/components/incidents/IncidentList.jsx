@@ -92,7 +92,7 @@ const IncidentList = () => {
     }
 
     const loadUserOptions = async () => {
-        const { status, data } = await get(auth, '/users/dropdown?excludingSelf=false');
+        const { status, data } = await get(auth, '/users/dropdown');
         if (status === 200) {
             setReporterOptions(buildUserOptions(data, '--Select Reporter--'));
             setAssigneeOptions(buildUserOptions(data, '--Select Assignee--'));
