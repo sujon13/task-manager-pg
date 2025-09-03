@@ -109,7 +109,7 @@ const PaginatedTable = ({ data, columns, anyActionColumn, pageChange, handleEdit
       case 'station':
         return '60px';
       case 'reportedAt':
-        return '120px';
+        return '90px';
       case 'reportedBy':
         return '120px';
       case 'assignedTo':
@@ -140,12 +140,26 @@ const PaginatedTable = ({ data, columns, anyActionColumn, pageChange, handleEdit
       </div>
     );
   }
+
+  const formattedDate = date => {
+    const twelveHourFormat = convertTo12HourDateTime(date);
+    const datePart = twelveHourFormat.substring(0, 10);
+    const timePart = twelveHourFormat.substring(11);
+    return (
+      <div>
+        {datePart}
+        <div className="text-muted" style={{ fontSize: "0.85em" }}>
+          {timePart}
+        </div>
+      </div>
+    );
+  }
   
   const tableContent = (item, column) => {
     const data = item[column.dataField];
     switch (column.type) {
       case 'date':
-        return convertTo12HourDateTime(data);
+        return formattedDate(data);
       case 'enum': 
         if (column.dataField === 'priority') {
           return badgeForPriority(capitalizeFirst(data));
