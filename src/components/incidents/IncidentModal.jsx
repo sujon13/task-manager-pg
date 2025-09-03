@@ -13,7 +13,7 @@ import '../css/IncidentModal.css';
 import useUser from "../../hooks/useUser";
 
 
-const IncidentModal = ({ isCreating, show, content, handleClose, handleCreate }) => {
+const IncidentModal = ({ isCreating, show, content, handleClose, handleCreate, handleUpdateByAssignee }) => {
     const { user } = useUser();
 
     //const [showModal, setShowModal] = useState(show);
@@ -37,12 +37,34 @@ const IncidentModal = ({ isCreating, show, content, handleClose, handleCreate })
 
     const [ priorityOptions, setPriorityOptions ] = useState([]);
     const [ userOptions, setUserOptions ] = useState([]);
-    const [ statusOptions, setStatusOptions ] = useState([]);
 
     const isOnlyAssignee = () => {
         if (isCreating) return false;
         const me = user?.userName;
         return me === assignedTo && me !== reportedBy;
+    }
+
+    const isAssigneeAndStatusInProgress = () => {
+        if (isCreating) return false;
+        const me = user?.userName;
+        return me === assignedTo && status === 'IN_PROGRESS';
+    }
+
+    const isReporterAndStatusOpen = () => {
+        const me = user?.userName;
+        if (me !== reportedBy) return false;
+
+        return isCreating || status === 'IN_PROGRESS' || status === 'REPORTED';
+    }
+
+    const shouldRemarksByAssigneeBeVisible = () => {
+        if (isCreating || status === 'REPORTED')return false;
+
+        if (status === 'IN_PROGRESS') {
+            return user?.userName === assignedTo;
+        } else {
+            return true;
+        } 
     }
 
     const setContent = () => {
@@ -97,19 +119,9 @@ const IncidentModal = ({ isCreating, show, content, handleClose, handleCreate })
         }
     }
 
-    const loadStatusOptions = async () => {
-        const { status, data } = await get(task, '/incidents/status/dropdown');
-        if (status === 200) {
-            const emptyOption = { value: '', label: 'Choose Status' };
-            const options = data.map(status => ({ value: status.id, label: status.name }));
-            setStatusOptions([emptyOption, ...options]);
-        }
-    }
-
     useEffect(() => {
         loadPriorityOptions();
         loadUserOptions();
-        loadStatusOptions();
 
         if (content) {
             console.info('has content');
@@ -153,6 +165,16 @@ const IncidentModal = ({ isCreating, show, content, handleClose, handleCreate })
 
         handleCreate(incident);
     }
+ 
+    const handleTaskCompletetion = () => {
+        const updateRequestByAssignee = {
+            id: content?.id || null,
+            remarksByAssignee,
+        };
+        console.log('incident to complete by assignee', updateRequestByAssignee);
+
+        handleUpdateByAssignee(updateRequestByAssignee);
+    }
 
     const handleDateChange = (date, setter) => {
         console.log('date selected', date);
@@ -187,7 +209,7 @@ const IncidentModal = ({ isCreating, show, content, handleClose, handleCreate })
                                         autoFocus
                                         onFocus={ () => setSummaryError('') }
                                         onChange={ (e) => setSummary(e.target.value) }
-                                        readOnly={ isOnlyAssignee() }
+                                        disabled={ isOnlyAssignee() }
                                     />
                                     { summaryError && <p className="text-danger">{ summaryError }</p> }
                                 </Form.Group>
@@ -226,18 +248,35 @@ const IncidentModal = ({ isCreating, show, content, handleClose, handleCreate })
                                         value={ station }
                                         maxLength={ 64 }
                                         onChange={ (e) => setStation(e.target.value) }
-                                        readOnly={ isOnlyAssignee() }
+                                        disabled={ isOnlyAssignee() }
                                     />
                                 </Form.Group>
                             </Col>
                             <Col md={6} sm={12} style={{ display: isCreating ? 'none' : 'block' }}>
                                 <Form.Group className="">
                                     <Form.Label>Status</Form.Label>
-                                    <Select
-                                        options={ statusOptions }
-                                        onChange={ (option) => setStatus(option.value) }
-                                        placeholder="Select Status"
-                                        value={ statusOptions.find(option => option.value === status) }
+                                    <Form.Control
+                                        className='modal-input'
+                                        type="text"
+                                        placeholder="Status"
+                                        value={ content?.statusStr }
+                                        disabled
+                                    />
+                                </Form.Group>
+                            </Col>
+                            <Col md={12} style={{ display: shouldRemarksByAssigneeBeVisible() ? 'block' : 'none' }}>
+                                <Form.Group className="mb-3">
+                                    <Form.Label>Assignee Remarks</Form.Label>
+                                    <Form.Control
+                                        as="textarea"
+                                        rows={3}
+                                        cols={50}
+                                        placeholder=""
+                                        value={ remarksByAssignee }
+                                        maxLength={ 2048 }
+                                        autoFocus
+                                        onChange={ (e) => setRemarksByAssignee(e.target.value) }
+                                        disabled={ !isAssigneeAndStatusInProgress() }
                                     />
                                 </Form.Group>
                             </Col>
@@ -264,7 +303,10 @@ const IncidentModal = ({ isCreating, show, content, handleClose, handleCreate })
                     <Button variant="secondary" onClick={handleClose}>
                         Close
                     </Button>
-                    <Button variant="primary" onClick={handleSave}>
+                    <Button variant="primary" onClick={handleTaskCompletetion} style={{ display: isAssigneeAndStatusInProgress() ? '' : 'none' }}>
+                        Task Done?
+                    </Button>
+                    <Button variant="primary" onClick={handleSave} style={{ display: isReporterAndStatusOpen() ? '' : 'none' }}>
                         Save
                     </Button>
                 </Modal.Footer>
@@ -279,6 +321,7 @@ IncidentModal.propTypes = {
     content: PropTypes.object,
     handleClose: PropTypes.func.isRequired,
     handleCreate: PropTypes.func.isRequired,
+    handleUpdateByAssignee: PropTypes.func.isRequired,
 };
 
 export default IncidentModal;

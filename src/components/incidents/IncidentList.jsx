@@ -189,6 +189,17 @@ const IncidentList = () => {
         }
     }
 
+    const handleUpdateByAssignee = async (updateRequestByAssignee) => {
+        setIsLoading(true);
+        const { status, data } = await put(task, '/incidents/update-by-assignee', updateRequestByAssignee);
+        if (status >= 200 && status < 300) {
+            handleClose();
+            handleOk();
+        } else {
+            handleError(data);
+        }
+    }
+
     const handleSearch = () => {
         setIsLoading(true);
         fetchIncidents(0, size, false);
@@ -205,6 +216,7 @@ const IncidentList = () => {
                 content={ isCreating ? null : findIncidentById(id) }
                 handleClose={handleClose} 
                 handleCreate={handleSave} 
+                handleUpdateByAssignee={handleUpdateByAssignee}
             />
             <DeleteConfirmation
                 show={showDeleteConfirmation}
