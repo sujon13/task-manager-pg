@@ -58,9 +58,10 @@ const IncidentModal = ({ isCreating, show, content, handleClose, handleCreate, h
     }
 
     const isReporterAndStatusOpen = () => {
+        if (isCreating)return true;
         if (isNotReporter())return false;
 
-        return isCreating || ['REPORTED', 'IN_PROGRESS'].includes(status);
+        return ['REPORTED', 'IN_PROGRESS'].includes(status);
     }
 
     const isReporterAndStatusCompleted = () => {
