@@ -124,6 +124,22 @@ const PaginatedTable = ({ data, columns, anyActionColumn, pageChange, handleEdit
         return '';
     }
   }
+
+  const userResponse = user => {
+    const name = user?.name || user?.userName;
+    const userOffice = user?.userOffices?.[0];
+    const designation = userOffice?.designation;
+    const office = userOffice?.office;
+    const any = !!designation || !!office;
+    const both = !!designation && !!office;
+
+    return (
+      <div>
+        {name}<br/>
+        {any ? '(' : ''}{designation}{both ? ', ' : ''}{office}{any ? ')' : ''}
+      </div>
+    );
+  }
   
   const tableContent = (item, column) => {
     const data = item[column.dataField];
@@ -139,7 +155,7 @@ const PaginatedTable = ({ data, columns, anyActionColumn, pageChange, handleEdit
           return data;
         }
       case 'user':
-        return data?.name || data?.userName;
+        return userResponse(data);
       default:
         return data;
     }
@@ -159,7 +175,7 @@ const PaginatedTable = ({ data, columns, anyActionColumn, pageChange, handleEdit
           return data;
         }
       case 'user':
-        return data?.name || data?.userName;
+        return userResponse(data);
       default:
         return data;
     }

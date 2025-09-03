@@ -4,6 +4,7 @@ import useUser from "../../hooks/useUser";
 import Confirmation from '../util/Confirmation';
 import ToastNotification  from "../util/ToastNotification";
 import { put, auth } from '../../services/api';
+import '../css/Profile.css';
 
 export default function Profile() {
     const { user, login } = useUser();
@@ -59,6 +60,14 @@ export default function Profile() {
         setShowToast(false);
     }
 
+    const userDesignationOffice = () => {
+        const userOffice = user?.userOffices?.[0];
+        const designation = userOffice?.designation;
+        const office = userOffice?.office;
+        const company = userOffice?.company;
+        return `${designation}, ${office}, ${company}`;
+    }
+
     if (!user) return <p>Loading...</p>;
 
     return (
@@ -89,31 +98,49 @@ export default function Profile() {
                         <Card.Body>
                             <Form>
                                 {/* Username - readonly */}
-                                <Form.Group className="mb-1">
+                                <Form.Group className="mb-0">
                                     <Form.Label>User Name</Form.Label>
-                                    <Form.Control type="text" value={user.userName} readOnly />
-                                </Form.Group>
-
-                                {/* Email - readonly */}
-                                <Form.Group className="mb-1">
-                                    <Form.Label>Email</Form.Label>
-                                    <Form.Control type="email" value={user.email} readOnly />
-                                </Form.Group>
-
-                                {/* Roles - readonly */}
-                                <Form.Group className="mb-1">
-                                    <Form.Label>Roles</Form.Label>
-                                    <Form.Control type="text" value={user.roles.join(", ")} readOnly />
+                                    <Form.Control className="profile-input" type="text" value={user.userName} disabled />
                                 </Form.Group>
 
                                 {/* Name - editable */}
-                                <Form.Group className="mb-2">
+                                <Form.Group className="mb-0">
                                     <Form.Label>Name</Form.Label>
                                     <Form.Control
+                                        className="profile-input"
                                         type="text"
                                         value={name}
                                         onChange={(e) => setName(e.target.value)}
                                         placeholder="Enter your name"
+                                        autoFocus
+                                    />
+                                </Form.Group>
+
+                                {/* Email - readonly */}
+                                <Form.Group className="mb-0">
+                                    <Form.Label>Email</Form.Label>
+                                    <Form.Control className="profile-input" type="email" value={user.email} disabled />
+                                </Form.Group>
+
+                                {/* Designation & Office - readonly */}
+                                <Form.Group className="mb-0">
+                                    <Form.Label>Designation & Office</Form.Label>
+                                    <Form.Control 
+                                        className="profile-input"
+                                        type="text" 
+                                        value={ userDesignationOffice() }
+                                        disabled
+                                    />
+                                </Form.Group>
+
+                                {/* Roles - readonly */}
+                                <Form.Group className="mb-3">
+                                    <Form.Label>Roles</Form.Label>
+                                    <Form.Control 
+                                        className="profile-input"
+                                        type="text" 
+                                        value={user?.roles.map(role => role.displayName).join(", ")}
+                                        disabled
                                     />
                                 </Form.Group>
 

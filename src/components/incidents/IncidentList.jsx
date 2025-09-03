@@ -252,7 +252,7 @@ const IncidentList = () => {
                             value={ priorityOptions.find(option => option.value === priority) }
                         />
                     </Col>
-                    <Col md={4} className=''>
+                    <Col md={4} className='search-field'>
                         <Select
                             options={ statusOptions }
                             onChange={ (option) => setStatus(option.value) }
@@ -260,7 +260,7 @@ const IncidentList = () => {
                             value={ statusOptions.find(option => option.value === status) }
                         /> 
                     </Col>
-                    <Col md={2}>
+                    <Col md={2} className='search-field'>
                         <Button 
                             variant="primary" 
                             className="w-100"
