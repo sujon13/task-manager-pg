@@ -110,6 +110,8 @@ const PaginatedTable = ({ data, columns, anyActionColumn, pageChange, handleEdit
         return '60px';
       case 'reportedAt':
         return '90px';
+      case 'resolvedAt':
+        return '90px';
       case 'reportedBy':
         return '120px';
       case 'assignedTo':
@@ -143,6 +145,9 @@ const PaginatedTable = ({ data, columns, anyActionColumn, pageChange, handleEdit
 
   const formattedDate = date => {
     const twelveHourFormat = convertTo12HourDateTime(date);
+    if (!twelveHourFormat) {
+      return null;
+    }
     const datePart = twelveHourFormat.substring(0, 10);
     const timePart = twelveHourFormat.substring(11);
     return (
@@ -200,7 +205,7 @@ const PaginatedTable = ({ data, columns, anyActionColumn, pageChange, handleEdit
       <Table striped bordered hover style={{ textAlign: 'center' }}>
         <thead>
           <tr>
-            <th className='text-break' style={{ maxWidth: '50px'}}> Serial </th>
+            {/* <th className='text-break' style={{ maxWidth: '50px'}}> Serial </th> */}
             { columns.map((column, index) => (
               <th key={index} className="text-break" style={{ maxWidth: getMaxWidth(column) }}>
                 {column.text}
@@ -213,7 +218,7 @@ const PaginatedTable = ({ data, columns, anyActionColumn, pageChange, handleEdit
           {currentItems.map((item, idx) => (
             <tr key={indexOfFirstItem + idx} style={{ height: '60px' }}>
               
-              <td style={{ maxWidth: '50px'}}>{indexOfFirstItem + idx + 1}</td>
+              {/* <td style={{ maxWidth: '50px'}}>{indexOfFirstItem + idx + 1}</td> */}
               { columns.map((column, index) => ( 
                 <td key={index} className="text-truncate" style={{ maxWidth: getMaxWidth(column) }}>
                   <OverlayTrigger

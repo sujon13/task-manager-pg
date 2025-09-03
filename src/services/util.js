@@ -1,8 +1,14 @@
-import { parse, format } from "date-fns";
+import { parse, format, isValid } from "date-fns";
 
 export const convertTo12HourDateTime = (dateStr) => {
+    if (!dateStr) {
+        return null;
+    }
     // Parse from "dd-MM-yyyy HH:mm"
     const parsedDate = parse(dateStr, "dd-MM-yyyy HH:mm", new Date());
+    if (!isValid(parsedDate)) {
+        return null;
+    }
   
     // Format to "MMM dd, yyyy hh:mm a" (e.g. "Aug 31, 2025 03:45 PM")
     return format(parsedDate, "dd MMM, yy h:mm a");
