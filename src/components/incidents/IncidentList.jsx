@@ -8,6 +8,7 @@ import PaginatedTable from '../util/PaginatedTable';
 import { get, post, put, deleteEntry, task, auth } from '../../services/api';
 import IncidentModal from './IncidentModal';
 import DeleteConfirmation from '../util/DeleteConfirmation';
+import '../css/IncidentList.css';
 
 
 const IncidentList = () => {
@@ -227,7 +228,7 @@ const IncidentList = () => {
 
             <div>
                 <Row>
-                    <Col md={4}>
+                    <Col md={4} className='search-field'>
                         <Select
                             options={ reporterOptions }
                             onChange={ (option) => setReportedBy(option.value) }
@@ -235,7 +236,7 @@ const IncidentList = () => {
                             value={ reporterOptions.find(option => option.value === reportedBy) }
                         />
                     </Col>
-                    <Col md={4}>
+                    <Col md={4} className='search-field'>
                         <Select
                             options={ assigneeOptions }
                             onChange={ (option) => setAssignedTo(option.value) }
@@ -243,26 +244,26 @@ const IncidentList = () => {
                             value={ assigneeOptions.find(option => option.value === assignedTo) }
                         />
                     </Col>
-                    <Col md={4}>
+                    <Col md={4} className='search-field'>
                        <Select
                             options={ priorityOptions }
                             onChange={ (option) => setPriority(option.value) }
-                            placeholder="Select Priority"
+                            placeholder="Priority"
                             value={ priorityOptions.find(option => option.value === priority) }
                         />
                     </Col>
-                    <Col md={3}>
+                    <Col md={4} className=''>
                         <Select
                             options={ statusOptions }
                             onChange={ (option) => setStatus(option.value) }
-                            placeholder="Select Status"
+                            placeholder="Status"
                             value={ statusOptions.find(option => option.value === status) }
                         /> 
                     </Col>
-                    <Col md={1} >
+                    <Col md={2}>
                         <Button 
                             variant="primary" 
-                            className="search-button"
+                            className="w-100"
                             onClick={ handleSearch }
                         >
                             Search

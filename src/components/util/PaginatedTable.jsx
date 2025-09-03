@@ -117,7 +117,7 @@ const PaginatedTable = ({ data, columns, anyActionColumn, pageChange, handleEdit
       case 'summary':
         return '250px';
       case 'priority':
-        return '60px';
+        return '80px';
       case 'status':
         return '90px';
       default:

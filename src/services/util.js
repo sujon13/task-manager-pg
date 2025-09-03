@@ -5,7 +5,7 @@ export const convertTo12HourDateTime = (dateStr) => {
     const parsedDate = parse(dateStr, "dd-MM-yyyy HH:mm", new Date());
   
     // Format to "MMM dd, yyyy hh:mm a" (e.g. "Aug 31, 2025 03:45 PM")
-    return format(parsedDate, "dd MMM, yyyy hh:mm a");
+    return format(parsedDate, "dd MMM, yy hh:mm a");
 }
 
 export const JsDate = dateStr => {
