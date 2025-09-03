@@ -135,11 +135,15 @@ const IncidentModal = ({ isCreating, show, content, handleClose, handleCreate, h
         }
     }
 
+    const generateLabel = user => {
+        return `${user.name}, ${user.designation}, ${user.office}`;
+    }
+
     const loadUserOptions = async () => {
         const { status, data } = await get(auth, '/users/dropdown');
         if (status === 200) {
             const emptyOption = { value: '', label: 'Choose an assignee' };
-            const options = data.map(user => ({ value: user.username, label: user.name }));
+            const options = data.map(user => ({ value: user.username, label: generateLabel(user) }));
             setUserOptions([emptyOption, ...options]);
         }
     }

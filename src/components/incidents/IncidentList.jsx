@@ -86,9 +86,13 @@ const IncidentList = () => {
         }
     }
 
+    const generateLabel = user => {
+        return `${user.name}, ${user.designation}, ${user.office}`;
+    }
+
     const buildUserOptions = (data, label) => {
         const emptyOption = { value: '', label: label };
-        const options = data.map(user => ({ value: user.username, label: user.name }));
+        const options = data.map(user => ({ value: user.username, label: generateLabel(user) }));
         return [emptyOption, ...options];
     }
 
