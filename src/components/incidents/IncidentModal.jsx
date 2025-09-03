@@ -13,7 +13,7 @@ import '../css/IncidentModal.css';
 import useUser from "../../hooks/useUser";
 
 
-const IncidentModal = ({ isCreating, show, content, handleClose, handleCreate, handleUpdateByAssignee }) => {
+const IncidentModal = ({ isCreating, show, content, handleClose, handleCreate, handleUpdate }) => {
     const { user } = useUser();
 
     //const [showModal, setShowModal] = useState(show);
@@ -38,30 +38,54 @@ const IncidentModal = ({ isCreating, show, content, handleClose, handleCreate, h
     const [ priorityOptions, setPriorityOptions ] = useState([]);
     const [ userOptions, setUserOptions ] = useState([]);
 
-    const isOnlyAssignee = () => {
-        if (isCreating) return false;
-        const me = user?.userName;
-        return me === assignedTo && me !== reportedBy;
+
+    const isAssignee = () => {
+        return user?.userName === assignedTo;
+    }
+
+    const isReporter = () => {
+        return user?.userName === reportedBy;
+    }
+
+    const isNotReporter = () => {
+        return !isReporter();
     }
 
     const isAssigneeAndStatusInProgress = () => {
         if (isCreating) return false;
-        const me = user?.userName;
-        return me === assignedTo && status === 'IN_PROGRESS';
+
+        return isAssignee() && (status === 'IN_PROGRESS');
     }
 
     const isReporterAndStatusOpen = () => {
-        const me = user?.userName;
-        if (me !== reportedBy) return false;
+        if (isNotReporter())return false;
 
-        return isCreating || status === 'IN_PROGRESS' || status === 'REPORTED';
+        return isCreating || ['REPORTED', 'IN_PROGRESS'].includes(status);
+    }
+
+    const isReporterAndStatusCompleted = () => {
+        return isReporter() && (status === 'COMPLETED');
+    }
+
+    const isReporterAndStatusCompletedOrInReview = () => {
+        return isReporter() && (['COMPLETED', 'IN_REVIEW'].includes(status));
     }
 
     const shouldRemarksByAssigneeBeVisible = () => {
         if (isCreating || status === 'REPORTED')return false;
 
         if (status === 'IN_PROGRESS') {
-            return user?.userName === assignedTo;
+            return isAssignee();
+        } else {
+            return true;
+        } 
+    }
+
+    const shouldRemarksByReporterBeVisible = () => {
+        if (isCreating || ['REPORTED', 'IN_PROGRESS'].includes(status))return false;
+
+        if (status === 'COMPLETED') {
+            return isReporter();
         } else {
             return true;
         } 
@@ -173,7 +197,17 @@ const IncidentModal = ({ isCreating, show, content, handleClose, handleCreate, h
         };
         console.log('incident to complete by assignee', updateRequestByAssignee);
 
-        handleUpdateByAssignee(updateRequestByAssignee);
+        handleUpdate('update-by-assignee', updateRequestByAssignee);
+    }
+
+    const handleTaskReview = () => {
+        const updateRequestByReporter = {
+            id: content?.id || null,
+            remarksByReporter,
+        };
+        console.log('Reporter Update Request: ', updateRequestByReporter);
+
+        handleUpdate('update-by-reporter', updateRequestByReporter);
     }
 
     const handleDateChange = (date, setter) => {
@@ -209,7 +243,7 @@ const IncidentModal = ({ isCreating, show, content, handleClose, handleCreate, h
                                         autoFocus
                                         onFocus={ () => setSummaryError('') }
                                         onChange={ (e) => setSummary(e.target.value) }
-                                        disabled={ isOnlyAssignee() }
+                                        disabled={ !isReporterAndStatusOpen() }
                                     />
                                     { summaryError && <p className="text-danger">{ summaryError }</p> }
                                 </Form.Group>
@@ -222,7 +256,7 @@ const IncidentModal = ({ isCreating, show, content, handleClose, handleCreate, h
                                         onChange={ (option) => setPriority(option.value) }
                                         placeholder="Select Priority"
                                         value={ priorityOptions.find(option => option.value === priority) }
-                                        isDisabled={ isOnlyAssignee() } 
+                                        isDisabled={ !isReporterAndStatusOpen() } 
                                     />
                                 </Form.Group>
                             </Col>
@@ -234,7 +268,7 @@ const IncidentModal = ({ isCreating, show, content, handleClose, handleCreate, h
                                         onChange={ (option) => setAssignedTo(option.value) }
                                         placeholder="Select Assignee"
                                         value={ userOptions.find(option => option.value === assignedTo) }
-                                        isDisabled={ isOnlyAssignee() } 
+                                        isDisabled={ !isReporterAndStatusOpen() } 
                                     />
                                 </Form.Group>
                             </Col>
@@ -248,7 +282,7 @@ const IncidentModal = ({ isCreating, show, content, handleClose, handleCreate, h
                                         value={ station }
                                         maxLength={ 64 }
                                         onChange={ (e) => setStation(e.target.value) }
-                                        disabled={ isOnlyAssignee() }
+                                        disabled={ !isReporterAndStatusOpen() }
                                     />
                                 </Form.Group>
                             </Col>
@@ -280,6 +314,22 @@ const IncidentModal = ({ isCreating, show, content, handleClose, handleCreate, h
                                     />
                                 </Form.Group>
                             </Col>
+                            <Col md={12} style={{ display: shouldRemarksByReporterBeVisible() ? 'block' : 'none' }}>
+                                <Form.Group className="mb-3">
+                                    <Form.Label>Reporter Remarks</Form.Label>
+                                    <Form.Control
+                                        as="textarea"
+                                        rows={3}
+                                        cols={50}
+                                        placeholder=""
+                                        value={ remarksByReporter }
+                                        maxLength={ 2048 }
+                                        autoFocus
+                                        onChange={ (e) => setRemarksByReporter(e.target.value) }
+                                        disabled={ !isReporterAndStatusCompleted() }
+                                    />
+                                </Form.Group>
+                            </Col>
                             
                             {/* <Col md={6} sm={12}>
                                 <Form.Group className="">
@@ -306,6 +356,12 @@ const IncidentModal = ({ isCreating, show, content, handleClose, handleCreate, h
                     <Button variant="primary" onClick={handleTaskCompletetion} style={{ display: isAssigneeAndStatusInProgress() ? '' : 'none' }}>
                         Task Done?
                     </Button>
+                    <Button variant="warning" onClick={handleTaskReview} style={{ display: isReporterAndStatusCompleted() ? '' : 'none' }}>
+                        Under observation
+                    </Button>
+                    <Button variant="success" onClick={handleTaskReview} style={{ display: isReporterAndStatusCompletedOrInReview() ? '' : 'none' }}>
+                        Resolved
+                    </Button>
                     <Button variant="primary" onClick={handleSave} style={{ display: isReporterAndStatusOpen() ? '' : 'none' }}>
                         Save
                     </Button>
@@ -321,7 +377,7 @@ IncidentModal.propTypes = {
     content: PropTypes.object,
     handleClose: PropTypes.func.isRequired,
     handleCreate: PropTypes.func.isRequired,
-    handleUpdateByAssignee: PropTypes.func.isRequired,
+    handleUpdate: PropTypes.func.isRequired,
 };
 
 export default IncidentModal;

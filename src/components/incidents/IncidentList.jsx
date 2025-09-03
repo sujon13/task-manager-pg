@@ -189,9 +189,9 @@ const IncidentList = () => {
         }
     }
 
-    const handleUpdateByAssignee = async (updateRequestByAssignee) => {
+    const handleUpdate = async (path, updateRequest) => {
         setIsLoading(true);
-        const { status, data } = await put(task, '/incidents/update-by-assignee', updateRequestByAssignee);
+        const { status, data } = await put(task, `/incidents/${path}`, updateRequest);
         if (status >= 200 && status < 300) {
             handleClose();
             handleOk();
@@ -216,7 +216,7 @@ const IncidentList = () => {
                 content={ isCreating ? null : findIncidentById(id) }
                 handleClose={handleClose} 
                 handleCreate={handleSave} 
-                handleUpdateByAssignee={handleUpdateByAssignee}
+                handleUpdate={handleUpdate}
             />
             <DeleteConfirmation
                 show={showDeleteConfirmation}
