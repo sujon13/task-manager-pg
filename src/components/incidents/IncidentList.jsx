@@ -215,7 +215,7 @@ const IncidentList = () => {
     }
 
     return (
-        <div className="container mt-4">
+        <div className="container mt-2">
             <IncidentModal 
                 isCreating={isCreating}
                 show={ showModal } 
@@ -231,6 +231,7 @@ const IncidentList = () => {
                 message="Are you sure you want to delete this item?"
             />
 
+            <h2 className="mb-2">Incident List</h2>
             <div>
                 <Row>
                     <Col md={4} className='search-field'>
@@ -283,15 +284,6 @@ const IncidentList = () => {
                     </Col>
                 </Row>
             </div>
-            {/* <div className="d-flex justify-content-between align-items-center mb-3">
-                <InputGroup style={{ maxWidth: '300px' }}>
-                    <Form.Control placeholder="Search..." />
-                    <Button variant="primary">Filter</Button>
-                </InputGroup>
-                <Button variant="success" onClick={handleAddNew}>
-                    <FaPlus className="me-1" /> Add New Entry
-                </Button>
-            </div> */}
             {isLoading 
                 ? <div className="d-flex justify-content-center mt-5">
                     <Spinner animation="border" variant="primary" />

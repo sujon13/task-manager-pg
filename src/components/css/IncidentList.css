@@ -1,3 +1,8 @@
 .search-field {
     margin-bottom: 6px;
 }
+
+.container {
+    width: 90%;
+    padding-top: 0px;
+}
