@@ -19,6 +19,7 @@ export const JsDate = dateStr => {
 }
 
 export const ApiDate = date => {
+    if (!date)return null;
     return format(date, "dd-MM-yyyy HH:mm");
 }
 

@@ -205,10 +205,11 @@ const IncidentModal = ({ isCreating, show, content, handleClose, handleCreate, h
         handleUpdate('update-by-assignee', updateRequestByAssignee);
     }
 
-    const handleTaskReview = () => {
+    const handleTaskReview = (resolved = false) => {
         const updateRequestByReporter = {
             id: content?.id || null,
             remarksByReporter,
+            resolved
         };
         console.log('Reporter Update Request: ', updateRequestByReporter);
 
@@ -364,7 +365,7 @@ const IncidentModal = ({ isCreating, show, content, handleClose, handleCreate, h
                     <Button variant="warning" onClick={handleTaskReview} style={{ display: isReporterAndStatusCompleted() ? '' : 'none' }}>
                         Under observation
                     </Button>
-                    <Button variant="success" onClick={handleTaskReview} style={{ display: isReporterAndStatusCompletedOrInReview() ? '' : 'none' }}>
+                    <Button variant="success" onClick={() => handleTaskReview(true)} style={{ display: isReporterAndStatusCompletedOrInReview() ? '' : 'none' }}>
                         Resolved
                     </Button>
                     <Button variant="primary" onClick={handleSave} style={{ display: isReporterAndStatusOpen() ? '' : 'none' }}>

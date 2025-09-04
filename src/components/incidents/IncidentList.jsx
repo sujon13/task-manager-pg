@@ -3,9 +3,12 @@ import { Button, Form, Row, Col } from 'react-bootstrap';
 import { FaPlus } from 'react-icons/fa';
 import Select from 'react-select';
 import Spinner from 'react-bootstrap/Spinner';
+import DatePicker from "react-datepicker";
+import "react-datepicker/dist/react-datepicker.css";
 
 import PaginatedTable from '../util/PaginatedTable';
 import { get, post, put, deleteEntry, task, auth } from '../../services/api';
+import { ApiDate } from '../../services/util'; 
 import IncidentModal from './IncidentModal';
 import DeleteConfirmation from '../util/DeleteConfirmation';
 import '../css/IncidentList.css';
@@ -30,17 +33,63 @@ const IncidentList = () => {
     const [ status, setStatus ] = useState(null);
     const [ priority, setPriority ] = useState(null);
 
+    // Date filters
+    const [reportedAtFrom, setReportedAtFrom] = useState(null);
+    const [reportedAtTo, setReportedAtTo] = useState(null);
+    const [timeframe, setTimeframe] = useState(null);
+
     const [ priorityOptions, setPriorityOptions ] = useState([]);
     const [ statusOptions, setStatusOptions ] = useState([]);
     const [ reporterOptions, setReporterOptions ] = useState([]);
     const [ assigneeOptions, setAssigneeOptions ] = useState([]);
 
-  // Mock data
-    const content = [
-        { id: 1, engName: 'John Doe', bngName: 'জন ডো', grade: 9 },
-        { id: 2, engName: 'Jane Smith', bngName: 'জেন স্মিথ', grade: 10 },
-        { id: 3, engName: 'Michael Lee', bngName: 'মাইকেল লি', grade: 9 },
+    const timeframeOptions = [
+        { value: '', label: '--Select Timeframe--' },
+        { value: 'today', label: 'Today' },
+        { value: 'this_week', label: 'This Week' },
+        { value: 'this_month', label: 'This Month' },
+        { value: 'last_month', label: 'Last Month' }
     ];
+
+    const handleTimeframeChange = (option) => {
+        setTimeframe(option.value);
+
+        const today = new Date();
+        let from = null, to = null;
+
+        switch (option.value) {
+            case 'today':
+                from = new Date(today.setHours(0, 0, 0, 0));
+                to = new Date();
+                break;
+            case 'this_week': {
+                const firstDay = new Date(today);
+                firstDay.setDate(today.getDate() - today.getDay()); // Sunday start
+                firstDay.setHours(0, 0, 0, 0);
+                from = firstDay;
+                to = new Date();
+                break;
+            }
+            case 'this_month': {
+                from = new Date(today.getFullYear(), today.getMonth(), 1);
+                to = new Date();
+                break;
+            }
+            case 'last_month': {
+                from = new Date(today.getFullYear(), today.getMonth() - 1, 1);
+                to = new Date(today.getFullYear(), today.getMonth(), 0); // last day prev month
+                from.setHours(0, 0, 0, 0);       // start of first day
+                to.setHours(23, 59, 59, 999);   // end of last day
+                break;
+            }
+            default:
+                from = null;
+                to = null;
+        }
+
+        setReportedAtFrom(from);
+        setReportedAtTo(to);
+    };
 
     const fetchIncidents = async (page, size, showLoading = true) => {
         if (showLoading) {
@@ -54,6 +103,8 @@ const IncidentList = () => {
             assignedTo,
             status,
             priority,
+            reportedAtFrom: ApiDate(reportedAtFrom),
+            reportedAtTo: ApiDate(reportedAtTo)
         };
 
         const response = await get(task, '/incidents', params);
@@ -234,46 +285,98 @@ const IncidentList = () => {
             <h2 className="mb-2">Incident List</h2>
             <div>
                 <Row>
-                    <Col md={4} className='search-field'>
-                        <Select
-                            options={ reporterOptions }
-                            onChange={ (option) => setReportedBy(option.value) }
-                            placeholder="Reported By"
-                            value={ reporterOptions.find(option => option.value === reportedBy) }
-                        />
+                    <Col md={3} className='search-field'>
+                        <Form.Group className=''>
+                            <Form.Label>Reported By</Form.Label>
+                            <Select
+                                options={ reporterOptions }
+                                onChange={ (option) => setReportedBy(option.value) }
+                                placeholder=""
+                                value={ reporterOptions.find(option => option.value === reportedBy) }
+                            />
+                        </Form.Group>
                     </Col>
-                    <Col md={4} className='search-field'>
-                        <Select
-                            options={ assigneeOptions }
-                            onChange={ (option) => setAssignedTo(option.value) }
-                            placeholder="Assigned To"
-                            value={ assigneeOptions.find(option => option.value === assignedTo) }
-                        />
+                    <Col md={3} className='search-field'>
+                        <Form.Group className=''>
+                            <Form.Label>Assigned To</Form.Label>
+                            <Select
+                                options={ assigneeOptions }
+                                onChange={ (option) => setAssignedTo(option.value) }
+                                placeholder=""
+                                value={ assigneeOptions.find(option => option.value === assignedTo) }
+                            />
+                        </Form.Group>
                     </Col>
-                    <Col md={4} className='search-field'>
-                       <Select
-                            options={ priorityOptions }
-                            onChange={ (option) => setPriority(option.value) }
-                            placeholder="Priority"
-                            value={ priorityOptions.find(option => option.value === priority) }
-                        />
+                    <Col md={3} className='search-field'>
+                        <Form.Group className=''>
+                            <Form.Label>Priority</Form.Label>
+                            <Select
+                                options={ priorityOptions }
+                                onChange={ (option) => setPriority(option.value) }
+                                placeholder=""
+                                value={ priorityOptions.find(option => option.value === priority) }
+                            />
+                        </Form.Group>
                     </Col>
-                    <Col md={4} className='search-field'>
-                        <Select
-                            options={ statusOptions }
-                            onChange={ (option) => setStatus(option.value) }
-                            placeholder="Status"
-                            value={ statusOptions.find(option => option.value === status) }
-                        /> 
+                    <Col md={3} className='search-field'>
+                        <Form.Group className=''>
+                            <Form.Label>Status</Form.Label>
+                            <Select
+                                options={ statusOptions }
+                                onChange={ (option) => setStatus(option.value) }
+                                placeholder=""
+                                value={ statusOptions.find(option => option.value === status) }
+                            /> 
+                        </Form.Group>
                     </Col>
-                    <Col md={2} className='search-field'>
-                        <Button 
-                            variant="primary" 
-                            className="w-100"
-                            onClick={ handleSearch }
-                        >
-                            Search
-                        </Button>    
+                    <Col md={3}>
+                        <Form.Group className="">
+                            <Form.Label>Reported At (From)</Form.Label>
+                            <DatePicker
+                                className='date-picker'
+                                selected={reportedAtFrom}
+                                onChange={(d) => setReportedAtFrom(d)}
+                                showTimeSelect
+                                timeIntervals={1}
+                                dateFormat="dd MMM, yyyy hh:mm a"
+                            />
+                        </Form.Group>
+                    </Col>
+                    <Col md={3}>
+                        <Form.Group className="">
+                            <Form.Label>Reported At (To)</Form.Label>
+                            <DatePicker
+                                className='date-picker'
+                                selected={reportedAtTo}
+                                onChange={(d) => setReportedAtTo(d)}
+                                showTimeSelect
+                                timeIntervals={1}
+                                dateFormat="dd MMM, yyyy hh:mm a"
+                            />
+                        </Form.Group>
+                    </Col>
+                    <Col md={3} className=''>
+                        <Form.Group className="">
+                            <Form.Label>Reported At</Form.Label>
+                            <Select
+                                options={timeframeOptions}
+                                onChange={handleTimeframeChange}
+                                placeholder="Reported At"
+                                value={timeframeOptions.find(option => option.value === timeframe)}
+                            />
+                        </Form.Group>
+                    </Col>
+                    <Col md={3} className=''>
+                        <Form.Group>
+                            <Form.Label style={{ visibility: 'hidden'}}>Search</Form.Label>
+                            <Button 
+                                variant="primary" 
+                                className="w-100"
+                                onClick={ handleSearch }
+                            >
+                                Search
+                            </Button> 
+                        </Form.Group>   
                     </Col>
                 </Row>
                 <Row>
