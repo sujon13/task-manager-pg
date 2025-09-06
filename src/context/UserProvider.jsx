@@ -11,11 +11,13 @@ export const UserProvider = ({ children }) => {
     const { goLogin, goIncidents } = useAppNavigate();
     const [user, setUser] = useState(null); // { id, name, email, role }
     const [loading, setLoading] = useState(true);
+    const [ supervisor, setSupervisor ] = useState(false);
 
     const fetchUserInfo = async (callback) => {
         const { status, data } = await get(auth, "/users/me", { withCredentials: true });
         if (status === 200 && data) {
-            setUser(data)
+            setUser(data);
+            checkAndSetSupervisor(data);
             //localStorage.setItem("userInfo", JSON.stringify(data));
             //setIsLoggedIn(true);
             
@@ -27,6 +29,11 @@ export const UserProvider = ({ children }) => {
             logout();
         }
         setLoading(false);
+    }
+
+    const checkAndSetSupervisor = (user) => {
+        const supervisorRoles = ['ADMIN', 'SCADA_SE', 'SMD_XEN'];
+        setSupervisor(user?.roles?.some(role => supervisorRoles.includes(role.name)));
     }
 
     // Restore by fetching from server on refresh
@@ -63,7 +70,7 @@ export const UserProvider = ({ children }) => {
     const isLoggedIn = !!user;
 
     return (
-        <UserContext.Provider value={{ user, isLoggedIn, login, logout, loading }}>
+        <UserContext.Provider value={{ user, isLoggedIn, login, logout, loading, supervisor }}>
             {children}
         </UserContext.Provider>
     );

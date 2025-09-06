@@ -4,8 +4,11 @@ import { FaEdit, FaTrash } from 'react-icons/fa';
 import PropTypes from 'prop-types';
 import '../../components/css/pagination.css';
 import { convertTo12HourDateTime, capitalizeFirst } from '../../services/util';
+import useUser from "../../hooks/useUser";
 
 const PaginatedTable = ({ data, columns, anyActionColumn, pageChange, handleEdit, handleDelete }) => {
+  const { supervisor } = useUser();
+
   const [ currentPage ] = useState(data.number);
   const totalPages = data.totalPages;
   const itemsPerPage = data.size;
@@ -35,7 +38,7 @@ const PaginatedTable = ({ data, columns, anyActionColumn, pageChange, handleEdit
     return (
       <td style={{ maxWidth: '50px' }}>
         <Button 
-        style={{ display: entry.reporter || entry.assignee ? '' : 'none' }}
+          style={{ display: entry.reporter || entry.assignee || supervisor ? '' : 'none' }}
           variant="warning" 
           size="sm" 
           className="me-2" 
