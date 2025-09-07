@@ -23,8 +23,8 @@ const IncidentModal = ({ isCreating, show, content, handleClose, handleCreate, h
     const [ station, setStation ] = useState('');
     const [ occurredAt, setOccurredAt ] = useState(new Date());
     const [ reportedAt, setReportedAt ] = useState(new Date());
-    const [ reportedBy, setReportedBy ] = useState('');
-    const [ assignedTo, setAssignedTo ] = useState('');
+    const [ reportedBy, setReportedBy ] = useState(null);
+    const [ assignedTo, setAssignedTo ] = useState(null);
     const [ resolvedAt, setResolvedAt ] = useState(null);
     const [ faultNature, setFaultNature ] = useState('SOFTWARE');
     const [ summary, setSummary ] = useState('');
@@ -120,8 +120,8 @@ const IncidentModal = ({ isCreating, show, content, handleClose, handleCreate, h
         setStation('');
         setOccurredAt(new Date());
         setReportedAt(new Date());
-        setReportedBy('');
-        setAssignedTo('');
+        setReportedBy(null);
+        setAssignedTo(null);
         setResolvedAt(null);
         setFaultNature('SOFTWARE');
         setSummary('');

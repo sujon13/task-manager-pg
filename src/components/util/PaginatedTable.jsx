@@ -7,7 +7,7 @@ import { convertTo12HourDateTime, capitalizeFirst } from '../../services/util';
 import useUser from "../../hooks/useUser";
 
 const PaginatedTable = ({ data, columns, anyActionColumn, pageChange, handleEdit, handleDelete }) => {
-  const { supervisor } = useUser();
+  const { supervisor, admin } = useUser();
 
   const [ currentPage ] = useState(data.number);
   const totalPages = data.totalPages;
@@ -47,7 +47,7 @@ const PaginatedTable = ({ data, columns, anyActionColumn, pageChange, handleEdit
           <FaEdit />
         </Button>
         <Button 
-          style = {{display: 'None'}}
+          style = {{display:  admin ? '' : 'none'}}
           variant="danger" 
           size="sm" 
           onClick={() => handleDelete(entry.id)}

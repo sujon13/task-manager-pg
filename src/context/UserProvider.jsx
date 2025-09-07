@@ -5,6 +5,7 @@ import PropTypes from 'prop-types';
 import { get, post, auth } from '../services/api';
 import UserContext from "./UserContext";
 import { useAppNavigate } from '../hooks/useAppNavigate';
+import { RoleEnum } from './RoleEnum';
 
 
 export const UserProvider = ({ children }) => {
@@ -12,12 +13,14 @@ export const UserProvider = ({ children }) => {
     const [user, setUser] = useState(null); // { id, name, email, role }
     const [loading, setLoading] = useState(true);
     const [ supervisor, setSupervisor ] = useState(false);
+    const [ admin, setAdmin ] = useState(false);
 
     const fetchUserInfo = async (callback) => {
         const { status, data } = await get(auth, "/users/me", { withCredentials: true });
         if (status === 200 && data) {
             setUser(data);
             checkAndSetSupervisor(data);
+            checkAndSetAdmin(data);
             callback?.();
         } else {
             logout();
@@ -26,8 +29,12 @@ export const UserProvider = ({ children }) => {
     }
 
     const checkAndSetSupervisor = (user) => {
-        const supervisorRoles = ['ADMIN', 'SCADA_SE', 'SMD_XEN'];
+        const supervisorRoles = [ RoleEnum.ADMIN.key, RoleEnum.SCADA_SE.key, RoleEnum.SMD_XEN.key ];
         setSupervisor(user?.roles?.some(role => supervisorRoles.includes(role.name)));
+    }
+
+    const checkAndSetAdmin = user => {
+        setAdmin(user?.roles?.some(role => RoleEnum.ADMIN.key === role.name));
     }
 
     // Restore by fetching from server on refresh
@@ -62,7 +69,7 @@ export const UserProvider = ({ children }) => {
     const isLoggedIn = !!user;
 
     return (
-        <UserContext.Provider value={{ user, isLoggedIn, login, logout, loading, supervisor }}>
+        <UserContext.Provider value={{ user, isLoggedIn, login, logout, loading, supervisor, admin }}>
             {children}
         </UserContext.Provider>
     );
