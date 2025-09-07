@@ -95,6 +95,8 @@ const PaginatedTable = ({ data, columns, anyActionColumn, pageChange, handleEdit
         return <Badge bg="primary">{statusStr}</Badge>;
       case "COMPLETED":
         return <Badge bg="info" text="dark">{statusStr}</Badge>;
+      case "RETURNED": 
+        return <Badge bg="warning" text="dark">{statusStr}</Badge>;
       case "IN_REVIEW":
         //return <Badge bg="warning" text="dark">{statusStr}</Badge>;
         return buildBadgeForStatus(statusStr);

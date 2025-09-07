@@ -15,7 +15,7 @@ import Confirmation from '../util/Confirmation';
 
 
 const IncidentModal = ({ isCreating, show, content, handleClose, handleCreate, handleUpdate }) => {
-    const { user } = useUser();
+    const { user, supervisor } = useUser();
 
     //const [showModal, setShowModal] = useState(show);
     const [ id, setId ] = useState('');
@@ -25,12 +25,14 @@ const IncidentModal = ({ isCreating, show, content, handleClose, handleCreate, h
     const [ reportedAt, setReportedAt ] = useState(new Date());
     const [ reportedBy, setReportedBy ] = useState(null);
     const [ assignedTo, setAssignedTo ] = useState(null);
+    const [ initialAssignee, setInitialAssignee ] = useState(null);
     const [ resolvedAt, setResolvedAt ] = useState(null);
     const [ faultNature, setFaultNature ] = useState('SOFTWARE');
     const [ summary, setSummary ] = useState('');
     const [ description, setDescription ] = useState('');
-    const [ remarksByReporter, setRemarksByReporter ] = useState('');
+    const [ remarksBySupervisor, setRemarksBySupervisor ] = useState('');
     const [ remarksByAssignee, setRemarksByAssignee ] = useState('');
+    const [ remarksByInitialAssignee, setRemarksByInitialAssignee ] = useState('');
     const [ status, setStatus] = useState(null);
     const [ priority, setPriority ] = useState('HIGH');
 
@@ -61,23 +63,25 @@ const IncidentModal = ({ isCreating, show, content, handleClose, handleCreate, h
         return isAssignee() && (status === 'IN_PROGRESS');
     }
 
-    const isReporterAndStatusOpen = () => {
+    const isFirstAssigneeAndStatusInProgress = () => {
+        if (isCreating) return false;
+
+        return isAssignee() && (status === 'IN_PROGRESS') && initialAssignee === null;
+    }
+
+    const isSupervisorAndStatusOpen = () => {
         if (isCreating)return true;
-        if (isNotReporter())return false;
+        if (!supervisor)return false;
 
-        return ['REPORTED', 'IN_PROGRESS'].includes(status);
+        return ['REPORTED', 'IN_PROGRESS', 'RETURNED'].includes(status);
     }
 
-    const isReporterAndStatusCompleted = () => {
-        return isReporter() && (status === 'COMPLETED');
-    }
-
-    const isReporterAndStatusCompletedOrInReview = () => {
-        return isReporter() && (['COMPLETED', 'IN_REVIEW'].includes(status));
+    const isSupervisorAndStatusCompleted = () => {
+        return supervisor && (status === 'COMPLETED');
     }
 
     const shouldRemarksByAssigneeBeVisible = () => {
-        if (isCreating || status === 'REPORTED')return false;
+        if (isCreating || status === 'REPORTED' || status === 'RETURNED')return false;
 
         if (status === 'IN_PROGRESS') {
             return isAssignee();
@@ -86,11 +90,17 @@ const IncidentModal = ({ isCreating, show, content, handleClose, handleCreate, h
         } 
     }
 
-    const shouldRemarksByReporterBeVisible = () => {
-        if (isCreating || ['REPORTED', 'IN_PROGRESS'].includes(status))return false;
+    const shouldRemarksByInitialAssigneeBeVisible = () => {
+        if (isCreating || status === 'REPORTED')return false;
+
+        return !!content.initialAssignee;
+    }
+
+    const shouldRemarksBySupervisorBeVisible = () => {
+        if (isCreating || ['REPORTED', 'IN_PROGRESS', 'RETURNED'].includes(status))return false;
 
         if (status === 'COMPLETED') {
-            return isReporter();
+            return supervisor;
         } else {
             return true;
         } 
@@ -104,12 +114,14 @@ const IncidentModal = ({ isCreating, show, content, handleClose, handleCreate, h
         setReportedAt(JsDate(content.reportedAt));
         setReportedBy(content.reportedBy?.userName);
         setAssignedTo(content.assignedTo?.userName);
+        setInitialAssignee(content.initialAssignee?.userName);
         setResolvedAt(content.resolvedAt);
         setFaultNature(content.faultNature);
         setSummary(content.summary);
         setDescription(content.description);
-        setRemarksByReporter(content.remarksByReporter);
-        setRemarksByAssignee(content.remarksByAssignee);
+        setRemarksBySupervisor(content.remarksBySupervisor || '');
+        setRemarksByAssignee(content.remarksByAssignee || '');
+        setRemarksByInitialAssignee(content.remarksByInitialAssignee || '');
         setStatus(content.status);
         setPriority(content.priority);
     }
@@ -122,12 +134,14 @@ const IncidentModal = ({ isCreating, show, content, handleClose, handleCreate, h
         setReportedAt(new Date());
         setReportedBy(null);
         setAssignedTo(null);
+        setInitialAssignee(null);
         setResolvedAt(null);
         setFaultNature('SOFTWARE');
         setSummary('');
         setDescription('');
-        setRemarksByReporter('');
+        setRemarksBySupervisor('');
         setRemarksByAssignee('');
+        setRemarksByInitialAssignee('');
         setStatus(null);
         setPriority('HIGH');
     }
@@ -189,8 +203,6 @@ const IncidentModal = ({ isCreating, show, content, handleClose, handleCreate, h
             faultNature,
             summary,
             description,
-            remarksByReporter,
-            remarksByAssignee,
             status: isCreating ? null: status,
             priority
         };
@@ -199,10 +211,11 @@ const IncidentModal = ({ isCreating, show, content, handleClose, handleCreate, h
         handleCreate(incident);
     }
  
-    const handleTaskCompletetion = () => {
+    const handleTaskCompletetion = (completed = true) => {
         const updateRequestByAssignee = {
             id: content?.id || null,
             remarksByAssignee,
+            completed
         };
         console.log('incident to complete by assignee', updateRequestByAssignee);
 
@@ -210,13 +223,13 @@ const IncidentModal = ({ isCreating, show, content, handleClose, handleCreate, h
     }
 
     const handleTaskReview = () => {
-        const updateRequestByReporter = {
+        const updateRequestBySupervisor = {
             id: content?.id || null,
-            remarksByReporter
+            remarksBySupervisor
         };
-        console.log('Reporter Update Request: ', updateRequestByReporter);
+        console.log('Supervisor Update Request: ', updateRequestBySupervisor);
 
-        handleUpdate('update-by-reporter', updateRequestByReporter);
+        handleUpdate('update-by-supervisor', updateRequestBySupervisor);
     }
 
     const closeConfirmationModal = () => {
@@ -227,7 +240,7 @@ const IncidentModal = ({ isCreating, show, content, handleClose, handleCreate, h
         setShowConfirmation(true);
     }
 
-    const handleTask = callback => {
+    const handleTask = (callback) => {
         showConfirmationModal();
         setSavedTask(() => callback);
     }
@@ -270,7 +283,7 @@ const IncidentModal = ({ isCreating, show, content, handleClose, handleCreate, h
                                         autoFocus
                                         onFocus={ () => setSummaryError('') }
                                         onChange={ (e) => setSummary(e.target.value) }
-                                        disabled={ !isReporterAndStatusOpen() }
+                                        disabled={ !isSupervisorAndStatusOpen() }
                                     />
                                     { summaryError && <p className="text-danger">{ summaryError }</p> }
                                 </Form.Group>
@@ -283,7 +296,7 @@ const IncidentModal = ({ isCreating, show, content, handleClose, handleCreate, h
                                         onChange={ (option) => setPriority(option.value) }
                                         placeholder="Select Priority"
                                         value={ priorityOptions.find(option => option.value === priority) }
-                                        isDisabled={ !isReporterAndStatusOpen() } 
+                                        isDisabled={ !isSupervisorAndStatusOpen() } 
                                     />
                                 </Form.Group>
                             </Col>
@@ -295,7 +308,7 @@ const IncidentModal = ({ isCreating, show, content, handleClose, handleCreate, h
                                         onChange={ (option) => setAssignedTo(option.value) }
                                         placeholder="Select Assignee"
                                         value={ userOptions.find(option => option.value === assignedTo) }
-                                        isDisabled={ !isReporterAndStatusOpen() } 
+                                        isDisabled={ !supervisor } 
                                     />
                                 </Form.Group>
                             </Col>
@@ -309,7 +322,7 @@ const IncidentModal = ({ isCreating, show, content, handleClose, handleCreate, h
                                         value={ station }
                                         maxLength={ 64 }
                                         onChange={ (e) => setStation(e.target.value) }
-                                        disabled={ !isReporterAndStatusOpen() }
+                                        disabled={ !isSupervisorAndStatusOpen() }
                                     />
                                 </Form.Group>
                             </Col>
@@ -325,6 +338,20 @@ const IncidentModal = ({ isCreating, show, content, handleClose, handleCreate, h
                                     />
                                 </Form.Group>
                             </Col>
+                            <Col md={12} style={{ display: shouldRemarksByInitialAssigneeBeVisible() ? 'block' : 'none' }}>
+                                <Form.Group className="mb-3">
+                                    <Form.Label>Initial Assignee Remarks</Form.Label>
+                                    <Form.Control
+                                        as="textarea"
+                                        rows={3}
+                                        cols={50}
+                                        placeholder=""
+                                        value={ remarksByInitialAssignee }
+                                        maxLength={ 1024 }
+                                        disabled
+                                    />
+                                </Form.Group>
+                            </Col>
                             <Col md={12} style={{ display: shouldRemarksByAssigneeBeVisible() ? 'block' : 'none' }}>
                                 <Form.Group className="mb-3">
                                     <Form.Label>Assignee Remarks</Form.Label>
@@ -334,26 +361,26 @@ const IncidentModal = ({ isCreating, show, content, handleClose, handleCreate, h
                                         cols={50}
                                         placeholder=""
                                         value={ remarksByAssignee }
-                                        maxLength={ 2048 }
+                                        maxLength={ 1024 }
                                         autoFocus
                                         onChange={ (e) => setRemarksByAssignee(e.target.value) }
                                         disabled={ !isAssigneeAndStatusInProgress() }
                                     />
                                 </Form.Group>
                             </Col>
-                            <Col md={12} style={{ display: shouldRemarksByReporterBeVisible() ? 'block' : 'none' }}>
+                            <Col md={12} style={{ display: shouldRemarksBySupervisorBeVisible() ? 'block' : 'none' }}>
                                 <Form.Group className="mb-3">
-                                    <Form.Label>Reporter Remarks</Form.Label>
+                                    <Form.Label>Supervisor Remarks</Form.Label>
                                     <Form.Control
                                         as="textarea"
                                         rows={3}
                                         cols={50}
                                         placeholder=""
-                                        value={ remarksByReporter }
-                                        maxLength={ 2048 }
+                                        value={ remarksBySupervisor }
+                                        maxLength={ 1024 }
                                         autoFocus
-                                        onChange={ (e) => setRemarksByReporter(e.target.value) }
-                                        disabled={ !isReporterAndStatusCompleted() }
+                                        onChange={ (e) => setRemarksBySupervisor(e.target.value) }
+                                        disabled={ !isSupervisorAndStatusCompleted() }
                                     />
                                 </Form.Group>
                             </Col>
@@ -381,6 +408,13 @@ const IncidentModal = ({ isCreating, show, content, handleClose, handleCreate, h
                         Close
                     </Button>
                     <Button 
+                        variant="warning" 
+                        onClick={ () => handleTask(() => handleTaskCompletetion(false)) } 
+                        style={{ display: isFirstAssigneeAndStatusInProgress() ? '' : 'none' }}
+                    >
+                        Return To Supervisor
+                    </Button>
+                    <Button 
                         variant="primary" 
                         onClick={ () => handleTask(handleTaskCompletetion)} 
                         style={{ display: isAssigneeAndStatusInProgress() ? '' : 'none' }}
@@ -393,14 +427,14 @@ const IncidentModal = ({ isCreating, show, content, handleClose, handleCreate, h
                     <Button 
                         variant="success" 
                         onClick={() => handleTask(handleTaskReview)} 
-                        style={{ display: isReporterAndStatusCompletedOrInReview() ? '' : 'none' }}
+                        style={{ display: isSupervisorAndStatusCompleted() ? '' : 'none' }}
                     >
                         Resolved
                     </Button>
                     <Button 
                         variant="primary" 
                         onClick={() => handleTask(handleSave)} 
-                        style={{ display: isReporterAndStatusOpen() ? '' : 'none' }}
+                        style={{ display: isSupervisorAndStatusOpen() ? '' : 'none' }}
                     >
                         Save
                     </Button>
