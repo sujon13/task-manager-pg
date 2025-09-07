@@ -18,12 +18,6 @@ export const UserProvider = ({ children }) => {
         if (status === 200 && data) {
             setUser(data);
             checkAndSetSupervisor(data);
-            //localStorage.setItem("userInfo", JSON.stringify(data));
-            //setIsLoggedIn(true);
-            
-            // if (typeof callback === "function") {
-            //     callback();
-            // }
             callback?.();
         } else {
             logout();
@@ -53,10 +47,8 @@ export const UserProvider = ({ children }) => {
     };
 
     const logoutFromServer = async (callback) => {
-        const { status } = await post(auth, "/logout");
-        if (status === 200) {
-            callback();
-        }
+        await post(auth, "/logout");
+        callback();
     }
 
     const logout = () => {

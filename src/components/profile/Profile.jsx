@@ -7,7 +7,7 @@ import { put, auth } from '../../services/api';
 import '../css/Profile.css';
 
 export default function Profile() {
-    const { user, login } = useUser();
+    const { user, login, logout } = useUser();
 
     const [name, setName] = useState(user?.name || "");
     
@@ -24,10 +24,11 @@ export default function Profile() {
         }, 500);
     }
 
-    const handleError = (error) => {
+    const handleError = (error, callback) => {
         setTimeout(() => {
             setIsLoading(false);
             console.error(error);
+            callback?.();
         }, 500);
     }
 
@@ -39,10 +40,13 @@ export default function Profile() {
 
         setIsLoading(true);
         
-        const { status, data } = await put(auth, '/users', userRequest);
+        const { status, data, errorStatus } = await put(auth, '/users', userRequest);
+        closeConfirmationModal();
         if (status >= 200 && status < 300) {
-            closeConfirmationModal();
             handleOk(() => setShowToast(true));
+        } else if (status === 401 || errorStatus === 'ERR_NETWORK') {
+            console.error('cors issue');
+            handleError(data, () => logout());
         } else {
             handleError(data);
         }

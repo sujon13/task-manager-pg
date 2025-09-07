@@ -39,12 +39,14 @@ const handleError = error => {
         // http.ClientRequest in node.js
         console.error('Error request: ', error.request);
         return {
+            errorStatus: 'ERR_NETWORK',
             data: error.request
         }
     } else {
         // Something happened in setting up the request that triggered an Error
         console.error('Error message: ', error.message);
         return {
+            errorStatus: 'UNKNOWN_ERROR',
             data: error.message
         }
     }
@@ -111,7 +113,7 @@ export const put = async (service, path, body, withCredentials = true) => {
         console.info('put body: ', body);
         const response = await service.put(url, body, { withCredentials: withCredentials });
         console.log('Status: ', response.status);
-
+        
         if (response.data !== null && response.data !== undefined) {
             console.info('response data: ', response.data);
             return { 
