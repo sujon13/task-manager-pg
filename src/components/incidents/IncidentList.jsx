@@ -207,10 +207,10 @@ const IncidentList = () => {
         }, 500);
     }
 
-    const handleError = (error) => {
+    const handleError = (error, callback) => {
         setTimeout(() => {
             setIsLoading(false);
-            console.error(error);
+            callback?.();
         }, 500);
     }
 
@@ -242,10 +242,12 @@ const IncidentList = () => {
 
     const handleSave = async (newIncident) => {
         setIsLoading(true);
-        const { status, data } = await (isCreating ? post : put)(task, '/incidents', newIncident);
+        const { status, data, errorStatus } = await (isCreating ? post : put)(task, '/incidents', newIncident);
         if (status >= 200 && status < 300) {
             handleClose();
             handleOk();
+        } else if (status === 401 || errorStatus === 'ERR_NETWORK') {
+            handleError(data, () => logout());
         } else {
             handleError(data);
         }
@@ -253,10 +255,12 @@ const IncidentList = () => {
 
     const handleUpdate = async (path, updateRequest) => {
         setIsLoading(true);
-        const { status, data } = await put(task, `/incidents/${path}`, updateRequest);
+        const { status, data, errorStatus } = await put(task, `/incidents/${path}`, updateRequest);
         if (status >= 200 && status < 300) {
             handleClose();
             handleOk();
+        } else if (status === 401 || errorStatus === 'ERR_NETWORK') {
+            handleError(data, () => logout());
         } else {
             handleError(data);
         }

@@ -6,11 +6,12 @@ import PropTypes from 'prop-types';
 import DatePicker from "react-datepicker";
 import Select from 'react-select';
 import "react-datepicker/dist/react-datepicker.css";
-import { get, task, auth } from '../../services/api';
+import { get, auth, task } from '../../services/api';
 import { JsDate, ApiDate } from '../../services/util';  
 import '../css/DatePicker.css';
 import '../css/IncidentModal.css';
 import useUser from "../../hooks/useUser";
+import Confirmation from '../util/Confirmation';
 
 
 const IncidentModal = ({ isCreating, show, content, handleClose, handleCreate, handleUpdate }) => {
@@ -37,6 +38,9 @@ const IncidentModal = ({ isCreating, show, content, handleClose, handleCreate, h
 
     const [ priorityOptions, setPriorityOptions ] = useState([]);
     const [ userOptions, setUserOptions ] = useState([]);
+
+    const [ showConfirmation, setShowConfirmation ] = useState(false);
+    const [ savedTask, setSavedTask ] = useState(null);
 
 
     const isAssignee = () => {
@@ -205,15 +209,27 @@ const IncidentModal = ({ isCreating, show, content, handleClose, handleCreate, h
         handleUpdate('update-by-assignee', updateRequestByAssignee);
     }
 
-    const handleTaskReview = (resolved = false) => {
+    const handleTaskReview = () => {
         const updateRequestByReporter = {
             id: content?.id || null,
-            remarksByReporter,
-            resolved
+            remarksByReporter
         };
         console.log('Reporter Update Request: ', updateRequestByReporter);
 
         handleUpdate('update-by-reporter', updateRequestByReporter);
+    }
+
+    const closeConfirmationModal = () => {
+        setShowConfirmation(false);
+    }
+
+    const showConfirmationModal = () => {
+        setShowConfirmation(true);
+    }
+
+    const handleTask = callback => {
+        showConfirmationModal();
+        setSavedTask(() => callback);
     }
 
     const handleDateChange = (date, setter) => {
@@ -359,20 +375,41 @@ const IncidentModal = ({ isCreating, show, content, handleClose, handleCreate, h
                     <Button variant="secondary" onClick={handleClose}>
                         Close
                     </Button>
-                    <Button variant="primary" onClick={handleTaskCompletetion} style={{ display: isAssigneeAndStatusInProgress() ? '' : 'none' }}>
+                    <Button 
+                        variant="primary" 
+                        onClick={ () => handleTask(handleTaskCompletetion)} 
+                        style={{ display: isAssigneeAndStatusInProgress() ? '' : 'none' }}
+                    >
                         Task Done?
                     </Button>
-                    <Button variant="warning" onClick={handleTaskReview} style={{ display: isReporterAndStatusCompleted() ? '' : 'none' }}>
+                    {/* <Button variant="warning" onClick={handleTaskReview} style={{ display: isReporterAndStatusCompleted() ? '' : 'none' }}>
                         Under observation
-                    </Button>
-                    <Button variant="success" onClick={() => handleTaskReview(true)} style={{ display: isReporterAndStatusCompletedOrInReview() ? '' : 'none' }}>
+                    </Button> */}
+                    <Button 
+                        variant="success" 
+                        onClick={() => handleTask(handleTaskReview)} 
+                        style={{ display: isReporterAndStatusCompletedOrInReview() ? '' : 'none' }}
+                    >
                         Resolved
                     </Button>
-                    <Button variant="primary" onClick={handleSave} style={{ display: isReporterAndStatusOpen() ? '' : 'none' }}>
+                    <Button 
+                        variant="primary" 
+                        onClick={() => handleTask(handleSave)} 
+                        style={{ display: isReporterAndStatusOpen() ? '' : 'none' }}
+                    >
                         Save
                     </Button>
                 </Modal.Footer>
             </Modal>
+            <Confirmation
+                show={ showConfirmation }
+                onConfirm={ () => {
+                    closeConfirmationModal();
+                    savedTask?.();
+                    setSavedTask(null);
+                } }
+                onCancel={ closeConfirmationModal }  
+            />
         </>
     );
 }
