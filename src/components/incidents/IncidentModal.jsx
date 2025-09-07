@@ -66,7 +66,7 @@ const IncidentModal = ({ isCreating, show, content, handleClose, handleCreate, h
     const isFirstAssigneeAndStatusInProgress = () => {
         if (isCreating) return false;
 
-        return isAssignee() && (status === 'IN_PROGRESS') && initialAssignee === null;
+        return isAssignee() && (status === 'IN_PROGRESS') && !initialAssignee;
     }
 
     const isSupervisorAndStatusOpen = () => {
