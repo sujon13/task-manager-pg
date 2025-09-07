@@ -45,8 +45,10 @@ export default function Profile() {
         if (status >= 200 && status < 300) {
             handleOk(() => setShowToast(true));
         } else if (status === 401 || errorStatus === 'ERR_NETWORK') {
-            console.error('cors issue');
-            handleError(data, () => logout());
+            handleError(data, () => {
+                console.error('login required');
+                logout();
+            });
         } else {
             handleError(data);
         }

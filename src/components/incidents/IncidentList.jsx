@@ -11,10 +11,13 @@ import { get, post, put, deleteEntry, task, auth } from '../../services/api';
 import { ApiDate } from '../../services/util'; 
 import IncidentModal from './IncidentModal';
 import DeleteConfirmation from '../util/DeleteConfirmation';
+import useUser from "../../hooks/useUser";
 import '../css/IncidentList.css';
 
 
 const IncidentList = () => {
+    const { logout } = useUser();
+
     // State
     const [ data, setData ] = useState({});
     const [ currentPage, setCurrentPage ] = useState(0);
@@ -113,6 +116,8 @@ const IncidentList = () => {
             setData(data);
             setCurrentPage(data.number);
             setSize(data.size);
+        } else if (response.status === 401 || response.errorStatus === 'ERR_NETWORK') {
+            logout();
         }
         if (showLoading) {
             setIsLoading(false);
