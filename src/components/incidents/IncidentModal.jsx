@@ -244,7 +244,12 @@ const IncidentModal = ({ isCreating, show, content, handleClose, handleCreate, h
 
     return (
         <>
-            <Modal show={ show } onHide={ handleClose } size='lg'>
+            <Modal 
+                show={ show } 
+                onHide={ handleClose } 
+                size='lg' 
+                contentClassName={ showConfirmation ? 'bottom-modal-dim' : 'bottom-modal-bg' }
+            >
                 <Modal.Header closeButton>
                     <Modal.Title>{ isCreating ? 'New Incident' : 'Edit Incident' }</Modal.Title>
                 </Modal.Header>
