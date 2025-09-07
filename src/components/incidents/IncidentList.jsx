@@ -184,6 +184,8 @@ const IncidentList = () => {
   // Handlers
     const handlePageChange = page => setCurrentPage(page);
 
+    const handlePageSizeChange = pageSize => setSize(pageSize);
+
     const findIncidentById = (id) => {
         return data.content.find(p => p.id === id);
     }
@@ -389,6 +391,9 @@ const IncidentList = () => {
                     </Col>
                 </Row>
                 <Row>
+                    {/* <Col md={6} className="d-flex justify-content-start align-items-center" >
+                        <h5 className="text-align-center">Total Entries: {data.totalElements || 0}</h5>
+                    </Col> */}
                     <Col md={12} className="d-flex justify-content-end mb-3">
                         <Button variant="success" onClick={handleAddNew}>
                             <FaPlus className="me-1" /> Add New Entry
@@ -405,6 +410,7 @@ const IncidentList = () => {
                     columns={columns} 
                     anyActionColumn={true}
                     pageChange={handlePageChange} 
+                    pageSizeChange={handlePageSizeChange}
                     handleEdit={handleEdit} 
                     handleDelete={handleDelete} 
                 />

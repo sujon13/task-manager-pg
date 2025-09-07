@@ -2,16 +2,22 @@ import { useState } from 'react';
 import { Table, Pagination, Button, Badge, OverlayTrigger, Tooltip } from 'react-bootstrap';
 import { FaEdit, FaTrash } from 'react-icons/fa';
 import PropTypes from 'prop-types';
+import Select from 'react-select';
 import '../../components/css/pagination.css';
 import { convertTo12HourDateTime, capitalizeFirst } from '../../services/util';
 import useUser from "../../hooks/useUser";
 
-const PaginatedTable = ({ data, columns, anyActionColumn, pageChange, handleEdit, handleDelete }) => {
+const PaginatedTable = ({ data, columns, anyActionColumn, pageChange, pageSizeChange, handleEdit, handleDelete }) => {
   const { supervisor, admin } = useUser();
 
   const [ currentPage ] = useState(data.number);
+  //const [ itemsPerPage, setItemsPerPage] = useState(data.size);
   const totalPages = data.totalPages;
   const itemsPerPage = data.size;
+
+  // Entries per page options
+  const pageSizeOptionList = [5, 10, 20];
+  const pageSizeOptions = pageSizeOptionList.map(pageSize => ({ value: pageSize, label: pageSize }));
 
   // Calculate the data to display on the current page
   //const indexOfLastItem = currentPage * itemsPerPage;
@@ -207,6 +213,18 @@ const PaginatedTable = ({ data, columns, anyActionColumn, pageChange, handleEdit
 
   return (
     <>
+      <div className="d-flex justify-content-start align-items-center mb-2">
+        <div className="d-flex align-items-center">
+          <Select
+              options={ pageSizeOptions }
+              onChange={ (option) => pageSizeChange(option.value) }
+              value={ pageSizeOptions.find(option => option.value === itemsPerPage) } 
+          />
+        </div>
+        <div style={{ marginLeft: '16px' }}>
+          <span>Total Entries: {data.totalElements || 0}</span>
+        </div>
+      </div>
       <Table striped bordered hover style={{ textAlign: 'center' }}>
         <thead>
           <tr>
@@ -263,6 +281,7 @@ PaginatedTable.propTypes = {
   columns: PropTypes.array.isRequired,
   anyActionColumn: PropTypes.bool,
   pageChange: PropTypes.func.isRequired,
+  pageSizeChange: PropTypes.func.isRequired,
   handleEdit: PropTypes.func,
   handleDelete: PropTypes.func,
 };
