@@ -50,6 +50,10 @@ const IncidentModal = ({ isCreating, show, content, handleClose, handleCreate, h
         return user?.userName === assignedTo;
     }
 
+    const isReporter = () => {
+        return user?.userName === reportedBy;
+    }
+
     const isAssigneeAndStatusInProgress = () => {
         if (isCreating) return false;
 
@@ -67,6 +71,14 @@ const IncidentModal = ({ isCreating, show, content, handleClose, handleCreate, h
         if (!supervisor)return false;
 
         return [IncidentStatus.REPORTED.key, IncidentStatus.IN_PROGRESS.key, IncidentStatus.RETURNED.key].includes(status);
+    }
+
+    const isReporterAndStatusReported = () => {
+        return isReporter() && (status === IncidentStatus.REPORTED.key);
+    }
+
+    const isEditable = () => {
+        return isSupervisorAndStatusOpen() || isReporterAndStatusReported();
     }
 
     const isSupervisorAndStatusCompleted = () => {
@@ -277,7 +289,7 @@ const IncidentModal = ({ isCreating, show, content, handleClose, handleCreate, h
                                         autoFocus
                                         onFocus={ () => setSummaryError('') }
                                         onChange={ (e) => setSummary(e.target.value) }
-                                        disabled={ !isSupervisorAndStatusOpen() }
+                                        disabled={ !isEditable() }
                                     />
                                     { summaryError && <p className="text-danger">{ summaryError }</p> }
                                 </Form.Group>
@@ -290,7 +302,7 @@ const IncidentModal = ({ isCreating, show, content, handleClose, handleCreate, h
                                         onChange={ (option) => setPriority(option.value) }
                                         placeholder="Select Priority"
                                         value={ priorityOptions.find(option => option.value === priority) }
-                                        isDisabled={ !isSupervisorAndStatusOpen() } 
+                                        isDisabled={ !isEditable() } 
                                     />
                                 </Form.Group>
                             </Col>
@@ -316,7 +328,7 @@ const IncidentModal = ({ isCreating, show, content, handleClose, handleCreate, h
                                         value={ station }
                                         maxLength={ 64 }
                                         onChange={ (e) => setStation(e.target.value) }
-                                        disabled={ !isSupervisorAndStatusOpen() }
+                                        disabled={ !isEditable() }
                                     />
                                 </Form.Group>
                             </Col>
@@ -428,7 +440,7 @@ const IncidentModal = ({ isCreating, show, content, handleClose, handleCreate, h
                     <Button 
                         variant="primary" 
                         onClick={() => handleTask(handleSave)} 
-                        style={{ display: isSupervisorAndStatusOpen() ? '' : 'none' }}
+                        style={{ display: isEditable() ? '' : 'none' }}
                     >
                         Save
                     </Button>
