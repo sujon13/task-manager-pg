@@ -10,3 +10,7 @@
 .date-picker {
     margin-top: 0px !important;
 }
+
+.pending-row td {
+    background-color: #fcffcc;
+}

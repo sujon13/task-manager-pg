@@ -8,7 +8,7 @@ import { convertTo12HourDateTime, capitalizeFirst } from '../../services/util';
 import useUser from "../../hooks/useUser";
 
 const PaginatedTable = ({ data, columns, anyActionColumn, pageChange, pageSizeChange, handleEdit, handleDelete }) => {
-  const { supervisor, admin } = useUser();
+  const { supervisor, admin, user } = useUser();
 
   const [ currentPage ] = useState(data.number);
   const totalPages = data.totalPages;
@@ -126,6 +126,8 @@ const PaginatedTable = ({ data, columns, anyActionColumn, pageChange, pageSizeCh
         return '120px';
       case 'assignedTo':
         return '120px';
+      case 'pendingTo':
+        return '120px';
       case 'summary':
         return '250px';
       case 'priority':
@@ -210,6 +212,10 @@ const PaginatedTable = ({ data, columns, anyActionColumn, pageChange, pageSizeCh
     }
   }
 
+  const isPendingToMe = (item) => {
+    return item['pendingTo']?.userName === user?.userName;
+  }
+
   return (
     <>
       <div className="d-flex justify-content-start align-items-center mb-2">
@@ -238,7 +244,11 @@ const PaginatedTable = ({ data, columns, anyActionColumn, pageChange, pageSizeCh
         </thead>
         <tbody>
           {currentItems.map((item, idx) => (
-            <tr key={indexOfFirstItem + idx} style={{ height: '60px' }}>
+            <tr 
+              key={indexOfFirstItem + idx} 
+              style={{ height: '60px' }} 
+              className={ isPendingToMe(item) ? 'pending-row' : ''}
+            >
               
               {/* <td style={{ maxWidth: '50px'}}>{indexOfFirstItem + idx + 1}</td> */}
               { columns.map((column, index) => ( 

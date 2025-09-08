@@ -176,6 +176,7 @@ const IncidentList = () => {
         { text: 'Resolved At', dataField: 'resolvedAt', type: 'date' },
         { text: 'Reported By', dataField: 'reportedBy', type: 'user' },
         { text: 'Assigned To', dataField: 'assignedTo', type: 'user' },
+        { text: 'Pending To', dataField: 'pendingTo', type: 'user' },
         { text: 'Incident', dataField: 'summary', type: 'string' },
         { text: 'Priority', dataField: 'priority', type: 'enum' },
         { text: 'Status', dataField: 'status', type: 'enum', extraField: 'statusStr' },
