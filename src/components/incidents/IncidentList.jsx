@@ -395,7 +395,7 @@ const IncidentList = () => {
                     {/* <Col md={6} className="d-flex justify-content-start align-items-center" >
                         <h5 className="text-align-center">Total Entries: {data.totalElements || 0}</h5>
                     </Col> */}
-                    <Col md={12} className="d-flex justify-content-end mb-3">
+                    <Col md={12} className="d-flex justify-content-end mb-3 mt-1">
                         <Button variant="success" onClick={handleAddNew}>
                             <FaPlus className="me-1" /> Add New Entry
                         </Button>

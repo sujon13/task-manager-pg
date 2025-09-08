@@ -41,7 +41,7 @@ const PaginatedTable = ({ data, columns, anyActionColumn, pageChange, pageSizeCh
 
   const actionCol = (entry) => {
     return (
-      <td style={{ maxWidth: '50px' }}>
+      <td style={{ maxWidth: '60px' }}>
         <Button 
           style={{ display: entry.reporter || entry.assignee || supervisor ? '' : 'none' }}
           variant="warning" 
@@ -115,7 +115,7 @@ const PaginatedTable = ({ data, columns, anyActionColumn, pageChange, pageSizeCh
   const getMaxWidth = col => {
     switch(col.dataField) {
       case 'eventNo':
-        return '50px';
+        return '60px';
       case 'station':
         return '60px';
       case 'reportedAt':
@@ -123,11 +123,11 @@ const PaginatedTable = ({ data, columns, anyActionColumn, pageChange, pageSizeCh
       case 'resolvedAt':
         return '90px';
       case 'reportedBy':
-        return '120px';
+        return '130px';
       case 'assignedTo':
-        return '120px';
+        return '130px';
       case 'pendingTo':
-        return '120px';
+        return '130px';
       case 'summary':
         return '250px';
       case 'priority':
@@ -230,7 +230,7 @@ const PaginatedTable = ({ data, columns, anyActionColumn, pageChange, pageSizeCh
           <span>Total Entries: {data.totalElements || 0}</span>
         </div>
       </div>
-      <Table striped bordered hover style={{ textAlign: 'center' }}>
+      <Table striped bordered hover responsive style={{ textAlign: 'center' }}>
         <thead>
           <tr>
             {/* <th className='text-break' style={{ maxWidth: '50px'}}> Serial </th> */}
