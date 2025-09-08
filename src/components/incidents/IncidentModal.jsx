@@ -127,7 +127,7 @@ const IncidentModal = ({ isCreating, show, content, handleClose, handleCreate, h
         setOccurredAt(new Date());
         setReportedAt(new Date());
         setReportedBy(null);
-        setAssignedTo(null);
+        setAssignedTo('');
         setInitialAssignee(null);
         setResolvedAt(null);
         setFaultNature('SOFTWARE');
