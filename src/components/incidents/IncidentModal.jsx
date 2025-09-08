@@ -12,6 +12,7 @@ import '../css/DatePicker.css';
 import '../css/IncidentModal.css';
 import useUser from "../../hooks/useUser";
 import Confirmation from '../util/Confirmation';
+import { IncidentStatus } from './IncidentStatus';
 
 
 const IncidentModal = ({ isCreating, show, content, handleClose, handleCreate, handleUpdate }) => {
@@ -49,41 +50,33 @@ const IncidentModal = ({ isCreating, show, content, handleClose, handleCreate, h
         return user?.userName === assignedTo;
     }
 
-    const isReporter = () => {
-        return user?.userName === reportedBy;
-    }
-
-    const isNotReporter = () => {
-        return !isReporter();
-    }
-
     const isAssigneeAndStatusInProgress = () => {
         if (isCreating) return false;
 
-        return isAssignee() && (status === 'IN_PROGRESS');
+        return isAssignee() && (status === IncidentStatus.IN_PROGRESS.key);
     }
 
     const isFirstAssigneeAndStatusInProgress = () => {
         if (isCreating) return false;
 
-        return isAssignee() && (status === 'IN_PROGRESS') && !initialAssignee;
+        return isAssignee() && (status === IncidentStatus.IN_PROGRESS.key) && !initialAssignee;
     }
 
     const isSupervisorAndStatusOpen = () => {
         if (isCreating)return true;
         if (!supervisor)return false;
 
-        return ['REPORTED', 'IN_PROGRESS', 'RETURNED'].includes(status);
+        return [IncidentStatus.REPORTED.key, IncidentStatus.IN_PROGRESS.key, IncidentStatus.RETURNED.key].includes(status);
     }
 
     const isSupervisorAndStatusCompleted = () => {
-        return supervisor && (status === 'COMPLETED');
+        return supervisor && (status === IncidentStatus.COMPLETED.key);
     }
 
     const shouldRemarksByAssigneeBeVisible = () => {
-        if (isCreating || status === 'REPORTED' || status === 'RETURNED')return false;
+        if (isCreating || status === IncidentStatus.REPORTED.key || status === IncidentStatus.RETURNED.key)return false;
 
-        if (status === 'IN_PROGRESS') {
+        if (status === IncidentStatus.IN_PROGRESS.key) {
             return isAssignee();
         } else {
             return true;
@@ -91,15 +84,16 @@ const IncidentModal = ({ isCreating, show, content, handleClose, handleCreate, h
     }
 
     const shouldRemarksByInitialAssigneeBeVisible = () => {
-        if (isCreating || status === 'REPORTED')return false;
+        if (isCreating || status === IncidentStatus.REPORTED.key)return false;
 
         return !!content.initialAssignee;
     }
 
     const shouldRemarksBySupervisorBeVisible = () => {
-        if (isCreating || ['REPORTED', 'IN_PROGRESS', 'RETURNED'].includes(status))return false;
+        if (isCreating || [IncidentStatus.REPORTED.key , IncidentStatus.IN_PROGRESS.key, IncidentStatus.RETURNED.key].includes(status))
+            return false;
 
-        if (status === 'COMPLETED') {
+        if (status === IncidentStatus.COMPLETED.key) {
             return supervisor;
         } else {
             return true;
