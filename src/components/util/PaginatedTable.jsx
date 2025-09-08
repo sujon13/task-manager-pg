@@ -11,7 +11,6 @@ const PaginatedTable = ({ data, columns, anyActionColumn, pageChange, pageSizeCh
   const { supervisor, admin } = useUser();
 
   const [ currentPage ] = useState(data.number);
-  //const [ itemsPerPage, setItemsPerPage] = useState(data.size);
   const totalPages = data.totalPages;
   const itemsPerPage = data.size;
 

@@ -107,7 +107,7 @@ export const Login = () => {
                     >
                         Login
                     </Button>
-                    <SignupLink />
+                    {/* <SignupLink /> */}
                 </Form>
             </Card>
             <SuccessToast

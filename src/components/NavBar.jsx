@@ -62,11 +62,11 @@ export const NavBar = () => {
                             Login
                         </Nav.Link>
                         )}
-                        {!isLoggedIn && (
+                        {/* {!isLoggedIn && (
                         <Nav.Link as={Link} to={ROUTES.SIGNUP}>
                             Sign Up
                         </Nav.Link>
-                        )}
+                        )} */}
                     </Nav>
                 </Navbar.Collapse>
             </Container>
