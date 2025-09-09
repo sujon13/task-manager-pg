@@ -1,9 +1,9 @@
 import useUser from '../hooks/useUser';
-import { useAppNavigate } from '../hooks/useAppNavigate';
+import { Navigate } from 'react-router-dom';
+import { ROUTES } from '../routes';
 
 export const Home = () => {
     const { isLoggedIn } = useUser();
-    const { goIncidents } = useAppNavigate();
 
     if (isLoggedIn) {
         //test();
@@ -11,11 +11,10 @@ export const Home = () => {
 
     return (
         <div className='d-flex justify-content-center align-items-center' style={{ marginTop: '20px' }}>
-            {isLoggedIn ? (
-                goIncidents()
-            ) : (
-                <h2>Please login to continue to Power Grid Task Tracker</h2>
-            )}
+            {isLoggedIn 
+                ? <Navigate to={ROUTES.INCIDENTS}/> 
+                : ( <h2>Please login to continue to Power Grid Task Tracker</h2>)
+            }
         </div>
     )
 }
