@@ -1,16 +1,18 @@
 import axios from 'axios';
 import { getUrl } from './util';
 
+const apiUrl = import.meta.env.VITE_API_URL;
+
 export const auth = axios.create({
-    baseURL: "http://localhost:8080/api/v1",
+    baseURL: `${apiUrl}:8080/api/v1`,
 });
 
 export const task = axios.create({
-    baseURL: "http://localhost:8085/api/v1",
+    baseURL: `${apiUrl}:8085/api/v1`,
 });
 
 export const qa = axios.create({
-    baseURL: "http://localhost:8085/api/v1",
+    baseURL: `${apiUrl}:8085/api/v1`,
 });
 
 const handleError = error => {
