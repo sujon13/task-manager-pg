@@ -1,16 +1,14 @@
 import axios from 'axios';
 import { getUrl } from './util';
 
-const apiUrl = import.meta.env.VITE_API_URL;
+const apiUrl = import.meta.env.VITE_API_URL; 
 
 export const auth = axios.create({
-    //baseURL: `${apiUrl}:8080/api/v1`,
-    baseURL: 'https://dade344439a9.ngrok-free.app/api/v1'
+    baseURL: `${apiUrl}/auth/api/v1`,
 });
 
 export const task = axios.create({
-    //baseURL: `${apiUrl}:8085/api/v1`,
-    baseURL: 'https://9e3f4967effc.ngrok-free.app/api/v1'
+    baseURL: `${apiUrl}/task/api/v1`,
 });
 
 export const qa = axios.create({
