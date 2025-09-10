@@ -1,8 +1,8 @@
 import axios from 'axios';
 import { getUrl } from './util';
 
-const authBaseUrl = import.meta.env.AUTH_BASE_URL;
-const taskBaseUrl = import.meta.env.TASK_BASE_URL;
+const authBaseUrl = import.meta.env.VITE_AUTH_BASE_URL;
+const taskBaseUrl = import.meta.env.VITE_TASK_BASE_URL;
 
 export const auth = axios.create({
     baseURL: `${authBaseUrl}/api/v1`,
