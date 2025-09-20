@@ -1,13 +1,13 @@
 import { useState } from 'react';
 import { Table, Pagination, Button, Badge, OverlayTrigger, Tooltip } from 'react-bootstrap';
-import { FaEdit, FaTrash } from 'react-icons/fa';
+import { FaEdit, FaTrash, FaEye } from 'react-icons/fa';
 import PropTypes from 'prop-types';
 import Select from 'react-select';
 import '../../components/css/pagination.css';
 import { convertTo12HourDateTime, capitalizeFirst } from '../../services/util';
 import useUser from "../../hooks/useUser";
 
-const PaginatedTable = ({ data, columns, anyActionColumn, pageChange, pageSizeChange, handleEdit, handleDelete }) => {
+const PaginatedTable = ({ data, columns, anyActionColumn, pageChange, pageSizeChange, handleEdit, handleDelete, handleView }) => {
   const { supervisor, admin, user } = useUser();
 
   const [ currentPage ] = useState(data.number);
@@ -41,7 +41,7 @@ const PaginatedTable = ({ data, columns, anyActionColumn, pageChange, pageSizeCh
 
   const actionCol = (entry) => {
     return (
-      <td style={{ maxWidth: '60px' }}>
+      <td style={{ maxWidth: '90px' }}>
         <Button 
           style={{ display: entry.reporter || entry.assignee || supervisor ? '' : 'none' }}
           variant="warning" 
@@ -50,6 +50,15 @@ const PaginatedTable = ({ data, columns, anyActionColumn, pageChange, pageSizeCh
           onClick={() => handleEdit(entry.id)}
         >
           <FaEdit />
+        </Button>
+        <Button 
+          //style={{ display: entry.reporter || entry.assignee || supervisor ? '' : 'none' }}
+          variant="info" 
+          size="sm" 
+          className="" 
+          onClick={() => handleView(entry.id)}
+        >
+          <FaEye />
         </Button>
         <Button 
           style = {{display:  admin ? '' : 'none'}}
@@ -293,6 +302,7 @@ PaginatedTable.propTypes = {
   pageSizeChange: PropTypes.func.isRequired,
   handleEdit: PropTypes.func,
   handleDelete: PropTypes.func,
+  handleView: PropTypes.func,
 };
 
 export default PaginatedTable;

@@ -10,6 +10,7 @@ import PaginatedTable from '../util/PaginatedTable';
 import { get, post, put, deleteEntry, task, auth } from '../../services/api';
 import { ApiDate } from '../../services/util'; 
 import IncidentModal from './IncidentModal';
+import IncidentView from './IncidentView';
 import DeleteConfirmation from '../util/DeleteConfirmation';
 import useUser from "../../hooks/useUser";
 import '../css/IncidentList.css';
@@ -24,6 +25,7 @@ const IncidentList = () => {
     const [ size, setSize ] = useState(5);
     const [ isLoading, setIsLoading ] = useState(true);
     const [ showModal, setShowModal ] = useState(false);
+    const [ showViewModal, setShowViewModal ] = useState(false);
     const [ showDeleteConfirmation, setShowDeleteConfirmation ] = useState(false);
     const [ isCreating, setIsCreating ] = useState(true);
 
@@ -188,20 +190,26 @@ const IncidentList = () => {
     const handlePageSizeChange = pageSize => setSize(pageSize);
 
     const findIncidentById = (id) => {
-        return data.content.find(p => p.id === id);
+        return data?.content?.find(p => p.id === id);
     }
 
     const handleEdit = (id) => {
-        console.log('clicked incident id', id);
+        console.log('clicked incident id: ', id);
         setId(id);
         setIsCreating(false);
         setShowModal(true);
     }
 
+    const handleView = (id) => {
+        console.log('clicked incident id: ', id);
+        setId(id);
+        setShowViewModal(true);
+    }
+
     const handleDelete = (id) => {
         setId(id);
         setShowDeleteConfirmation(true);
-    };
+    }
 
     const handleOk = () => {
         fetchIncidents(currentPage, size, false);
@@ -225,7 +233,7 @@ const IncidentList = () => {
         } else {
             handleError(data);
         }
-    };
+    }
 
     const handleDeleteConfirmation = () => {
         setShowDeleteConfirmation(false);
@@ -241,6 +249,7 @@ const IncidentList = () => {
 
     const handleClose = () => {
         setShowModal(false);
+        setShowViewModal(false);
     }
 
     const handleSave = async (newIncident) => {
@@ -286,6 +295,11 @@ const IncidentList = () => {
                 handleClose={handleClose} 
                 handleCreate={handleSave} 
                 handleUpdate={handleUpdate}
+            />
+            <IncidentView 
+                show={ showViewModal } 
+                content={ findIncidentById(id) }
+                handleClose={handleClose} 
             />
             <DeleteConfirmation
                 show={showDeleteConfirmation}
@@ -414,6 +428,7 @@ const IncidentList = () => {
                     pageSizeChange={handlePageSizeChange}
                     handleEdit={handleEdit} 
                     handleDelete={handleDelete} 
+                    handleView={handleView}
                 />
             }
         </div>
