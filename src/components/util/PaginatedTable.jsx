@@ -41,33 +41,34 @@ const PaginatedTable = ({ data, columns, anyActionColumn, pageChange, pageSizeCh
 
   const actionCol = (entry) => {
     return (
-      <td style={{ maxWidth: '90px' }}>
-        <Button 
-          style={{ display: entry.reporter || entry.assignee || supervisor ? '' : 'none' }}
-          variant="warning" 
-          size="sm" 
-          className="me-2" 
-          onClick={() => handleEdit(entry.id)}
-        >
-          <FaEdit />
-        </Button>
-        <Button 
-          //style={{ display: entry.reporter || entry.assignee || supervisor ? '' : 'none' }}
-          variant="info" 
-          size="sm" 
-          className="" 
-          onClick={() => handleView(entry.id)}
-        >
-          <FaEye />
-        </Button>
-        <Button 
-          style = {{display:  admin ? '' : 'none'}}
-          variant="danger" 
-          size="sm" 
-          onClick={() => handleDelete(entry.id)}
-        >
-          <FaTrash />
-        </Button>
+      <td style={{ maxWidth: '90px' }} >
+        <div className="d-flex flex-column flex-md-row">
+          <Button 
+            style={{ display: entry.reporter || entry.assignee || supervisor ? '' : 'none' }}
+            variant="warning" 
+            size="sm" 
+            className="mb-1 mb-md-0 me-md-2" 
+            onClick={() => handleEdit(entry.id)}
+          >
+            <FaEdit />
+          </Button>
+          <Button 
+            variant="info" 
+            size="sm" 
+            onClick={() => handleView(entry.id)}
+          >
+            <FaEye />
+          </Button>
+          <Button 
+            style = {{display:  admin ? '' : 'none'}}
+            variant="danger" 
+            size="sm" 
+            className="mt-1 mt-md-0" 
+            onClick={() => handleDelete(entry.id)}
+          >
+            <FaTrash />
+          </Button>
+        </div>
       </td>
     );
   }
