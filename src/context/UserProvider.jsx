@@ -6,6 +6,7 @@ import { get, post, auth } from '../services/api';
 import UserContext from "./UserContext";
 import { useAppNavigate } from '../hooks/useAppNavigate';
 import { RoleEnum } from './RoleEnum';
+import { isSupervisor } from "../services/util";
 
 
 export const UserProvider = ({ children }) => {
@@ -14,6 +15,7 @@ export const UserProvider = ({ children }) => {
     const [loading, setLoading] = useState(true);
     const [ supervisor, setSupervisor ] = useState(false);
     const [ admin, setAdmin ] = useState(false);
+    const [ seScada, setSeScada ] = useState(false);
 
     const fetchUserInfo = async (callback) => {
         const { status, data } = await get(auth, "/users/me", { withCredentials: true });
@@ -21,6 +23,7 @@ export const UserProvider = ({ children }) => {
             setUser(data);
             checkAndSetSupervisor(data);
             checkAndSetAdmin(data);
+            checkAndSetSeScada(data);
             callback?.();
         } else {
             logout();
@@ -29,12 +32,15 @@ export const UserProvider = ({ children }) => {
     }
 
     const checkAndSetSupervisor = (user) => {
-        const supervisorRoles = [ RoleEnum.ADMIN.key, RoleEnum.SCADA_SE.key, RoleEnum.SMD_XEN.key ];
-        setSupervisor(user?.roles?.some(role => supervisorRoles.includes(role.name)));
+        setSupervisor(isSupervisor(user));
     }
 
     const checkAndSetAdmin = user => {
         setAdmin(user?.roles?.some(role => RoleEnum.ADMIN.key === role.name));
+    }
+
+    const checkAndSetSeScada = user => {
+        setSeScada(user?.roles?.some(role => RoleEnum.SCADA_SE.key === role.name));
     }
 
     // Restore by fetching from server on refresh
@@ -69,7 +75,7 @@ export const UserProvider = ({ children }) => {
     const isLoggedIn = !!user;
 
     return (
-        <UserContext.Provider value={{ user, isLoggedIn, login, logout, loading, supervisor, admin }}>
+        <UserContext.Provider value={{ user, isLoggedIn, login, logout, loading, supervisor, admin, seScada }}>
             {children}
         </UserContext.Provider>
     );

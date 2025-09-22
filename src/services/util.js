@@ -1,4 +1,5 @@
 import { parse, format, isValid } from "date-fns";
+import { RoleEnum } from "../context/RoleEnum";
 
 export const convertTo12HourDateTime = (dateStr) => {
     if (!dateStr) {
@@ -34,4 +35,9 @@ export const getUrl = (path, paramMap) => {
 export const capitalizeFirst = str => {
   if (!str) return "";
   return str.charAt(0).toUpperCase() + str.slice(1).toLowerCase();
+}
+
+export const isSupervisor = user => {
+    const supervisorRoles = [ RoleEnum.ADMIN.key, RoleEnum.SCADA_SE.key, RoleEnum.SMD_XEN.key ];
+    return user?.roles?.some(role => supervisorRoles.includes(role.name));
 }

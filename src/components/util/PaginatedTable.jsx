@@ -4,12 +4,12 @@ import { FaEdit, FaTrash, FaEye } from 'react-icons/fa';
 import PropTypes from 'prop-types';
 import Select from 'react-select';
 import '../../components/css/pagination.css';
-import { convertTo12HourDateTime, capitalizeFirst } from '../../services/util';
+import { convertTo12HourDateTime, capitalizeFirst, isSupervisor } from '../../services/util';
 import useUser from "../../hooks/useUser";
 import { IncidentStatus } from '../incidents/IncidentStatus';
 
 const PaginatedTable = ({ data, columns, anyActionColumn, pageChange, pageSizeChange, handleEdit, handleDelete, handleView }) => {
-  const { supervisor, admin, user } = useUser();
+  const { supervisor, admin, user, seScada } = useUser();
 
   const [ currentPage ] = useState(data.number);
   const totalPages = data.totalPages;
@@ -231,6 +231,7 @@ const PaginatedTable = ({ data, columns, anyActionColumn, pageChange, pageSizeCh
   }
 
   const isPendingToMe = (item) => {
+    if (seScada && isSupervisor(item['pendingTo']))return true;
     return item['pendingTo']?.userName === user?.userName;
   }
 
