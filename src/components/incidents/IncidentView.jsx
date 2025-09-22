@@ -5,6 +5,7 @@ import PropTypes from 'prop-types';
 import "react-datepicker/dist/react-datepicker.css";
 import '../css/DatePicker.css';
 import '../css/IncidentModal.css';
+import '../css/IncidentView.css';
 import useUser from "../../hooks/useUser";
 import { IncidentStatus } from './IncidentStatus';
 import { convertTo12HourDateTime, capitalizeFirst } from '../../services/util';
@@ -65,7 +66,7 @@ const IncidentView = ({ show, content, handleClose }) => {
                         <Row>
                             <Col md={12}>
                                 <Form.Group className="mb-1">
-                                    <Form.Label>Incident Summary</Form.Label>
+                                    <Form.Label className='text-secondary'>Incident Summary</Form.Label>
                                     <Form.Control
                                         as="textarea"
                                         rows={3}
@@ -78,29 +79,18 @@ const IncidentView = ({ show, content, handleClose }) => {
                             </Col>
                             <Col md={4} sm={12}>
                                 <Form.Group className="">
-                                    <Form.Label>Occurred At</Form.Label>
+                                    <Form.Label className='text-secondary'>Reported At</Form.Label>
                                     <Form.Control
                                         className='modal-input'
                                         type="text"
-                                        value={ convertTo12HourDateTime(content?.occurredAt) || "" }
+                                        value={ convertTo12HourDateTime(content?.reportedAt, true) || "" }
                                         readOnly
                                     />
                                 </Form.Group>
                             </Col>
                             <Col md={4} sm={12}>
                                 <Form.Group className="">
-                                    <Form.Label>Reported At</Form.Label>
-                                    <Form.Control
-                                        className='modal-input'
-                                        type="text"
-                                        value={ convertTo12HourDateTime(content?.reportedAt) || "" }
-                                        readOnly
-                                    />
-                                </Form.Group>
-                            </Col>
-                            <Col md={4} sm={12}>
-                                <Form.Group className="">
-                                    <Form.Label>Reported By</Form.Label>
+                                    <Form.Label className='text-secondary'>Reported By</Form.Label>
                                     <Form.Control
                                         className='modal-input'
                                         type="text"
@@ -111,7 +101,7 @@ const IncidentView = ({ show, content, handleClose }) => {
                             </Col>
                             <Col md={4} sm={12} style={{ display: content?.initialAssignee ? 'block' : 'none' }}>
                                 <Form.Group className="">
-                                    <Form.Label>Initial Assignee</Form.Label>
+                                    <Form.Label className='text-secondary'>Initial Assignee</Form.Label>
                                     <Form.Control
                                         className='modal-input'
                                         type="text"
@@ -122,7 +112,7 @@ const IncidentView = ({ show, content, handleClose }) => {
                             </Col>
                             <Col md={4} sm={12}>
                                 <Form.Group className="">
-                                    <Form.Label>{ content?.initialAssignee ? 'Current ': ''}Assignee</Form.Label>
+                                    <Form.Label className='text-secondary'>{ content?.initialAssignee ? 'Current ': ''}Assignee</Form.Label>
                                     <Form.Control
                                         className='modal-input'
                                         type="text"
@@ -133,7 +123,7 @@ const IncidentView = ({ show, content, handleClose }) => {
                             </Col>
                             <Col md={4} sm={12}>
                                 <Form.Group className="">
-                                    <Form.Label>Priority</Form.Label>
+                                    <Form.Label className='text-secondary'>Priority</Form.Label>
                                     <Form.Control
                                         className='modal-input'
                                         type="text"
@@ -144,7 +134,7 @@ const IncidentView = ({ show, content, handleClose }) => {
                             </Col>
                             <Col md={4} sm={12}>
                                 <Form.Group className="">
-                                    <Form.Label>Station</Form.Label>
+                                    <Form.Label className='text-secondary'>Station</Form.Label>
                                     <Form.Control
                                         className='modal-input'
                                         type="text"
@@ -155,7 +145,7 @@ const IncidentView = ({ show, content, handleClose }) => {
                             </Col>
                             <Col md={4} sm={12}>
                                 <Form.Group className="">
-                                    <Form.Label>Status</Form.Label>
+                                    <Form.Label className='text-secondary'>Status</Form.Label>
                                     <Form.Control
                                         className='modal-input'
                                         type="text"
@@ -164,9 +154,20 @@ const IncidentView = ({ show, content, handleClose }) => {
                                     />
                                 </Form.Group>
                             </Col>
+                            <Col md={4} sm={12} style={{ display: IncidentStatus.RESOLVED.key === content?.status ? '' : 'none' }}>
+                                <Form.Group className="">
+                                    <Form.Label className='text-secondary'>Resolved At</Form.Label>
+                                    <Form.Control
+                                        className='modal-input'
+                                        type="text"
+                                        value={ convertTo12HourDateTime(content?.resolvedAt, true) || "" }
+                                        readOnly
+                                    />
+                                </Form.Group>
+                            </Col>
                             <Col md={12} style={{ display: shouldRemarksByInitialAssigneeBeVisible() ? 'block' : 'none' }}>
                                 <Form.Group className="mb-1">
-                                    <Form.Label>Initial Assignee Remarks</Form.Label>
+                                    <Form.Label className='text-secondary'>Initial Assignee Remarks</Form.Label>
                                     <Form.Control
                                         as="textarea"
                                         rows={3}
@@ -178,7 +179,7 @@ const IncidentView = ({ show, content, handleClose }) => {
                             </Col>
                             <Col md={12} style={{ display: shouldRemarksByAssigneeBeVisible() ? 'block' : 'none' }}>
                                 <Form.Group className="mb-1">
-                                    <Form.Label>Assignee Remarks</Form.Label>
+                                    <Form.Label className='text-secondary'>Assignee Remarks</Form.Label>
                                     <Form.Control
                                         as="textarea"
                                         rows={3}
@@ -190,10 +191,10 @@ const IncidentView = ({ show, content, handleClose }) => {
                             </Col>
                             <Col md={12} style={{ display: shouldRemarksBySupervisorBeVisible() ? 'block' : 'none' }}>
                                 <Form.Group className="mb-1">
-                                    <Form.Label>Supervisor Remarks</Form.Label>
+                                    <Form.Label className='text-secondary'>Supervisor Remarks</Form.Label>
                                     <Form.Control
                                         as="textarea"
-                                        rows={3}
+                                        rows={2}
                                         cols={50}
                                         value={ content?.remarksBySupervisor }
                                         readOnly

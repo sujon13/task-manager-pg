@@ -1,7 +1,7 @@
 import { parse, format, isValid } from "date-fns";
 import { RoleEnum } from "../context/RoleEnum";
 
-export const convertTo12HourDateTime = (dateStr) => {
+export const convertTo12HourDateTime = (dateStr, forView = false) => {
     if (!dateStr) {
         return null;
     }
@@ -12,7 +12,8 @@ export const convertTo12HourDateTime = (dateStr) => {
     }
   
     // Format to "MMM dd, yyyy hh:mm a" (e.g. "Aug 31, 2025 03:45 PM")
-    return format(parsedDate, "dd MMM, yy h:mm a");
+    const dateFormat = forView ? 'MMM dd, yyyy h:mm a' : 'dd MMM, yy h:mm a';
+    return format(parsedDate, dateFormat);
 }
 
 export const JsDate = dateStr => {
@@ -33,8 +34,8 @@ export const getUrl = (path, paramMap) => {
 }
 
 export const capitalizeFirst = str => {
-  if (!str) return "";
-  return str.charAt(0).toUpperCase() + str.slice(1).toLowerCase();
+    if (!str) return "";
+    return str.charAt(0).toUpperCase() + str.slice(1).toLowerCase();
 }
 
 export const isSupervisor = user => {
