@@ -41,7 +41,11 @@ const IncidentList = () => {
     // Date filters
     const [reportedAtFrom, setReportedAtFrom] = useState(null);
     const [reportedAtTo, setReportedAtTo] = useState(null);
-    const [timeframe, setTimeframe] = useState(null);
+    const [reportedAtTimeframe, setReportedAtTimeframe] = useState(null);
+    const [resolvedAtFrom, setResolvedAtFrom] = useState(null);
+    const [resolvedAtTo, setResolvedAtTo] = useState(null);
+    const [resolvedATimeframe, setResolvedATimeframe] = useState(null);
+
 
     const [ priorityOptions, setPriorityOptions ] = useState([]);
     const [ statusOptions, setStatusOptions ] = useState([]);
@@ -56,13 +60,11 @@ const IncidentList = () => {
         { value: 'last_month', label: 'Last Month' }
     ];
 
-    const handleTimeframeChange = (option) => {
-        setTimeframe(option.value);
-
+    const calculateFromAndToFromTimeFrame = optionValue => {
         const today = new Date();
         let from = null, to = null;
 
-        switch (option.value) {
+        switch (optionValue) {
             case 'today':
                 from = new Date(today.setHours(0, 0, 0, 0));
                 to = new Date();
@@ -91,9 +93,26 @@ const IncidentList = () => {
                 from = null;
                 to = null;
         }
+        return {
+            from,
+            to
+        }
+    }
 
+    const handleReportedAtTimeframeChange = option => {
+        setReportedAtTimeframe(option.value);
+
+        const { from, to } = calculateFromAndToFromTimeFrame(option.value);
         setReportedAtFrom(from);
         setReportedAtTo(to);
+    };
+
+    const handleResolvedAtTimeframeChange = option => {
+        setResolvedATimeframe(option.value);
+
+        const { from, to } = calculateFromAndToFromTimeFrame(option.value);
+        setResolvedAtFrom(from);
+        setResolvedAtTo(to);
     };
 
     const fetchIncidents = async (page, size, showLoading = true) => {
@@ -109,7 +128,9 @@ const IncidentList = () => {
             status,
             priority,
             reportedAtFrom: ApiDate(reportedAtFrom),
-            reportedAtTo: ApiDate(reportedAtTo)
+            reportedAtTo: ApiDate(reportedAtTo),
+            resolvedAtFrom: ApiDate(resolvedAtFrom),
+            resolvedAtTo: ApiDate(resolvedAtTo)
         };
 
         const response = await get(task, '/incidents', params);
@@ -386,31 +407,42 @@ const IncidentList = () => {
                             <Form.Label>Reported At</Form.Label>
                             <Select
                                 options={timeframeOptions}
-                                onChange={handleTimeframeChange}
+                                onChange={handleReportedAtTimeframeChange}
                                 placeholder="Reported At"
-                                value={timeframeOptions.find(option => option.value === timeframe)}
+                                value={timeframeOptions.find(option => option.value === reportedAtTimeframe)}
                             />
                         </Form.Group>
                     </Col>
                     <Col md={3} className=''>
-                        <Form.Group>
-                            <Form.Label style={{ visibility: 'hidden'}}>Search</Form.Label>
-                            <Button 
-                                variant="primary" 
-                                className="w-100"
-                                onClick={ handleSearch }
-                            >
-                                Search
-                            </Button> 
-                        </Form.Group>   
+                        <Form.Group className="">
+                            <Form.Label>Resolved At</Form.Label>
+                            <Select
+                                options={timeframeOptions}
+                                onChange={handleResolvedAtTimeframeChange}
+                                placeholder="Resolved At"
+                                value={timeframeOptions.find(option => option.value === resolvedATimeframe)}
+                            />
+                        </Form.Group>
                     </Col>
                 </Row>
-                <Row>
-                    {/* <Col md={6} className="d-flex justify-content-start align-items-center" >
-                        <h5 className="text-align-center">Total Entries: {data.totalElements || 0}</h5>
-                    </Col> */}
-                    <Col md={12} className="d-flex justify-content-end mb-3 mt-1">
-                        <Button variant="success" onClick={handleAddNew}>
+                <Row className="justify-content-end mt-1">
+                    <Col md={3} className=''>
+                        <Button 
+                            variant="primary" 
+                            className="w-100"
+                            onClick={ handleSearch }
+                        >
+                            Search
+                        </Button>   
+                    </Col>
+                </Row>
+                <Row className='justify-content-end mb-2 mb-md-0 mt-2'>
+                    <Col md={3} className="">
+                        <Button 
+                            variant="success" 
+                            onClick={handleAddNew}
+                            className="w-100"
+                        >
                             <FaPlus className="me-1" /> Add New Entry
                         </Button>
                     </Col>
