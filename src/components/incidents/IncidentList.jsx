@@ -212,7 +212,7 @@ const IncidentList = () => {
     }
 
     const handleOk = () => {
-        fetchIncidents(currentPage, size, false);
+        fetchIncidents(isCreating ? 0 : currentPage, size, false);
         setTimeout(() => {
             setIsLoading(false);
         }, 500);
