@@ -6,6 +6,7 @@ import Select from 'react-select';
 import '../../components/css/pagination.css';
 import { convertTo12HourDateTime, capitalizeFirst } from '../../services/util';
 import useUser from "../../hooks/useUser";
+import { IncidentStatus } from '../incidents/IncidentStatus';
 
 const PaginatedTable = ({ data, columns, anyActionColumn, pageChange, pageSizeChange, handleEdit, handleDelete, handleView }) => {
   const { supervisor, admin, user } = useUser();
@@ -39,12 +40,19 @@ const PaginatedTable = ({ data, columns, anyActionColumn, pageChange, pageSizeCh
     );
   }
 
+  const isEditable = entry => {
+    if (IncidentStatus.RESOLVED.key === entry.status)return false;
+    if (supervisor)return true;
+    if (entry.reporter && IncidentStatus.REPORTED.key === entry.status)return true;
+    if (entry.assignee && IncidentStatus.IN_PROGRESS.key === entry.status)return true;
+  }
+
   const actionCol = (entry) => {
     return (
       <td style={{ maxWidth: '90px' }} >
         <div className="d-flex flex-column flex-md-row">
           <Button 
-            style={{ display: entry.reporter || entry.assignee || supervisor ? '' : 'none' }}
+            style={{ display: isEditable(entry) ? '' : 'none' }}
             variant="warning" 
             size="sm" 
             className="mb-1 mb-md-0 me-md-2" 
