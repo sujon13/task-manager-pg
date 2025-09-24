@@ -17,7 +17,7 @@ import '../css/IncidentList.css';
 
 
 const IncidentList = () => {
-    const { logout } = useUser();
+    const { logout, user } = useUser();
 
     // State
     const [ data, setData ] = useState({});
@@ -165,8 +165,9 @@ const IncidentList = () => {
         }
     }
 
-    const generateLabel = user => {
-        return `${user.name}, ${user.designation}, ${user.office}`;
+    const generateLabel = entry => {
+        const me = entry.username === user.userName;
+        return `${entry.name}, ${entry.designation}, ${entry.office}` + (me ? ' (me)' : '');
     }
 
     const buildUserOptions = (data, label) => {
