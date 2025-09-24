@@ -195,10 +195,10 @@ const IncidentList = () => {
         // { text: '#', dataField: 'id' },
         { text: 'Event', dataField: 'eventNo', type: 'int' },
         { text: 'Station', dataField: 'station', type: 'string' },
-        { text: 'Reported At', dataField: 'reportedAt', type: 'date' },
-        { text: 'Resolved At', dataField: 'resolvedAt', type: 'date' },
-        { text: 'Reported By', dataField: 'reportedBy', type: 'user' },
-        { text: 'Assigned To', dataField: 'assignedTo', type: 'user' },
+        { text: 'Reporting Time', dataField: 'reportedAt', type: 'date' },
+        { text: 'Resolved Time', dataField: 'resolvedAt', type: 'date' },
+        { text: 'Reporter', dataField: 'reportedBy', type: 'user' },
+        { text: 'Assignee', dataField: 'assignedTo', type: 'user' },
         { text: 'Pending To', dataField: 'pendingTo', type: 'user' },
         { text: 'Incident', dataField: 'summary', type: 'string' },
         { text: 'Priority', dataField: 'priority', type: 'enum' },
@@ -334,7 +334,7 @@ const IncidentList = () => {
                 <Row>
                     <Col md={3} className='search-field'>
                         <Form.Group className=''>
-                            <Form.Label>Reported By</Form.Label>
+                            <Form.Label>Reporter</Form.Label>
                             <Select
                                 options={ reporterOptions }
                                 onChange={ (option) => setReportedBy(option.value) }
@@ -345,7 +345,7 @@ const IncidentList = () => {
                     </Col>
                     <Col md={3} className='search-field'>
                         <Form.Group className=''>
-                            <Form.Label>Assigned To</Form.Label>
+                            <Form.Label>Assignee</Form.Label>
                             <Select
                                 options={ assigneeOptions }
                                 onChange={ (option) => setAssignedTo(option.value) }
@@ -378,7 +378,7 @@ const IncidentList = () => {
                     </Col>
                     <Col md={3}>
                         <Form.Group className="">
-                            <Form.Label>Reported At (From)</Form.Label>
+                            <Form.Label>Reporting Time (From)</Form.Label>
                             <DatePicker
                                 className='date-picker'
                                 selected={reportedAtFrom}
@@ -391,7 +391,7 @@ const IncidentList = () => {
                     </Col>
                     <Col md={3}>
                         <Form.Group className="">
-                            <Form.Label>Reported At (To)</Form.Label>
+                            <Form.Label>Reporting Time (To)</Form.Label>
                             <DatePicker
                                 className='date-picker'
                                 selected={reportedAtTo}
@@ -404,7 +404,7 @@ const IncidentList = () => {
                     </Col>
                     <Col md={3} className=''>
                         <Form.Group className="">
-                            <Form.Label>Reported At</Form.Label>
+                            <Form.Label>Reporting Time</Form.Label>
                             <Select
                                 options={timeframeOptions}
                                 onChange={handleReportedAtTimeframeChange}
@@ -415,7 +415,7 @@ const IncidentList = () => {
                     </Col>
                     <Col md={3} className=''>
                         <Form.Group className="">
-                            <Form.Label>Resolved At</Form.Label>
+                            <Form.Label>Resolved Time</Form.Label>
                             <Select
                                 options={timeframeOptions}
                                 onChange={handleResolvedAtTimeframeChange}

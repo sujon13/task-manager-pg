@@ -79,7 +79,7 @@ const IncidentView = ({ show, content, handleClose }) => {
                             </Col>
                             <Col md={4} sm={12}>
                                 <Form.Group className="">
-                                    <Form.Label className='text-secondary'>Reported At</Form.Label>
+                                    <Form.Label className='text-secondary'>Reporting Time</Form.Label>
                                     <Form.Control
                                         className='modal-input'
                                         type="text"
@@ -90,7 +90,7 @@ const IncidentView = ({ show, content, handleClose }) => {
                             </Col>
                             <Col md={4} sm={12}>
                                 <Form.Group className="">
-                                    <Form.Label className='text-secondary'>Reported By</Form.Label>
+                                    <Form.Label className='text-secondary'>Reporter</Form.Label>
                                     <Form.Control
                                         className='modal-input'
                                         type="text"
@@ -156,7 +156,7 @@ const IncidentView = ({ show, content, handleClose }) => {
                             </Col>
                             <Col md={4} sm={12} style={{ display: IncidentStatus.RESOLVED.key === content?.status ? '' : 'none' }}>
                                 <Form.Group className="">
-                                    <Form.Label className='text-secondary'>Resolved At</Form.Label>
+                                    <Form.Label className='text-secondary'>Resolved Time</Form.Label>
                                     <Form.Control
                                         className='modal-input'
                                         type="text"

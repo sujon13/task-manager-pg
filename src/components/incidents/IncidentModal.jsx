@@ -308,7 +308,7 @@ const IncidentModal = ({ isCreating, show, content, handleClose, handleCreate, h
                             </Col>
                             <Col md={6} sm={12}>
                                 <Form.Group className="mb-3">
-                                    <Form.Label>Assigned To</Form.Label>
+                                    <Form.Label>Assignee</Form.Label>
                                     <Select
                                         options={ userOptions }
                                         onChange={ (option) => setAssignedTo(option.value) }
