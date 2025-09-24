@@ -35,6 +35,7 @@ const IncidentList = () => {
     //const [ occurredAt, setOccurredAt] = useState('');
     const [ reportedBy, setReportedBy ] = useState(null);
     const [ assignedTo, setAssignedTo ] = useState(null);
+    const [ pendingTo, setPendingTo ] = useState(null);
     const [ status, setStatus ] = useState(null);
     const [ priority, setPriority ] = useState(null);
 
@@ -51,6 +52,7 @@ const IncidentList = () => {
     const [ statusOptions, setStatusOptions ] = useState([]);
     const [ reporterOptions, setReporterOptions ] = useState([]);
     const [ assigneeOptions, setAssigneeOptions ] = useState([]);
+    const [ pendingToOptions, setPendingToOptions ] = useState([]);
 
     const timeframeOptions = [
         { value: '', label: '--Select Timeframe--' },
@@ -125,6 +127,7 @@ const IncidentList = () => {
             size,
             reportedBy,
             assignedTo,
+            pendingTo,
             status,
             priority,
             reportedAtFrom: ApiDate(reportedAtFrom),
@@ -181,6 +184,7 @@ const IncidentList = () => {
         if (status === 200) {
             setReporterOptions(buildUserOptions(data, '--Select Reporter--'));
             setAssigneeOptions(buildUserOptions(data, '--Select Assignee--'));
+            setPendingToOptions(buildUserOptions(data, '--Select Pending To--'));
         }
     }
 
@@ -357,6 +361,17 @@ const IncidentList = () => {
                     </Col>
                     <Col md={3} className='search-field'>
                         <Form.Group className=''>
+                            <Form.Label>Pending To</Form.Label>
+                            <Select
+                                options={ pendingToOptions }
+                                onChange={ (option) => setPendingTo(option.value) }
+                                placeholder=""
+                                value={ pendingToOptions.find(option => option.value === pendingTo) }
+                            />
+                        </Form.Group>
+                    </Col>
+                    <Col md={3} className='search-field'>
+                        <Form.Group className=''>
                             <Form.Label>Priority</Form.Label>
                             <Select
                                 options={ priorityOptions }
@@ -377,7 +392,7 @@ const IncidentList = () => {
                             /> 
                         </Form.Group>
                     </Col>
-                    <Col md={3}>
+                    {/* <Col md={3}>
                         <Form.Group className="">
                             <Form.Label>Reporting Time (From)</Form.Label>
                             <DatePicker
@@ -402,8 +417,8 @@ const IncidentList = () => {
                                 dateFormat="dd MMM, yyyy hh:mm a"
                             />
                         </Form.Group>
-                    </Col>
-                    <Col md={3} className=''>
+                    </Col> */}
+                    <Col md={3} className='search-field'>
                         <Form.Group className="">
                             <Form.Label>Reporting Time</Form.Label>
                             <Select
@@ -414,7 +429,7 @@ const IncidentList = () => {
                             />
                         </Form.Group>
                     </Col>
-                    <Col md={3} className=''>
+                    <Col md={3} className='search-field'>
                         <Form.Group className="">
                             <Form.Label>Resolved Time</Form.Label>
                             <Select
@@ -425,19 +440,20 @@ const IncidentList = () => {
                             />
                         </Form.Group>
                     </Col>
-                </Row>
-                <Row className="justify-content-end mt-1">
-                    <Col md={3} className=''>
-                        <Button 
-                            variant="primary" 
-                            className="w-100"
-                            onClick={ handleSearch }
-                        >
-                            Search
-                        </Button>   
+                    <Col md={3} className='search-field'>
+                        <Form.Group className="">
+                            <Form.Label style={{ visibility: 'hidden'}}>Search</Form.Label>
+                            <Button 
+                                variant="primary" 
+                                className="w-100"
+                                onClick={ handleSearch }
+                            >
+                                Search
+                            </Button>
+                        </Form.Group>  
                     </Col>
                 </Row>
-                <Row className='justify-content-end mb-2 mb-md-0 mt-2'>
+                <Row className='justify-content-end mb-2 mb-md-0 mt-1'>
                     <Col md={3} className="">
                         <Button 
                             variant="success" 
