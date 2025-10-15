@@ -166,7 +166,7 @@ const PaginatedTable = ({ data, columns, anyActionColumn, pageChange, pageSizeCh
     const both = !!designation && !!office;
 
     return (
-      <div>
+      <div style={{ fontSize: '14px' }}>
         {name}<br/>
         {any ? '(' : ''}{designation}{both ? ', ' : ''}{office}{any ? ')' : ''}
       </div>

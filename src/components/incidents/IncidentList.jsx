@@ -22,7 +22,7 @@ const IncidentList = () => {
     // State
     const [ data, setData ] = useState({});
     const [ currentPage, setCurrentPage ] = useState(0);
-    const [ size, setSize ] = useState(5);
+    const [ size, setSize ] = useState(10);
     const [ isLoading, setIsLoading ] = useState(true);
     const [ showModal, setShowModal ] = useState(false);
     const [ showViewModal, setShowViewModal ] = useState(false);
