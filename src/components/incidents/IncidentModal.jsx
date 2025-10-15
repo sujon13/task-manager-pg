@@ -81,6 +81,10 @@ const IncidentModal = ({ isCreating, show, content, handleClose, handleCreate, h
         return isSupervisorAndStatusOpen() || isReporterAndStatusReported();
     }
 
+    const isIncidentSummaryEditable = () => {
+        return isCreating || isReporterAndStatusReported();
+    }
+
     const isSupervisorAndStatusCompleted = () => {
         return supervisor && (status === IncidentStatus.COMPLETED.key);
     }
@@ -289,7 +293,7 @@ const IncidentModal = ({ isCreating, show, content, handleClose, handleCreate, h
                                         autoFocus
                                         onFocus={ () => setSummaryError('') }
                                         onChange={ (e) => setSummary(e.target.value) }
-                                        disabled={ !isEditable() }
+                                        disabled={ !isIncidentSummaryEditable() }
                                     />
                                     { summaryError && <p className="text-danger">{ summaryError }</p> }
                                 </Form.Group>
