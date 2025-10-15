@@ -141,11 +141,11 @@ const PaginatedTable = ({ data, columns, anyActionColumn, pageChange, pageSizeCh
       case 'resolvedAt':
         return '90px';
       case 'reportedBy':
-        return '130px';
+        return '135px';
       case 'assignedTo':
-        return '130px';
+        return '135px';
       case 'pendingTo':
-        return '130px';
+        return '135px';
       case 'summary':
         return '250px';
       case 'priority':
