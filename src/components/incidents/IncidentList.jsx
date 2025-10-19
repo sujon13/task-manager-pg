@@ -183,8 +183,16 @@ const IncidentList = () => {
         const { status, data } = await get(auth, '/users/dropdown');
         if (status === 200) {
             setReporterOptions(buildUserOptions(data, '--Select Reporter--'));
-            setAssigneeOptions(buildUserOptions(data, '--Select Assignee--'));
+            //setAssigneeOptions(buildUserOptions(data, '--Select Assignee--'));
             setPendingToOptions(buildUserOptions(data, '--Select Pending To--'));
+        }
+    }
+
+    const loadAssigneeOptions = async () => {
+        const { status, data } = await get(auth, '/users/dropdown?assignee=true');
+        if (status === 200) {
+            setAssigneeOptions(buildUserOptions(data, '--Select Assignee--'));
+            //setPendingToOptions(buildUserOptions(data, '--Select Pending To--'));
         }
     }
 
@@ -193,6 +201,7 @@ const IncidentList = () => {
         loadPriorityOptions();
         loadStatusOptions();
         loadUserOptions();
+        loadAssigneeOptions();
     }, [currentPage, size]);
 
 
