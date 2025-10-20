@@ -151,7 +151,7 @@ const PaginatedTable = ({ data, columns, anyActionColumn, pageChange, pageSizeCh
       case 'priority':
         return '80px';
       case 'status':
-        return '90px';
+        return '100px';
       default:
         return '';
     }
