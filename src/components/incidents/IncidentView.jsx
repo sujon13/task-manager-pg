@@ -7,7 +7,7 @@ import '../css/DatePicker.css';
 import '../css/IncidentModal.css';
 import '../css/IncidentView.css';
 import useUser from "../../hooks/useUser";
-import { IncidentStatus } from './IncidentStatus';
+import { IncidentStatus } from './IncidentConstant';
 import { convertTo12HourDateTime, capitalizeFirst } from '../../services/util';
 
 

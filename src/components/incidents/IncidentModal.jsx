@@ -12,7 +12,7 @@ import '../css/DatePicker.css';
 import '../css/IncidentModal.css';
 import useUser from "../../hooks/useUser";
 import Confirmation from '../util/Confirmation';
-import { IncidentStatus } from './IncidentStatus';
+import { IncidentStatus } from './IncidentConstant';
 
 
 const IncidentModal = ({ isCreating, show, content, handleClose, handleCreate, handleUpdate }) => {
@@ -36,11 +36,13 @@ const IncidentModal = ({ isCreating, show, content, handleClose, handleCreate, h
     const [ remarksByInitialAssignee, setRemarksByInitialAssignee ] = useState('');
     const [ status, setStatus] = useState(null);
     const [ priority, setPriority ] = useState('HIGH');
+    const [ category, setCategory ] = useState(null);
 
     const [ summaryError, setSummaryError ] = useState('');
 
     const [ priorityOptions, setPriorityOptions ] = useState([]);
     const [ userOptions, setUserOptions ] = useState([]);
+    const [ categoryOptions, setCategoryOptions ] = useState([]);
 
     const [ showConfirmation, setShowConfirmation ] = useState(false);
     const [ savedTask, setSavedTask ] = useState(null);
@@ -134,6 +136,7 @@ const IncidentModal = ({ isCreating, show, content, handleClose, handleCreate, h
         setRemarksByInitialAssignee(content.remarksByInitialAssignee || '');
         setStatus(content.status);
         setPriority(content.priority);
+        setCategory(content.category);
     }
 
     const clearContent = () => {
@@ -154,6 +157,7 @@ const IncidentModal = ({ isCreating, show, content, handleClose, handleCreate, h
         setRemarksByInitialAssignee('');
         setStatus(null);
         setPriority('HIGH');
+        setCategory(null);
     }
 
     const loadPriorityOptions = async () => {
@@ -176,8 +180,18 @@ const IncidentModal = ({ isCreating, show, content, handleClose, handleCreate, h
         }
     }
 
+    const loadCategoryOptions = async () => {
+        const { status, data } = await get(task, '/incidents/category/dropdown');
+        if (status === 200) {
+            const emptyOption = { value: '', label: '--Select Category--' };
+            const options = data.map(category => ({ value: category.id, label: category.name }));
+            setCategoryOptions([emptyOption, ...options]);
+        }
+    }
+
     useEffect(() => {
         loadPriorityOptions();
+        loadCategoryOptions();
         loadUserOptions();
 
         if (content) {
@@ -214,7 +228,8 @@ const IncidentModal = ({ isCreating, show, content, handleClose, handleCreate, h
             summary,
             description,
             status: isCreating ? null: status,
-            priority
+            priority,
+            category: category ? category : null
         };
         console.log('incident to save', incident);
 
@@ -279,6 +294,18 @@ const IncidentModal = ({ isCreating, show, content, handleClose, handleCreate, h
                 <Modal.Body>
                     <Form>
                         <Row>
+                            <Col md={6} sm={12}>
+                                <Form.Group className="mb-3">
+                                    <Form.Label>Incident Category</Form.Label>
+                                    <Select
+                                        options={ categoryOptions }
+                                        onChange={ (option) => setCategory(option.value) }
+                                        placeholder="Select Category"
+                                        value={ category ? categoryOptions.find(option => option.value === category) : ''}
+                                        isDisabled={ !isEditable() } 
+                                    />
+                                </Form.Group>
+                            </Col>
                             <Col md={12}>
                                 <Form.Group className="mb-3">
                                     <Form.Label>Incident Summary</Form.Label>

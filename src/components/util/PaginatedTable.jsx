@@ -4,9 +4,9 @@ import { FaEdit, FaTrash, FaEye } from 'react-icons/fa';
 import PropTypes from 'prop-types';
 import Select from 'react-select';
 import '../../components/css/pagination.css';
-import { convertTo12HourDateTime, capitalizeFirst, isSupervisor } from '../../services/util';
+import { convertTo12HourDateTime, isSupervisor } from '../../services/util';
 import useUser from "../../hooks/useUser";
-import { IncidentStatus } from '../incidents/IncidentStatus';
+import { IncidentStatus, IncidentPriority } from '../incidents/IncidentConstant';
 
 const PaginatedTable = ({ data, columns, anyActionColumn, pageChange, pageSizeChange, handleEdit, handleDelete, handleView }) => {
   const { supervisor, admin, user, seScada } = useUser();
@@ -81,16 +81,16 @@ const PaginatedTable = ({ data, columns, anyActionColumn, pageChange, pageSizeCh
     );
   }
 
-  const badgeForPriority = priority => {
+  const badgeForPriority = (priority, priorityStr) => {
     switch (priority) {
-      case "Critical":
-        return <Badge bg="danger">{priority}</Badge>;
-      case "High":
-        return <Badge bg="warning">{priority}</Badge>;
-      case "Medium":
-        return <Badge bg="info">{priority}</Badge>;
-      case "Low":
-        return <Badge bg="secondary">{priority}</Badge>;
+      case IncidentPriority.CRITICAL.key:
+        return <Badge bg="danger">{priorityStr}</Badge>;
+      case IncidentPriority.HIGH.key:
+        return <Badge bg="warning">{priorityStr}</Badge>;
+      case IncidentPriority.MEDIUM.key:
+        return <Badge bg="info">{priorityStr}</Badge>;
+      case IncidentPriority.LOW.key:
+        return <Badge bg="secondary">{priorityStr}</Badge>;
       default:
         return null;
     }
@@ -112,18 +112,15 @@ const PaginatedTable = ({ data, columns, anyActionColumn, pageChange, pageSizeCh
 
   const badgeForStatus = (status, statusStr) => {
     switch (status) {
-      case "REPORTED":
+      case IncidentStatus.REPORTED.key:
         return <Badge bg="secondary">{statusStr}</Badge>;
-      case "IN_PROGRESS":
+      case IncidentStatus.IN_PROGRESS.key:
         return <Badge bg="primary">{statusStr}</Badge>;
-      case "COMPLETED":
+      case IncidentStatus.COMPLETED.key:
         return <Badge bg="info" text="dark">{statusStr}</Badge>;
-      case "RETURNED": 
+      case IncidentStatus.RETURNED.key: 
         return <Badge bg="warning" text="dark">{statusStr}</Badge>;
-      case "IN_REVIEW":
-        //return <Badge bg="warning" text="dark">{statusStr}</Badge>;
-        return buildBadgeForStatus(statusStr);
-      case "RESOLVED":
+      case IncidentStatus.RESOLVED.key:
         return <Badge bg="success">{statusStr}</Badge>;
       default:
         return null;
@@ -134,8 +131,6 @@ const PaginatedTable = ({ data, columns, anyActionColumn, pageChange, pageSizeCh
     switch(col.dataField) {
       case 'eventNo':
         return '60px';
-      case 'station':
-        return '120px';
       case 'reportedAt':
         return '90px';
       case 'resolvedAt':
@@ -146,6 +141,10 @@ const PaginatedTable = ({ data, columns, anyActionColumn, pageChange, pageSizeCh
         return '135px';
       case 'pendingTo':
         return '135px';
+      case 'category':
+        return '120px';
+      case 'station':
+        return '120px';
       case 'summary':
         return '250px';
       case 'priority':
@@ -197,9 +196,11 @@ const PaginatedTable = ({ data, columns, anyActionColumn, pageChange, pageSizeCh
         return formattedDate(data);
       case 'enum': 
         if (column.dataField === 'priority') {
-          return badgeForPriority(capitalizeFirst(data));
+          return badgeForPriority(data, item[column.extraField]);
         } else if (column.dataField === 'status') {
           return badgeForStatus(data, item[column.extraField]);
+        } else if (column.dataField === 'category') {
+          return item[column.extraField];
         } else {
           return data;
         }
@@ -216,13 +217,7 @@ const PaginatedTable = ({ data, columns, anyActionColumn, pageChange, pageSizeCh
       case 'date':
         return convertTo12HourDateTime(data);
       case 'enum': 
-        if (column.dataField === 'priority') {
-          return capitalizeFirst(data);
-        } else if (column.dataField === 'status') {
-          return item[column.extraField];
-        } else {
-          return data;
-        }
+        return item[column.extraField];
       case 'user':
         return userResponse(data);
       default:

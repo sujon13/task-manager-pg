@@ -38,6 +38,7 @@ const IncidentList = () => {
     const [ pendingTo, setPendingTo ] = useState(null);
     const [ status, setStatus ] = useState(null);
     const [ priority, setPriority ] = useState(null);
+    const [ category, setCategory] = useState(null);
 
     // Date filters
     const [reportedAtFrom, setReportedAtFrom] = useState(null);
@@ -50,6 +51,7 @@ const IncidentList = () => {
 
     const [ priorityOptions, setPriorityOptions ] = useState([]);
     const [ statusOptions, setStatusOptions ] = useState([]);
+    const [ categoryOptions, setCategoryOptions ] = useState([]);
     const [ reporterOptions, setReporterOptions ] = useState([]);
     const [ assigneeOptions, setAssigneeOptions ] = useState([]);
     const [ pendingToOptions, setPendingToOptions ] = useState([]);
@@ -130,6 +132,7 @@ const IncidentList = () => {
             pendingTo,
             status,
             priority,
+            category,
             reportedAtFrom: ApiDate(reportedAtFrom),
             reportedAtTo: ApiDate(reportedAtTo),
             resolvedAtFrom: ApiDate(resolvedAtFrom),
@@ -168,6 +171,15 @@ const IncidentList = () => {
         }
     }
 
+    const loadCategoryOptions = async () => {
+        const { status, data } = await get(task, '/incidents/category/dropdown');
+        if (status === 200) {
+            const emptyOption = { value: '', label: '--Select Category--' };
+            const options = data.map(category => ({ value: category.id, label: category.name }));
+            setCategoryOptions([emptyOption, ...options]);
+        }
+    }
+
     const generateLabel = entry => {
         const me = entry.username === user.userName;
         return `${entry.name}, ${entry.designation}, ${entry.office}` + (me ? ' (me)' : '');
@@ -200,6 +212,7 @@ const IncidentList = () => {
         fetchIncidents(currentPage, size);
         loadPriorityOptions();
         loadStatusOptions();
+        loadCategoryOptions();
         loadUserOptions();
         loadAssigneeOptions();
     }, [currentPage, size]);
@@ -208,14 +221,15 @@ const IncidentList = () => {
     const columns = [
         // { text: '#', dataField: 'id' },
         { text: 'Event', dataField: 'eventNo', type: 'int' },
-        { text: 'Station', dataField: 'station', type: 'string' },
         { text: 'Reporting Time', dataField: 'reportedAt', type: 'date' },
         { text: 'Resolved Time', dataField: 'resolvedAt', type: 'date' },
         { text: 'Reporter', dataField: 'reportedBy', type: 'user' },
         { text: 'Assignee', dataField: 'assignedTo', type: 'user' },
         { text: 'Pending To', dataField: 'pendingTo', type: 'user' },
+        { text: 'Category', dataField: 'category', type: 'enum', extraField: 'categoryStr' },
+        { text: 'Station', dataField: 'station', type: 'string' },
         { text: 'Incident', dataField: 'summary', type: 'string' },
-        { text: 'Priority', dataField: 'priority', type: 'enum' },
+        { text: 'Priority', dataField: 'priority', type: 'enum', extraField: 'priorityStr' },
         { text: 'Status', dataField: 'status', type: 'enum', extraField: 'statusStr' },
     ];
   
@@ -392,6 +406,17 @@ const IncidentList = () => {
                     </Col>
                     <Col md={3} className='search-field'>
                         <Form.Group className=''>
+                            <Form.Label>Category</Form.Label>
+                            <Select
+                                options={ categoryOptions }
+                                onChange={ (option) => setCategory(option.value) }
+                                placeholder=""
+                                value={ categoryOptions.find(option => option.value === category) }
+                            />
+                        </Form.Group>
+                    </Col>
+                    <Col md={3} className='search-field'>
+                        <Form.Group className=''>
                             <Form.Label>Status</Form.Label>
                             <Select
                                 options={ statusOptions }
@@ -449,9 +474,10 @@ const IncidentList = () => {
                             />
                         </Form.Group>
                     </Col>
+                </Row>
+                <Row className='justify-content-end mb-2 mb-md-0 mt-1'>
                     <Col md={3} className='search-field'>
                         <Form.Group className="">
-                            <Form.Label style={{ visibility: 'hidden'}}>Search</Form.Label>
                             <Button 
                                 variant="primary" 
                                 className="w-100"
