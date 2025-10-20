@@ -135,7 +135,7 @@ const PaginatedTable = ({ data, columns, anyActionColumn, pageChange, pageSizeCh
       case 'eventNo':
         return '60px';
       case 'station':
-        return '60px';
+        return '120px';
       case 'reportedAt':
         return '90px';
       case 'resolvedAt':
@@ -254,11 +254,11 @@ const PaginatedTable = ({ data, columns, anyActionColumn, pageChange, pageSizeCh
           <tr>
             {/* <th className='text-break' style={{ maxWidth: '50px'}}> Serial </th> */}
             { columns.map((column, index) => (
-              <th key={index} className="text-break" style={{ maxWidth: getMaxWidth(column) }}>
+              <th key={index} className="" style={{ maxWidth: getMaxWidth(column) }}>
                 {column.text}
               </th>
             ))}
-            { anyActionColumn && <th className='text-break' style={{ maxWidth: '50px'}}> Action </th> }
+            { anyActionColumn && <th className='' style={{ maxWidth: '60px'}}> Action </th> }
           </tr>
         </thead>
         <tbody>
