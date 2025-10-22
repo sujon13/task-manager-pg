@@ -130,17 +130,17 @@ const PaginatedTable = ({ data, columns, anyActionColumn, pageChange, pageSizeCh
   const getMaxWidth = col => {
     switch(col.dataField) {
       case 'eventNo':
-        return '60px';
+        return '55px';
       case 'reportedAt':
-        return '90px';
+        return '80px';
       case 'resolvedAt':
-        return '90px';
+        return '80px';
       case 'reportedBy':
-        return '135px';
+        return '100px';
       case 'assignedTo':
-        return '135px';
+        return '100px';
       case 'pendingTo':
-        return '135px';
+        return '100px';
       case 'category':
         return '120px';
       case 'station':
@@ -165,9 +165,13 @@ const PaginatedTable = ({ data, columns, anyActionColumn, pageChange, pageSizeCh
     const both = !!designation && !!office;
 
     return (
-      <div style={{ fontSize: '14px' }}>
-        {name}<br/>
-        {any ? '(' : ''}{designation}{both ? ', ' : ''}{office}{any ? ')' : ''}
+      <div>
+        <div className='text-wrap'>
+          {name}
+        </div>
+        <div>
+          {any ? '(' : ''}{designation}{both ? ', ' : ''}{office}{any ? ')' : ''}
+        </div>
       </div>
     );
   }
@@ -245,7 +249,7 @@ const PaginatedTable = ({ data, columns, anyActionColumn, pageChange, pageSizeCh
         </div>
       </div>
       <Table striped bordered hover responsive style={{ textAlign: 'center' }}>
-        <thead>
+        <thead style={{ fontSize: '15px' }}>
           <tr>
             {/* <th className='text-break' style={{ maxWidth: '50px'}}> Serial </th> */}
             { columns.map((column, index) => (
@@ -256,7 +260,7 @@ const PaginatedTable = ({ data, columns, anyActionColumn, pageChange, pageSizeCh
             { anyActionColumn && <th className='' style={{ maxWidth: '60px'}}> Action </th> }
           </tr>
         </thead>
-        <tbody>
+        <tbody style={{ fontSize: '14px' }}>
           {currentItems.map((item, idx) => (
             <tr 
               key={indexOfFirstItem + idx} 

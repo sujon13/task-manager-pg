@@ -13,6 +13,7 @@ import '../css/IncidentModal.css';
 import useUser from "../../hooks/useUser";
 import Confirmation from '../util/Confirmation';
 import { IncidentStatus } from './IncidentConstant';
+import RequiredField from '../util/RequiredField';
 
 
 const IncidentModal = ({ isCreating, show, content, handleClose, handleCreate, handleUpdate }) => {
@@ -38,6 +39,7 @@ const IncidentModal = ({ isCreating, show, content, handleClose, handleCreate, h
     const [ priority, setPriority ] = useState('HIGH');
     const [ category, setCategory ] = useState(null);
 
+    const [ categoryError, setCategoryError ] = useState('');
     const [ summaryError, setSummaryError ] = useState('');
 
     const [ priorityOptions, setPriorityOptions ] = useState([]);
@@ -137,6 +139,7 @@ const IncidentModal = ({ isCreating, show, content, handleClose, handleCreate, h
         setStatus(content.status);
         setPriority(content.priority);
         setCategory(content.category);
+        setCategoryError('');
     }
 
     const clearContent = () => {
@@ -158,6 +161,7 @@ const IncidentModal = ({ isCreating, show, content, handleClose, handleCreate, h
         setStatus(null);
         setPriority('HIGH');
         setCategory(null);
+        setCategoryError('');
     }
 
     const loadPriorityOptions = async () => {
@@ -204,6 +208,10 @@ const IncidentModal = ({ isCreating, show, content, handleClose, handleCreate, h
     }, [show, content]);
 
     const validate = () => {
+        if (!category || category.trim() === '') {
+            setCategoryError('Incident category is required');
+            return false;
+        }
         if (!summary || summary.trim() === '') {
             setSummaryError('Incident summary is required');
             return false;
@@ -296,7 +304,7 @@ const IncidentModal = ({ isCreating, show, content, handleClose, handleCreate, h
                         <Row>
                             <Col md={6} sm={12}>
                                 <Form.Group className="mb-3">
-                                    <Form.Label>Incident Category</Form.Label>
+                                    <Form.Label><RequiredField/>Incident Category</Form.Label>
                                     <Select
                                         options={ categoryOptions }
                                         onChange={ (option) => setCategory(option.value) }
@@ -304,16 +312,17 @@ const IncidentModal = ({ isCreating, show, content, handleClose, handleCreate, h
                                         value={ category ? categoryOptions.find(option => option.value === category) : ''}
                                         isDisabled={ !isEditable() } 
                                     />
+                                    { categoryError && <p className="text-danger">{ categoryError }</p> }
                                 </Form.Group>
                             </Col>
                             <Col md={12}>
                                 <Form.Group className="mb-3">
-                                    <Form.Label>Incident Summary</Form.Label>
+                                    <Form.Label><RequiredField/>Incident Summary</Form.Label>
                                     <Form.Control
                                         as="textarea"
                                         rows={3}
                                         cols={50}
-                                        placeholder="*Write incident summary here..."
+                                        placeholder="Write incident summary here..."
                                         value={ summary }
                                         required
                                         maxLength={ 1024 }
