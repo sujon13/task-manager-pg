@@ -49,7 +49,7 @@ const PaginatedTable = ({ data, columns, anyActionColumn, pageChange, pageSizeCh
 
   const actionCol = (entry) => {
     return (
-      <td style={{ maxWidth: '90px' }} >
+      <td style={{ maxWidth: '90px', verticalAlign: 'middle' }} >
         <div className="d-flex flex-column flex-md-row">
           <Button 
             style={{ display: isEditable(entry) ? '' : 'none' }}
@@ -270,7 +270,7 @@ const PaginatedTable = ({ data, columns, anyActionColumn, pageChange, pageSizeCh
               
               {/* <td style={{ maxWidth: '50px'}}>{indexOfFirstItem + idx + 1}</td> */}
               { columns.map((column, index) => ( 
-                <td key={index} className="text-truncate" style={{ maxWidth: getMaxWidth(column) }}>
+                <td key={index} className="text-truncate" style={{ maxWidth: getMaxWidth(column), verticalAlign: 'middle' }}>
                   <OverlayTrigger
                     placement="auto"
                     overlay={<Tooltip>{ tooltipContent(item, column) }</Tooltip>}
