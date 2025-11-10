@@ -10,4 +10,9 @@ export const RoleEnum = Object.freeze({
     NOD_AE:      Object.freeze({ key: "NOD_AE", value: 9, displayName: "NOD AE" }),
     NOD_SAE:     Object.freeze({ key: "NOD_SAE", value: 10, displayName: "NOD SAE" }),
     CONTRACTOR:  Object.freeze({ key: "CONTRACTOR", value: 11, displayName: "Contractor" }),
+    IMD:         Object.freeze({ key: "IMD", value: 12, displayName: "IMD" }),
+    EMD:         Object.freeze({ key: "EMD", value: 13, displayName: "EMD" }),
+    CNST_XEN:    Object.freeze({ key: "CNST_XEN", value: 14, displayName: "CNST XEN" }),
+    CNST_SDE:    Object.freeze({ key: "CNST_SDE", value: 15, displayName: "CNST SDE" }),
+    CNST_AE:     Object.freeze({ key: "CNST_AE", value: 16, displayName: "CNST AE" }),
 });

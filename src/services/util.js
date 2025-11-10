@@ -39,6 +39,6 @@ export const capitalizeFirst = str => {
 }
 
 export const isSupervisor = user => {
-    const supervisorRoles = [ RoleEnum.ADMIN.key, RoleEnum.SCADA_SE.key, RoleEnum.SMD_XEN.key ];
+    const supervisorRoles = [ RoleEnum.ADMIN.key, RoleEnum.SCADA_SE.key, RoleEnum.SMD_XEN.key, RoleEnum.CNST_XEN.key ];
     return user?.roles?.some(role => supervisorRoles.includes(role.name));
 }
