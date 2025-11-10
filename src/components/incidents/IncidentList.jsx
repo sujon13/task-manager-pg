@@ -131,7 +131,7 @@ const IncidentList = () => {
             size,
             reportedBy,
             assignedTo,
-            pendingTo,
+            pendingToList: [pendingTo],
             status,
             priority,
             category,
