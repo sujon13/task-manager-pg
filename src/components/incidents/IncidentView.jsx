@@ -64,6 +64,39 @@ const IncidentView = ({ show, content, handleClose }) => {
                 <Modal.Body>
                     <Form>
                         <Row>
+                            <Col md={4} sm={12}>
+                                <Form.Group className="">
+                                    <Form.Label className='text-secondary'>Division</Form.Label>
+                                    <Form.Control
+                                        className='modal-input'
+                                        type="text"
+                                        value={ content?.division }
+                                        readOnly
+                                    />
+                                </Form.Group>
+                            </Col>
+                            <Col md={4} sm={12}>
+                                <Form.Group className="">
+                                    <Form.Label className='text-secondary'>Category</Form.Label>
+                                    <Form.Control
+                                        className='modal-input'
+                                        type="text"
+                                        value={ content?.categoryStr }
+                                        readOnly
+                                    />
+                                </Form.Group>
+                            </Col>
+                            <Col md={4} sm={12}>
+                                <Form.Group className="">
+                                    <Form.Label className='text-secondary'>Priority</Form.Label>
+                                    <Form.Control
+                                        className='modal-input'
+                                        type="text"
+                                        value ={ capitalizeFirst(content?.priority) }
+                                        readOnly
+                                    />
+                                </Form.Group>
+                            </Col>
                             <Col md={12}>
                                 <Form.Group className="mb-1">
                                     <Form.Label className='text-secondary'>Incident Summary</Form.Label>
@@ -117,17 +150,6 @@ const IncidentView = ({ show, content, handleClose }) => {
                                         className='modal-input'
                                         type="text"
                                         value={ content?.assignedTo?.name || "" }
-                                        readOnly
-                                    />
-                                </Form.Group>
-                            </Col>
-                            <Col md={4} sm={12}>
-                                <Form.Group className="">
-                                    <Form.Label className='text-secondary'>Priority</Form.Label>
-                                    <Form.Control
-                                        className='modal-input'
-                                        type="text"
-                                        value ={ capitalizeFirst(content?.priority) }
                                         readOnly
                                     />
                                 </Form.Group>

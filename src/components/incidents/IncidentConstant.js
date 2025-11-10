@@ -12,3 +12,8 @@ export const IncidentPriority = Object.freeze({
     MEDIUM:    Object.freeze({ key: "MEDIUM", value: 3, displayName: "Medium" }),
     LOW:       Object.freeze({ key: "LOW", value: 4, displayName: "Low" })
 });
+
+export const Division = Object.freeze({
+    SCADA:     Object.freeze({ key: "SCADA", value: 1, displayName: "SCADA" }),
+    CNSTD:     Object.freeze({ key: "CNSTD", value: 2, displayName: "CNSTD" }),
+});

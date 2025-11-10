@@ -12,8 +12,9 @@ import '../css/DatePicker.css';
 import '../css/IncidentModal.css';
 import useUser from "../../hooks/useUser";
 import Confirmation from '../util/Confirmation';
-import { IncidentStatus } from './IncidentConstant';
+import { IncidentStatus, Division } from './IncidentConstant';
 import RequiredField from '../util/RequiredField';
+import { set } from 'date-fns';
 
 
 const IncidentModal = ({ isCreating, show, content, handleClose, handleCreate, handleUpdate }) => {
@@ -38,6 +39,7 @@ const IncidentModal = ({ isCreating, show, content, handleClose, handleCreate, h
     const [ status, setStatus] = useState(null);
     const [ priority, setPriority ] = useState('HIGH');
     const [ category, setCategory ] = useState(null);
+    const [ division, setDivision ] = useState(null);
 
     const [ categoryError, setCategoryError ] = useState('');
     const [ summaryError, setSummaryError ] = useState('');
@@ -45,6 +47,7 @@ const IncidentModal = ({ isCreating, show, content, handleClose, handleCreate, h
     const [ priorityOptions, setPriorityOptions ] = useState([]);
     const [ userOptions, setUserOptions ] = useState([]);
     const [ categoryOptions, setCategoryOptions ] = useState([]);
+    const [ divisionOptions, setDivisionOptions ] = useState([]);
 
     const [ showConfirmation, setShowConfirmation ] = useState(false);
     const [ savedTask, setSavedTask ] = useState(null);
@@ -140,6 +143,7 @@ const IncidentModal = ({ isCreating, show, content, handleClose, handleCreate, h
         setPriority(content.priority);
         setCategory(content.category);
         setCategoryError('');
+        setDivision(content.division);
     }
 
     const clearContent = () => {
@@ -162,6 +166,7 @@ const IncidentModal = ({ isCreating, show, content, handleClose, handleCreate, h
         setPriority('HIGH');
         setCategory(null);
         setCategoryError('');
+        setDivision(Division.SCADA.key);
     }
 
     const loadPriorityOptions = async () => {
@@ -193,10 +198,18 @@ const IncidentModal = ({ isCreating, show, content, handleClose, handleCreate, h
         }
     }
 
+    const loadDivisionOptions = async () => {
+        const { status, data } = await get(task, '/incidents/division/dropdown');
+        if (status === 200) {
+            setDivisionOptions(data.map(division => ({ value: division.id, label: division.name })));
+        }
+    }
+
     useEffect(() => {
         loadPriorityOptions();
         loadCategoryOptions();
         loadUserOptions();
+        loadDivisionOptions();
 
         if (content) {
             console.info('has content');
@@ -237,7 +250,8 @@ const IncidentModal = ({ isCreating, show, content, handleClose, handleCreate, h
             description,
             status: isCreating ? null: status,
             priority,
-            category: category ? category : null
+            category: category ? category : null,
+            division
         };
         console.log('incident to save', incident);
 
@@ -302,6 +316,17 @@ const IncidentModal = ({ isCreating, show, content, handleClose, handleCreate, h
                 <Modal.Body>
                     <Form>
                         <Row>
+                            <Col md={6} sm={12}>
+                                <Form.Group className="mb-3">
+                                    <Form.Label>Division</Form.Label>
+                                    <Select
+                                        options={ divisionOptions }
+                                        onChange={ (option) => setDivision(option.value) }
+                                        value={ division ? divisionOptions.find(option => option.value === division) : ''}
+                                        isDisabled={ !isEditable() } 
+                                    />
+                                </Form.Group>
+                            </Col>
                             <Col md={6} sm={12}>
                                 <Form.Group className="mb-3">
                                     <Form.Label><RequiredField/>Incident Category</Form.Label>

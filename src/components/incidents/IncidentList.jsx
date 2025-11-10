@@ -39,6 +39,7 @@ const IncidentList = () => {
     const [ status, setStatus ] = useState(null);
     const [ priority, setPriority ] = useState(null);
     const [ category, setCategory] = useState(null);
+    const [ division, setDivision ] = useState(null);
 
     // Date filters
     const [reportedAtFrom, setReportedAtFrom] = useState(null);
@@ -52,6 +53,7 @@ const IncidentList = () => {
     const [ priorityOptions, setPriorityOptions ] = useState([]);
     const [ statusOptions, setStatusOptions ] = useState([]);
     const [ categoryOptions, setCategoryOptions ] = useState([]);
+    const [ divisionOptions, setDivisionOptions ] = useState([]);
     const [ reporterOptions, setReporterOptions ] = useState([]);
     const [ assigneeOptions, setAssigneeOptions ] = useState([]);
     const [ pendingToOptions, setPendingToOptions ] = useState([]);
@@ -133,6 +135,7 @@ const IncidentList = () => {
             status,
             priority,
             category,
+            division,
             reportedAtFrom: ApiDate(reportedAtFrom),
             reportedAtTo: ApiDate(reportedAtTo),
             resolvedAtFrom: ApiDate(resolvedAtFrom),
@@ -180,6 +183,15 @@ const IncidentList = () => {
         }
     }
 
+    const loadDivisionOptions = async () => {
+        const { status, data } = await get(task, '/incidents/division/dropdown');
+        if (status === 200) {
+            const emptyOption = { value: '', label: '--Select Division--' };
+            const options = data.map(division => ({ value: division.id, label: division.name }));
+            setDivisionOptions([emptyOption, ...options]);
+        }
+    }
+
     const generateLabel = entry => {
         const me = entry.username === user.userName;
         return `${entry.name}, ${entry.designation}, ${entry.office}` + (me ? ' (me)' : '');
@@ -215,6 +227,7 @@ const IncidentList = () => {
         loadCategoryOptions();
         loadUserOptions();
         loadAssigneeOptions();
+        loadDivisionOptions();
     }, [currentPage, size]);
 
 
@@ -417,6 +430,17 @@ const IncidentList = () => {
                     </Col>
                     <Col md={3} className='search-field'>
                         <Form.Group className=''>
+                            <Form.Label>Division</Form.Label>
+                            <Select
+                                options={ divisionOptions }
+                                onChange={ (option) => setDivision(option.value) }
+                                placeholder=""
+                                value={ divisionOptions.find(option => option.value === division) }
+                            />
+                        </Form.Group>
+                    </Col>
+                    <Col md={3} className='search-field'>
+                        <Form.Group className=''>
                             <Form.Label>Status</Form.Label>
                             <Select
                                 options={ statusOptions }
@@ -463,6 +487,8 @@ const IncidentList = () => {
                             />
                         </Form.Group>
                     </Col>
+                </Row>
+                <Row className="mb-2">
                     <Col md={3} className='search-field'>
                         <Form.Group className="">
                             <Form.Label>Resolved Time</Form.Label>
@@ -474,10 +500,9 @@ const IncidentList = () => {
                             />
                         </Form.Group>
                     </Col>
-                </Row>
-                <Row className='justify-content-end mb-2 mb-md-0 mt-1'>
                     <Col md={3} className='search-field'>
                         <Form.Group className="">
+                            <Form.Label style={{ visibility: 'hidden'}}>Search</Form.Label>
                             <Button 
                                 variant="primary" 
                                 className="w-100"
@@ -487,16 +512,17 @@ const IncidentList = () => {
                             </Button>
                         </Form.Group>  
                     </Col>
-                </Row>
-                <Row className='justify-content-end mb-2 mb-md-0 mt-1'>
-                    <Col md={3} className="">
-                        <Button 
-                            variant="success" 
-                            onClick={handleAddNew}
-                            className="w-100"
-                        >
-                            <FaPlus className="me-1" /> Add New Entry
-                        </Button>
+                    <Col md={6} className="d-flex justify-content-end">
+                        <div>
+                            <Form.Label style={{ visibility: 'hidden'}}>Add New Entry</Form.Label>
+                            <Button 
+                                variant="success" 
+                                onClick={handleAddNew}
+                                className="w-100"
+                            >
+                                <FaPlus className="me-1" /> Add New Entry
+                            </Button>
+                        </div>
                     </Col>
                 </Row>
             </div>
