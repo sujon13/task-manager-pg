@@ -14,7 +14,6 @@ import useUser from "../../hooks/useUser";
 import Confirmation from '../util/Confirmation';
 import { IncidentStatus, Division } from './IncidentConstant';
 import RequiredField from '../util/RequiredField';
-import { set } from 'date-fns';
 
 
 const IncidentModal = ({ isCreating, show, content, handleClose, handleCreate, handleUpdate }) => {
@@ -378,7 +377,7 @@ const IncidentModal = ({ isCreating, show, content, handleClose, handleCreate, h
                                         options={ userOptions }
                                         onChange={ (option) => setAssignedTo(option.value) }
                                         placeholder="Select Assignee"
-                                        value={ userOptions.find(option => option.value === assignedTo) }
+                                        value={ assignedTo ? userOptions.find(option => option.value === assignedTo) : ''}
                                         isDisabled={ !supervisor } 
                                     />
                                 </Form.Group>
