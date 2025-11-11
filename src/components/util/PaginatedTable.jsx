@@ -6,10 +6,10 @@ import Select from 'react-select';
 import '../../components/css/pagination.css';
 import { convertTo12HourDateTime, isSupervisor } from '../../services/util';
 import useUser from "../../hooks/useUser";
-import { IncidentStatus, IncidentPriority } from '../incidents/IncidentConstant';
+import { IncidentStatus, IncidentPriority, Division } from '../incidents/IncidentConstant';
 
 const PaginatedTable = ({ data, columns, anyActionColumn, pageChange, pageSizeChange, handleEdit, handleDelete, handleView }) => {
-  const { supervisor, admin, user, seScada } = useUser();
+  const { admin, user, seScada, smdXen, cnstXen } = useUser();
 
   const [ currentPage ] = useState(data.number);
   const totalPages = data.totalPages;
@@ -41,8 +41,11 @@ const PaginatedTable = ({ data, columns, anyActionColumn, pageChange, pageSizeCh
   }
 
   const isEditable = entry => {
+    if (admin)return true;
     if (IncidentStatus.RESOLVED.key === entry.status)return false;
-    if (supervisor)return true;
+    if (seScada)return true;
+    if (smdXen && entry.division === Division.SCADA.key)return true;
+    if (cnstXen && entry.division === Division.CNSTD.key)return true;
     if (entry.reporter && IncidentStatus.REPORTED.key === entry.status)return true;
     if (entry.assignee && IncidentStatus.IN_PROGRESS.key === entry.status)return true;
   }
@@ -94,20 +97,6 @@ const PaginatedTable = ({ data, columns, anyActionColumn, pageChange, pageSizeCh
       default:
         return null;
     }
-  }
-
-  const buildBadgeForStatus = (statusStr) => {
-    return (
-      <>
-        {statusStr.split(" ").map((word, idx) => (
-          <div key={idx} className=""> 
-            <Badge bg="warning" text="dark">
-              {word}
-            </Badge>
-        </div>
-        ))}
-      </>
-    );
   }
 
   const badgeForStatus = (status, statusStr) => {

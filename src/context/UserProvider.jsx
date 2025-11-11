@@ -6,16 +6,18 @@ import { get, post, auth } from '../services/api';
 import UserContext from "./UserContext";
 import { useAppNavigate } from '../hooks/useAppNavigate';
 import { RoleEnum } from './RoleEnum';
-import { isSupervisor } from "../services/util";
+import { isCnstXen, isSmdXen, isSupervisor } from "../services/util";
 
 
 export const UserProvider = ({ children }) => {
     const { goLogin, goIncidents } = useAppNavigate();
-    const [user, setUser] = useState(null); // { id, name, email, role }
-    const [loading, setLoading] = useState(true);
+    const [ user, setUser ] = useState(null); // { id, name, email, role }
+    const [ loading, setLoading ] = useState(true);
     const [ supervisor, setSupervisor ] = useState(false);
     const [ admin, setAdmin ] = useState(false);
     const [ seScada, setSeScada ] = useState(false);
+    const [ smdXen, setSmdXen ] = useState(false);
+    const [ cnstXen, setCnstXen ] = useState(false);
 
     const fetchUserInfo = async (callback) => {
         const { status, data } = await get(auth, "/users/me", { withCredentials: true });
@@ -24,6 +26,8 @@ export const UserProvider = ({ children }) => {
             checkAndSetSupervisor(data);
             checkAndSetAdmin(data);
             checkAndSetSeScada(data);
+            checkAndSetSmdXen(data);
+            checkAndSetCnstXen(data);
             callback?.();
         } else {
             logout();
@@ -33,6 +37,14 @@ export const UserProvider = ({ children }) => {
 
     const checkAndSetSupervisor = (user) => {
         setSupervisor(isSupervisor(user));
+    }
+
+    const checkAndSetSmdXen = (user) => {
+        setSmdXen(isSmdXen(user));
+    }
+
+    const checkAndSetCnstXen = (user) => {
+        setCnstXen(isCnstXen(user));
     }
 
     const checkAndSetAdmin = user => {
@@ -75,7 +87,7 @@ export const UserProvider = ({ children }) => {
     const isLoggedIn = !!user;
 
     return (
-        <UserContext.Provider value={{ user, isLoggedIn, login, logout, loading, supervisor, admin, seScada }}>
+        <UserContext.Provider value={{ user, isLoggedIn, login, logout, loading, supervisor, admin, seScada, smdXen, cnstXen }}>
             {children}
         </UserContext.Provider>
     );

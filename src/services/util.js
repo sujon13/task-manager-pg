@@ -42,3 +42,11 @@ export const isSupervisor = user => {
     const supervisorRoles = [ RoleEnum.ADMIN.key, RoleEnum.SCADA_SE.key, RoleEnum.SMD_XEN.key, RoleEnum.CNST_XEN.key ];
     return user?.roles?.some(role => supervisorRoles.includes(role.name));
 }
+
+export const isSmdXen = user => {
+    return user?.roles?.some(role => RoleEnum.SMD_XEN.key === role.name);
+}
+
+export const isCnstXen = user => {
+    return user?.roles?.some(role => RoleEnum.CNST_XEN.key === role.name);
+}
