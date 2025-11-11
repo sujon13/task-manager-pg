@@ -158,8 +158,9 @@ const PaginatedTable = ({ data, columns, anyActionColumn, pageChange, pageSizeCh
         <div className='text-wrap'>
           {name}
         </div>
-        <div>
-          {any ? '(' : ''}{designation}{both ? ', ' : ''}{office}{any ? ')' : ''}
+        <div className='text-wrap'>
+          {/* {any ? '(' : ''}{designation}{both ? ', ' : ''}{office}{any ? ')' : ''} */}
+          {designation}{both ? ', ' : ''}{office}
         </div>
       </div>
     );
